@@ -1,0 +1,14 @@
+mind2web:
+  type: web
+  fields: [dom, screenshot, actions]
+webarena:
+  type: docker-sim
+  tasks: 800
+waveui25k:
+  type: ui-grounding
+  samples: 25000
+webshop:
+  type: ecommerce
+  traces: clicks
+
+

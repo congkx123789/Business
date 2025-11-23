@@ -1,0 +1,34 @@
+# IstioControlPlane for permissive mode (Phase 1)
+# Install: kubectl apply -f infrastructure/istio/istio-operator-permissive.yaml
+
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: permissive-mode
+  namespace: istio-system
+spec:
+  profile: default
+  components:
+    pilot:
+      k8s:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2048Mi
+  values:
+    global:
+      mtls:
+        enabled: false  # Permissive mode
+      controlPlaneSecurityEnabled: false
+    meshConfig:
+      defaultConfig:
+        proxyStatsMatcher:
+          inclusionRegexps:
+          - ".*circuit_breakers.*"
+          - ".*outlier_detection.*"
+          - ".*mtls.*"
+    pilot:
+      autoscaleEnabled: true
+      autoscaleMin: 2
+      autoscaleMax: 5
+

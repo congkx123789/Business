@@ -1,0 +1,6 @@
+web:
+  suites: ["webarena", "mind2web"]
+os:
+  suites: ["osworld"]
+
+

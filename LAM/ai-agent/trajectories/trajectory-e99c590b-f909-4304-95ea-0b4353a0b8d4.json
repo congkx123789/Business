@@ -1,0 +1,232 @@
+{
+  "goal": "Move mouse to center of screen",
+  "steps": [
+    {
+      "state": {
+        "screenshot": "temp_screenshot_0.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1157,
+          89
+        ],
+        "mouse_after": [
+          1166,
+          77
+        ]
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1157,
+          89
+        ],
+        "mouse_after": [
+          1166,
+          77
+        ]
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 0
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_1.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1245,
+          822
+        ],
+        "mouse_after": [
+          1293,
+          766
+        ]
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1245,
+          822
+        ],
+        "mouse_after": [
+          1293,
+          766
+        ]
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 1
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_2.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1589,
+          252
+        ],
+        "mouse_after": [
+          1156,
+          632
+        ]
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1589,
+          252
+        ],
+        "mouse_after": [
+          1156,
+          632
+        ]
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 2
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_3.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1010,
+          586
+        ],
+        "mouse_after": [
+          1010,
+          586
+        ]
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1010,
+          586
+        ],
+        "mouse_after": [
+          1010,
+          586
+        ]
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 3
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_4.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1077,
+          720
+        ],
+        "mouse_after": [
+          1129,
+          655
+        ]
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1077,
+          720
+        ],
+        "mouse_after": [
+          1129,
+          655
+        ]
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 4
+      }
+    }
+  ],
+  "success": true,
+  "metadata": {}
+}

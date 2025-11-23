@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "domain": { "type": "string" },
+          "allow": { "type": "array", "items": { "type": "string" } },
+          "hitl_for": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}
+
+

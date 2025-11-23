@@ -1,0 +1,17 @@
+# Managed rule sets mapped to OWASP Top 10 and CWEs
+rules:
+  - id: include-packs
+    message: "Using managed packs via semgrep-action"
+    languages: [generic]
+    severity: INFO
+    patterns: []
+pconfigs:
+  # OWASP Top Ten and general security auditing
+  - p/owasp-top-ten
+  - p/security-audit
+  - p/secrets
+  # Language specific packs will be auto-detected by semgrep
+
+options:
+  severity: WARNING
+

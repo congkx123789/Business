@@ -1,0 +1,32 @@
+query GetChapter($id: ID!) {
+  chapter(id: $id) {
+    id
+    storyId
+    title
+    content
+    order
+    wordCount
+    isPaid
+    price
+    isUnlocked
+    createdAt
+    updatedAt
+  }
+}
+
+query GetChapters($storyId: ID!) {
+  chapters(storyId: $storyId) {
+    id
+    storyId
+    title
+    content
+    order
+    wordCount
+    isPaid
+    price
+    isUnlocked
+    createdAt
+    updatedAt
+  }
+}
+

@@ -1,0 +1,361 @@
+
+Phân Tích Toàn Diện về các Agent AI trong Tương Tác Người-Máy và Tự Động Hóa Giao Diện Người Dùng Đồ Họa
+
+
+Phần 1: Nền tảng Kiến trúc của các Agent GUI Hiện đại
+
+Phần này thiết lập các nguyên tắc cơ bản chi phối cách các agent giao diện người dùng đồ họa (GUI) nhận thức, lý luận và hành động trong môi trường kỹ thuật số. Nó sẽ phân tích các thành phần cốt lõi của hệ thống agent và so sánh các mô hình kiến trúc chủ đạo, cung cấp nền tảng lý thuyết cho các phần tiếp theo.
+
+1.1. Vòng lặp Agent: Phân tích Chu trình Nhận thức-Lý luận-Hành động
+
+Sự ra đời của Trí tuệ nhân tạo Agent (Agentic AI) đánh dấu một bước tiến đáng kể so với các hệ thống tự động hóa truyền thống. Một agent AI được định nghĩa là một hệ thống phần mềm tự trị, có khả năng nhận thức môi trường xung quanh, lý luận trong thời gian thực để đạt được mục tiêu, và thực thi các tác vụ phức tạp, nhiều bước với sự can thiệp tối thiểu của con người.1 Định nghĩa này phân biệt rõ ràng chúng với các chatbot hoặc robot Tự động hóa Quy trình bằng Robot (RPA) đơn giản hơn, vốn thường dựa trên các quy tắc được xác định trước và có mức độ tự chủ thấp hơn nhiều.1
+Cốt lõi của một agent hiện đại là một kiến trúc mô-đun được thiết kế để mô phỏng một chu trình ra quyết định thông minh. Các thành phần thiết yếu của kiến trúc này bao gồm:
+Nhận thức (Perception): Đây là cách agent thu thập dữ liệu từ môi trường của nó. Dữ liệu này có thể đến từ nhiều nguồn khác nhau, bao gồm các cảm biến vật lý, đầu vào kỹ thuật số như ảnh chụp màn hình hoặc cấu trúc cây của Document Object Model (DOM), hoặc thông qua các giao diện lập trình ứng dụng (API) kết nối với các hệ thống bên ngoài.3
+Công cụ Ra quyết định/Lý luận (Decision-Making/Reasoning Engine): Đây là bộ não nhận thức của agent, thường được cung cấp sức mạnh bởi một Mô hình Ngôn ngữ Lớn (LLM). Công cụ này xử lý các thông tin đầu vào từ mô-đun nhận thức, lập kế hoạch hành động, và đưa ra các quyết định hợp lý nhằm đạt được mục tiêu đã định.3 Khả năng lập kế hoạch—xác định các bước cần thiết, đánh giá các hành động tiềm năng và chọn ra hướng đi tốt nhất—là một khía cạnh quan trọng của hành vi thông minh.1
+Hệ thống Hành động (Action System): Mô-đun này chịu trách nhiệm chuyển các quyết định thành hành động cụ thể trong môi trường kỹ thuật số. Các hành động này có thể bao gồm việc nhấp vào một nút, gõ văn bản vào một trường, hoặc gọi một công cụ/API bên ngoài để thực hiện một nhiệm vụ cụ thể.3
+Bộ nhớ (Memory): Một thành phần quan trọng cho phép agent lưu trữ và truy xuất thông tin từ các tương tác trong quá khứ. Điều này rất cần thiết để duy trì ngữ cảnh qua các tác vụ dài và cải thiện hiệu suất trong tương lai. Bộ nhớ thường được phân biệt thành hai loại: bộ nhớ ngắn hạn, bị giới hạn bởi cửa sổ ngữ cảnh của mô hình, và bộ nhớ dài hạn, có thể được lưu trữ trong các cơ sở dữ liệu vector bên ngoài.4
+Hoạt động của các thành phần này được điều phối thông qua một Chu trình Nhận thức-Suy nghĩ-Hành động (Perceive-Think-Act). Đây là một vòng lặp lặp đi lặp lại, là mô hình hoạt động cơ bản của agent. Trong mỗi chu kỳ, agent quan sát trạng thái hiện tại của môi trường, xử lý thông tin đó để hiểu ngữ cảnh, quyết định hành động tiếp theo, thực thi hành động đó, và cuối cùng là phân tích kết quả để thông báo cho chu kỳ tiếp theo.4 Vòng lặp phản hồi này cho phép agent học hỏi từ kinh nghiệm và thích ứng với các tình huống thay đổi, một đặc điểm nổi bật so với các kịch bản tự động hóa cứng nhắc.
+
+1.2. Các Phương thức Tương tác Cốt lõi: Nhận thức Dựa trên Thị giác so với Dựa trên Cấu trúc
+
+Trong thiết kế agent GUI, một trong những lựa chọn kiến trúc cơ bản và có ảnh hưởng nhất là cách agent "nhìn" và hiểu giao diện người dùng. Sự lựa chọn này tạo ra một sự phân đôi giữa việc diễn giải biểu diễn trực quan của giao diện (dựa trên pixel) và việc phân tích cấu trúc mã nguồn cơ bản của nó (dựa trên DOM hoặc cây truy cập).7
+
+Agent Dựa trên Cấu trúc (DOM/Code)
+
+Các agent này hoạt động bằng cách xử lý dữ liệu có cấu trúc như HTML, cây truy cập (AXTree), hoặc mã nguồn để xác định và tương tác với các thành phần giao diện.7 Chúng thường dựa vào các bộ định vị (locators) như XPath để xác định chính xác các nút trong cây DOM.8
+Ưu điểm: Phương pháp này mang lại độ chính xác cao, chi phí tính toán thấp hơn và cho phép truy cập trực tiếp vào siêu dữ liệu của các thành phần (ví dụ: thuộc tính, văn bản ẩn). Nó cực kỳ hiệu quả khi cấu trúc cơ bản của trang web ổn định và được xác định rõ ràng.7
+Nhược điểm: Điểm yếu chí mạng của phương pháp này là sự mong manh. Bất kỳ thay đổi nhỏ nào đối với mã nguồn của trang web—chẳng hạn như thay đổi tên lớp, cấu trúc phân cấp của các phần tử—đều có thể làm hỏng các bộ định vị của agent, ngay cả khi giao diện trực quan không thay đổi. Điều này dẫn đến chi phí bảo trì cao và thường xuyên gây ra các kết quả dương tính giả hoặc âm tính giả trong các kịch bản kiểm thử.9 Hơn nữa, chúng không thể nắm bắt được những gì người dùng thực sự nhìn thấy, vì các cấu trúc DOM giống hệt nhau có thể được hiển thị khác nhau và ngược lại.10
+
+Agent Dựa trên Thị giác (Pixel)
+
+Trái ngược lại, các agent dựa trên thị giác hoạt động trực tiếp trên ảnh chụp màn hình của giao diện người dùng. Chúng sử dụng các mô hình thị giác máy tính và đa phương thức để "nhìn" và hiểu giao diện giống như con người.7 Các hành động như di chuyển chuột và nhập liệu từ bàn phím được tạo ra dựa trên các tín hiệu trực quan mà agent nhận biết được.11
+Ưu điểm: Phương pháp này có độ bền cao trước những thay đổi trong mã nguồn cơ bản, vì nó gắn liền với cách trình bày trực quan chứ không phải cách triển khai. Điều này làm cho chúng có khả năng tổng quát hóa tốt hơn và ít bị hỏng do các cập nhật nhỏ về mã giao diện người dùng.8 Chúng cũng có thể hoạt động trên các giao diện không có DOM truy cập được, chẳng hạn như môi trường máy tính từ xa hoặc ứng dụng di động.
+Nhược điểm: Phương pháp này đòi hỏi chi phí tính toán và độ trễ cao hơn. Chúng có thể gặp khó khăn trong việc xác định vị trí chính xác của các phần tử nhỏ hoặc mơ hồ về mặt hình ảnh và có thể kém chính xác hơn so với các phương pháp dựa trên DOM. Chúng cũng dễ bị ảnh hưởng bởi "nhiễu" hình ảnh và sự khác biệt về hiển thị giữa các trình duyệt hoặc thiết bị khác nhau.10
+Sự mong manh cố hữu của các agent chỉ dựa vào DOM trong bối cảnh các môi trường web động, được cập nhật liên tục, khiến chúng không bền vững cho mục đích tự động hóa tổng quát. Do đó, xu hướng trong lĩnh vực này đang dịch chuyển mạnh mẽ sang các mô hình dựa trên thị giác, vốn nhận thức giao diện theo cách của con người. Cấu trúc DOM hoặc cây truy cập sau đó được sử dụng như một công cụ phụ trợ để tăng cường độ chính xác và hiệu quả. Các hệ thống tiên tiến nhất hiện nay kết hợp cả hai phương thức. Chúng có thể sử dụng thị giác để xác định một phần tử mục tiêu ở mức độ cao (ví dụ: "nút 'Gửi'") và sau đó sử dụng phân tích DOM để tìm bộ định vị chính xác của nó để thực hiện một cú nhấp chuột đáng tin cậy hơn. Cách tiếp cận kết hợp này tận dụng được sự bền bỉ của thị giác và độ chính xác của dữ liệu có cấu trúc, phản ánh trong các nghiên cứu gần đây về agent GUI đa phương thức.7
+
+1.3. Các Mô hình Học tập để Mô phỏng Hành vi
+
+Để một agent có thể thực hiện các tác vụ một cách thông minh, nó phải được huấn luyện để hiểu và tái tạo các mẫu hành vi của con người. Hai mô hình học tập chính được sử dụng cho mục đích này là học có giám sát và học tăng cường.
+
+Học có Giám sát (Học Bắt chước)
+
+Đây là mô hình học tập chiếm ưu thế hiện nay, trong đó các agent học bằng cách "sao chép" hành vi của con người, một kỹ thuật được gọi là Sao chép Hành vi (Behavior Cloning).11 Dữ liệu huấn luyện bao gồm các bản trình diễn (trajectories) của con người thực hiện các tác vụ. Mỗi bản trình diễn chứa một chuỗi các quan sát (ảnh chụp màn hình hoặc DOM) và các hành động tương ứng (nhấp chuột, gõ phím).11 Mô hình học cách dự đoán hành động chính xác dựa trên một quan sát nhất định.
+Hầu hết các bộ dữ liệu nền tảng cho agent web, như Mind2Web và WebLINX, đều được xây dựng dựa trên các bản trình diễn của con người, làm cho chúng trở thành nguồn tài nguyên lý tưởng cho việc tinh chỉnh có giám sát.13 Tuy nhiên, phương pháp này có một hạn chế cơ bản: hiệu suất của agent bị giới hạn bởi chất lượng và sự đa dạng của các bản trình diễn. Nó gặp khó khăn với các tình huống chưa từng thấy trong dữ liệu huấn luyện và có thể không tổng quát hóa tốt. Nó cũng có xu hướng học "hành vi trung bình" của tất cả các bản trình diễn, điều này có thể không phải là tối ưu hoặc đa dạng.11
+
+Học Tăng cường (Reinforcement Learning - RL)
+
+Trong mô hình học tăng cường, các agent học thông qua quá trình thử và sai bằng cách tương tác trực tiếp với một môi trường. Chúng nhận được phần thưởng tích cực cho các hành động dẫn đến mục tiêu và hình phạt cho các hành động không chính xác. Mục tiêu cuối cùng là học một chính sách (policy) để tối đa hóa tổng phần thưởng tích lũy theo thời gian.3
+Học tăng cường là lý tưởng cho các môi trường động, nơi dữ liệu huấn luyện rõ ràng khan hiếm hoặc không có sẵn. Nó cho phép agent khám phá và tìm ra các chiến lược mới lạ vượt ra ngoài những gì con người đã trình diễn, đặc biệt hữu ích cho các bài toán ra quyết định tuần tự.3 Tuy nhiên, RL cũng có những thách thức riêng. Nó đòi hỏi một hàm phần thưởng được xác định rõ ràng, điều này có thể khó thiết kế cho các tác vụ web phức tạp. Nó cũng liên quan đến một sự đánh đổi quan trọng giữa việc khám phá (thử các hành động mới) và khai thác (sử dụng các hành động đã biết là tốt).15
+Học có giám sát và học tăng cường không loại trừ lẫn nhau mà bổ sung cho nhau. Một chiến lược huấn luyện hiệu quả thường bao gồm việc tiền huấn luyện một mô hình thông qua học bắt chước trên một bộ dữ liệu lớn các bản trình diễn của con người để thiết lập một chính sách cơ sở mạnh mẽ. Sau đó, mô hình này được tinh chỉnh bằng học tăng cường trong một môi trường tương tác. Giai đoạn thứ hai này cho phép agent vượt qua những hạn chế của dữ liệu ban đầu và thích ứng với các tình huống mới lạ. Cách tiếp cận này tận dụng được hiệu quả dữ liệu của học có giám sát và khả năng đạt hiệu suất cao hơn cùng tính thích ứng của học tăng cường, một mô hình phổ biến trong các lĩnh vực AI tiên tiến như robot và chơi game, và hiện đang được áp dụng cho các agent web.3
+
+Phần 2: Hệ sinh thái Dữ liệu: Đánh giá các Bộ dữ liệu Huấn luyện và Điểm chuẩn
+
+Phần này cung cấp một cuộc khảo sát có hệ thống về dữ liệu làm nền tảng cho các khả năng của agent GUI. Chúng ta sẽ đi từ các kho dữ liệu web quy mô lớn, mục đích chung đến các bộ dữ liệu quỹ đạo chuyên biệt, được tuyển chọn kỹ lưỡng, và kết thúc bằng một phân tích chi tiết về các điểm chuẩn chính được sử dụng để đánh giá các agent hiện đại.
+
+2.1. Từ Kho Dữ liệu Quy mô Web đến các Quỹ đạo Chuyên biệt
+
+Khả năng lý luận của các agent bắt nguồn từ các Mô hình Ngôn ngữ Lớn (LLM) được tiền huấn luyện trên các bộ dữ liệu văn bản và hình ảnh khổng lồ ở quy mô web như Common Crawl, The Pile, và LAION-5B.19 Những bộ dữ liệu này cung cấp kiến thức tổng quát về thế giới và khả năng hiểu ngôn ngữ. Tuy nhiên, việc tiền huấn luyện chung này không đủ để dạy cho agent cách hành động trên một giao diện người dùng đồ họa. Điều này đòi hỏi các bộ dữ liệu chuyên biệt chứa các quỹ đạo (trajectories)—các chuỗi quan sát và hành động—để minh họa việc hoàn thành tác vụ.11
+Việc tạo ra dữ liệu quỹ đạo chất lượng cao bằng tay là một công việc cực kỳ tốn nhiều công sức và chi phí.13 Nút thắt cổ chai này đã thúc đẩy một xu hướng lớn hướng tới các quy trình tổng hợp dữ liệu tự động và bán tự động. Các phương pháp tiếp cận sáng tạo đã được phát triển để tạo ra dữ liệu huấn luyện mà không cần chú thích rộng rãi từ con người.
+Tổng hợp Dựa trên Hướng dẫn (AgentTrek): Phương pháp này tự động thu thập các bài hướng dẫn trên web, chuyển đổi chúng thành các tác vụ có cấu trúc, và sử dụng một agent VLM mạnh mẽ để mô phỏng việc thực thi, từ đó tạo ra các quỹ đạo huấn luyện mới.21
+Huấn luyện Quy mô Internet cho Agent (InSTA): Đây là một quy trình ba giai đoạn, trong đó một LLM đầu tiên đề xuất các tác vụ cho hàng nghìn trang web, sau đó một agent LLM khác cố gắng hoàn thành chúng, và cuối cùng một LLM thứ ba đánh giá sự thành công, tạo ra một bộ dữ liệu khổng lồ, mặc dù có thể có nhiễu.13
+NNetscape Navigator (NNetnav): Một phương pháp sử dụng một agent để khám phá môi trường trước, sau đó sử dụng một LLM để gán nhãn hồi tố cho các quỹ đạo đã tạo bằng các hướng dẫn ngôn ngữ tự nhiên.25
+Sự thiếu hụt dữ liệu đang buộc ngành công nghiệp phải chuyển từ việc tuyển chọn thủ công sang tổng hợp do AI điều khiển. Chi phí khổng lồ và tốc độ chậm chạp của việc thu thập các bản trình diễn của con người là không bền vững để huấn luyện các agent ở quy mô internet. Điều này đã tạo ra một nhu cầu cấp thiết cho các quy trình tạo dữ liệu tự động, thay đổi cơ bản cách sản xuất dữ liệu huấn luyện. Các quy trình như InSTA và AgentTrek cung cấp một giải pháp bằng cách sử dụng các LLM mạnh mẽ để tạo và xác thực các tác vụ và quỹ đạo mới ở quy mô lớn với chi phí thấp.13 Điều này tạo ra một "bánh đà dữ liệu": các mô hình tốt hơn có thể tạo ra dữ liệu tổng hợp chất lượng cao hơn, sau đó được sử dụng để huấn luyện các mô hình thậm chí còn tốt hơn. Tương lai của việc huấn luyện agent sẽ phụ thuộc nhiều vào sự kết hợp giữa một bộ dữ liệu nhỏ, chất lượng cao từ con người và một kho dữ liệu tổng hợp khổng lồ do AI tạo ra. Tuy nhiên, điều này cũng mang lại những rủi ro mới, chẳng hạn như AI kế thừa và khuếch đại các thành kiến từ các mô hình tạo ra nó.
+
+2.2. Khảo sát các Bộ dữ liệu Chính cho Tự động hóa GUI
+
+Dưới đây là danh mục các bộ dữ liệu quan trọng, được phân loại theo nền tảng (Web, Máy tính để bàn, Di động), làm nổi bật những đóng góp độc đáo của chúng.
+Bộ dữ liệu GUI Web: Mind2Web, WebLINX, AgentTrek, VisualWebArena, WebShop, GUIDE, WaveUI-25k.20
+Bộ dữ liệu GUI Máy tính để bàn: WorldGUI, ASSISTGUI.23
+Bộ dữ liệu GUI Di động: LearnGUI, MoTIF, Android in the Wild (AitW).23
+Bộ dữ liệu Đa phương thức & Chuyên biệt: MultiUI (hiểu hình ảnh giàu văn bản), WebVLN (điều hướng + hỏi đáp), GUI-World (dựa trên video).23
+Bảng dưới đây tóm tắt các đặc điểm chính của các bộ dữ liệu quan trọng nhất đã được thảo luận.
+Table 1: Phân tích so sánh các bộ dữ liệu tự động hóa GUI chính
+
+Tên bộ dữ liệu
+Nền tảng
+Quy mô
+Các loại dữ liệu
+Trọng tâm/Đóng góp chính
+Mind2Web
+Web
+2,350 tác vụ, 137 trang web
+HTML, Ảnh chụp màn hình, Chuỗi hành động
+Kiểm tra khả năng tổng quát hóa trên các trang web thực tế, đa dạng 14
+WebArena
+Web
+812 tác vụ, 4 ứng dụng web
+Môi trường có thể tái tạo (Docker), Lệnh ngôn ngữ tự nhiên
+Khả năng tái tạo cao để đánh giá điểm chuẩn công bằng, các tác vụ phức tạp 30
+Android in the Wild (AitW)
+Di động
+715,000 tập, 30,000 lệnh
+Màn hình, Hành động, Hướng dẫn ngôn ngữ tự nhiên
+Quy mô lớn, đa dạng thiết bị và phiên bản hệ điều hành cho hệ sinh thái Android 28
+AgentTrek
+Web
+4,902 quỹ đạo
+Quỹ đạo, Hướng dẫn, Quan sát hình ảnh
+Tổng hợp dữ liệu có thể mở rộng từ các hướng dẫn trên web để giảm chi phí chú thích 21
+WebLINX
+Web
+>100,000 tương tác
+Cây DOM, Ảnh chụp màn hình, Đối thoại đa lượt
+Tập trung vào các agent GUI đàm thoại, tương tác đa lượt 23
+GUI-Robust
+Web, Máy tính để bàn
+5,318 tác vụ
+Chuỗi hành vi người dùng, Ảnh chụp màn hình
+Đánh giá sự mạnh mẽ của agent khi đối mặt với các sự cố bất thường trong thế giới thực 22
+
+
+2.3. Phân tích Chuyên sâu về Điểm chuẩn
+
+Phần này đi sâu vào các điểm chuẩn có ảnh hưởng nhất đang định hình lĩnh vực này và được sử dụng cho các bảng xếp hạng được thảo luận trong Phần 4.
+
+Mind2Web
+
+Mind2Web được thiết kế để phát triển và đánh giá các agent web tổng quát có thể tuân theo các hướng dẫn bằng ngôn ngữ để hoàn thành các tác vụ phức tạp trên bất kỳ trang web nào.14 Nó chứa 2,350 tác vụ trên 137 trang web thực tế thuộc 31 lĩnh vực. Dữ liệu bao gồm mô tả tác vụ, chuỗi hành động được thu thập từ cộng đồng (Nhấp, Gõ, Chọn), và dữ liệu trang web đầy đủ (HTML, ảnh chụp màn hình).14 Đóng góp chính của Mind2Web là sự nhấn mạnh vào các trang web trong thế giới thực thay vì các mô phỏng đơn giản hóa, cùng với sự đa dạng về tác vụ, trang web và lĩnh vực. Điều này kiểm tra khả năng tổng quát hóa của một agent đối với các môi trường chưa từng thấy.29 Việc phát hành Multimodal-Mind2Web, kết hợp HTML với ảnh chụp màn hình, đã thúc đẩy nghiên cứu hơn nữa.32
+
+WebArena
+
+WebArena là một môi trường web có độ thực tế cao và có thể tái tạo được thiết kế để đánh giá tính đúng đắn về mặt chức năng của việc hoàn thành tác vụ.30 Nó có 812 tác vụ dài hạn trên bốn trang web tự lưu trữ, đầy đủ chức năng (thương mại điện tử, diễn đàn xã hội, phát triển phần mềm, CMS).31 Môi trường được cung cấp thông qua các container Docker với một API giống như Gym.31 Đóng góp quan trọng của WebArena là khả năng tái tạo, điều này rất quan trọng để có thể đánh giá điểm chuẩn một cách công bằng và nhất quán. Bằng cách tự lưu trữ các trang web, nó loại bỏ sự biến đổi của các trang web trực tiếp. Nó cũng bao gồm các công cụ tiện ích (bản đồ, máy tính) và cơ sở kiến thức (Wikipedia) để khuyến khích việc giải quyết vấn đề phức tạp, giống con người hơn.31 VisualWebArena mở rộng điều này để kiểm tra cụ thể các agent đa phương thức.37
+
+Android in the Wild (AitW)
+
+AitW là một bộ dữ liệu quy mô lớn dành cho nghiên cứu điều khiển thiết bị di động.28 Nó lớn hơn các bộ dữ liệu trước đó nhiều bậc, với 715,000 tập, 30,000 hướng dẫn độc đáo, và các bản trình diễn của con người (màn hình và hành động), bao gồm nhiều phiên bản Android (10-13) và các loại thiết bị.28 Đóng góp chính của AitW là quy mô và sự đa dạng tuyệt đối về thiết bị và phiên bản hệ điều hành, cung cấp một nền tảng vững chắc để huấn luyện các agent có thể xử lý hệ sinh thái Android phân mảnh.
+Sự phát triển của các điểm chuẩn cho thấy một mô hình rõ ràng: khi các agent thành thạo một bộ thách thức, cộng đồng nghiên cứu tạo ra các điểm chuẩn mới, khó hơn để phơi bày những điểm yếu còn lại của chúng. Chu kỳ lặp đi lặp lại này là động cơ chính của sự tiến bộ trong lĩnh vực này. Các điểm chuẩn ban đầu như MiniWoB++ tập trung vào các trang web mô phỏng, đơn giản hóa.14 Mind2Web đã nâng tầm bằng cách chuyển sang các trang web thực tế, đa dạng, kiểm tra khả năng tổng quát hóa.14 WebArena giải quyết vấn đề về khả năng tái tạo của các trang web trực tiếp bằng cách tạo ra một môi trường được kiểm soát, tự lưu trữ.30 Khi các agent được cải thiện, các nhà nghiên cứu đã xác định được những khoảng trống mới. WebChoreArena được tạo ra để kiểm tra các tác vụ đòi hỏi nhiều bộ nhớ và tính toán, vốn ít được đề cập trong WebArena.38 ST-WebAgentBench được phát triển để đánh giá sự an toàn và đáng tin cậy, vượt ra ngoài việc chỉ hoàn thành tác vụ.39 Điều này cho thấy một lĩnh vực đang trưởng thành, liên tục định nghĩa lại "thành công" để phù hợp hơn với tiện ích và sự an toàn trong thế giới thực, trực tiếp thúc đẩy nghiên cứu hướng tới các agent mạnh mẽ và đáng tin cậy hơn.
+
+Phần 3: Các Mô hình, Framework và Hệ thống Tiên tiến
+
+Phần này sẽ chuyển từ các nguyên tắc trừu tượng và dữ liệu sang các công nghệ cụ thể đang được xây dựng. Chúng ta sẽ phân tích các mô hình AI có ảnh hưởng cụ thể, khám phá xu hướng hướng tới sự hợp tác đa agent, và khảo sát hệ sinh thái mã nguồn mở.
+
+3.1. Các Kiến trúc Đa phương thức Tiên phong
+
+
+Adept Fuyu-8B
+
+Fuyu-8B nổi bật với thiết kế độc đáo và đơn giản hóa: một bộ biến đổi chỉ có bộ giải mã (decoder-only transformer) mà không có bộ mã hóa hình ảnh riêng biệt.40 Các mảng ảnh (image patches) được chiếu tuyến tính trực tiếp vào lớp biến đổi đầu tiên, được xử lý giống như các token văn bản.41
+Đổi mới chính: Kiến trúc này hỗ trợ các độ phân giải hình ảnh tùy ý bằng cách sử dụng một token "xuống dòng hình ảnh" đặc biệt, loại bỏ nhu cầu huấn luyện đa giai đoạn phức tạp.41 Sự đơn giản này dẫn đến suy luận rất nhanh (dưới 100ms cho các hình ảnh lớn), làm cho nó trở nên lý tưởng cho các vòng lặp agent thời gian thực.43
+Khả năng: Được thiết kế đặc biệt cho các agent kỹ thuật số, nó xuất sắc trong việc hỏi đáp dựa trên giao diện người dùng, hiểu biểu đồ/sơ đồ, và định vị chi tiết trên hình ảnh màn hình.41
+
+Google Gemini 2.5 Computer Use
+
+Mô hình này hoạt động trong một vòng lặp "thị giác + hành động". Nó nhận đầu vào là ý định của người dùng, một ảnh chụp màn hình hiện tại, và một nhật ký hành động.45
+Đầu ra: Nó tạo ra một đề xuất hành động giao diện người dùng (ví dụ: "nhấp vào nút X," "gõ 'văn bản' vào trường Y"), sau đó được thực thi bởi một hệ thống phía máy khách. Một ảnh chụp màn hình mới được gửi lại, tiếp tục vòng lặp.45
+Ứng dụng & Hiệu suất: Nó được tối ưu hóa cho các tác vụ giao diện người dùng web và di động và đã cho thấy hiệu suất vượt trội về độ chính xác và độ trễ trên các điểm chuẩn so với các giải pháp thay thế. Nó đã được sử dụng trong các sản phẩm nội bộ của Google như AI Mode và Project Mariner.45
+Thiết kế của Fuyu-8B cho thấy một xu hướng mạnh mẽ: chuyển từ các kiến trúc phức tạp, nhiều thành phần (ví dụ: bộ mã hóa thị giác, bộ giải mã văn bản và các mô-đun kết hợp riêng biệt) sang các mô hình thống nhất, từ đầu đến cuối. Sự đơn giản hóa này trực tiếp chuyển thành suy luận nhanh hơn, khả năng mở rộng dễ dàng hơn và khả năng ứng dụng rộng rãi hơn trong các ứng dụng thực tế, nhạy cảm với độ trễ. Các mô hình đa phương thức truyền thống thường có các bộ mã hóa riêng biệt, được huấn luyện riêng cho từng phương thức, làm tăng thêm sự phức tạp và độ trễ.41 Sự đổi mới của Fuyu-8B là coi các pixel như một loại token khác trong một kiến trúc biến đổi chỉ có bộ giải mã duy nhất.40 Điều này loại bỏ toàn bộ các thành phần, giảm kích thước mô hình và chi phí tính toán. Kết quả trực tiếp là một mô hình đủ nhanh (dưới 100ms) cho các trường hợp sử dụng tương tác như agent GUI, nơi người dùng đang chờ đợi hành động tiếp theo.43 Điều này ngụ ý rằng sự tiến bộ trong tương lai có thể không chỉ đến từ việc làm cho các mô hình lớn hơn, mà còn từ việc làm cho kiến trúc của chúng thông minh hơn và hiệu quả hơn.
+
+3.2. Sự trỗi dậy của Trí tuệ Hợp tác: Hệ thống Đa Agent (MAS)
+
+Hệ thống Đa Agent (MAS) được định nghĩa là các hệ thống trong đó nhiều agent tự trị, mỗi agent có các khả năng chuyên biệt, tương tác và hợp tác để giải quyết các vấn đề phức tạp vượt quá khả năng của một agent đơn lẻ.46 Cách tiếp cận này nhấn mạnh vào việc ra quyết định phi tập trung, tính mô-đun và khả năng mở rộng.46
+Các Mẫu Kiến trúc:
+Quản lý/Điều phối + Công nhân/Chuyên gia: Một mẫu phổ biến trong đó một agent chính phân rã một mục tiêu phức tạp thành các nhiệm vụ con và giao chúng cho các agent công nhân chuyên biệt (ví dụ: "Agent Trích xuất Dữ liệu," "Agent Tuân thủ").47
+Các Nhóm Phân cấp: Các cấu trúc phức tạp hơn bao gồm các giám sát viên quản lý các nhóm agent, cho phép các quy trình làm việc tinh vi.49
+Các Framework để Điều phối:
+LangChain & CrewAI: Các framework cung cấp công cụ để xây dựng các ứng dụng mô hình ngôn ngữ, bao gồm việc điều phối nhiều agent hợp tác trong các tác vụ.4
+Microsoft AutoGen: Một framework tập trung vào việc xây dựng các quy trình làm việc đa agent đàm thoại, nơi các agent tương tác thông qua trò chuyện do LLM làm trung gian.49
+Sự xuất hiện nhanh chóng của các hệ thống đa agent không phải là một bài tập học thuật; đó là một phản ứng trực tiếp đối với những hạn chế cố hữu của các agent LLM đơn lẻ trong việc xử lý các quy trình làm việc phức tạp, nhiều bước trong thế giới thực. Các agent đơn lẻ, ngay cả những agent mạnh mẽ, cũng gặp khó khăn với việc lập kế hoạch dài hạn, mất ngữ cảnh và phân rã tác vụ.2 Các quy trình kinh doanh trong thế giới thực (ví dụ: xử lý hóa đơn, phân tích cạnh tranh) không phải là nguyên khối; chúng bao gồm các nhiệm vụ con riêng biệt đòi hỏi các kỹ năng khác nhau.47 Kiến trúc đa agent phản ánh trực tiếp thực tế này bằng cách gán các vai trò chuyên biệt (ví dụ: nhà nghiên cứu, nhà văn, nhà phê bình) cho các agent khác nhau.48 Tính mô-đun này làm cho hệ thống trở nên mạnh mẽ hơn (lỗi ở một agent không làm sập toàn bộ hệ thống), có thể mở rộng (thêm nhiều agent hơn để xử lý nhiều tải hơn) và hiệu quả hơn (mỗi agent có thể được tối ưu hóa cho kỹ năng cụ thể của nó). "Đồng nghiệp AI" của tương lai sẽ không phải là một thực thể duy nhất mà là một đội quân các agent được điều phối, và kỹ năng con người có giá trị nhất sẽ là điều phối các đội AI này.
+
+3.3. Bối cảnh Mã nguồn mở
+
+Hệ sinh thái mã nguồn mở đang phát triển mạnh mẽ, cung cấp một loạt các công cụ và agent cho các nhà phát triển và nhà nghiên cứu.
+Các Agent Web Đa dụng:
+Browser-Use: Một dự án mã nguồn mở nổi bật với cộng đồng lớn (hơn 72,000 sao trên GitHub) cho phép người dùng tự động hóa các tác vụ trực tuyến bằng cách cung cấp các hướng dẫn bằng ngôn ngữ tự nhiên. Nó cung cấp cả một sản phẩm và một framework mã nguồn mở.18
+AutoWebGLM: Một agent dựa trên LLM sử dụng phương pháp đơn giản hóa HTML và học tăng cường để điều hướng web.18
+Các Agent Chuyên biệt và Đa phương thức:
+UI-TARS: Một agent đa phương thức kết hợp nhận thức (ảnh chụp màn hình) và điều khiển tượng trưng để vận hành các giao diện máy tính để bàn.18
+WebVoyager: Một agent dựa trên thị giác điều hướng các trang web dựa trên đầu vào hình ảnh.18
+Các Framework Kiểm thử và Tự động hóa:
+TestZeus Hercules: Một agent kiểm thử mã nguồn mở nhận các bài kiểm thử bằng ngôn ngữ tự nhiên cho giao diện người dùng, API, hình ảnh và các loại kiểm thử khác và tự động chạy chúng bằng các công cụ như Playwright.53
+Các framework như LangChain và CrewAI cũng đóng vai trò quan trọng trong hệ sinh thái này, cung cấp các khối xây dựng để tạo ra các agent mã nguồn mở tùy chỉnh.4
+
+Phần 4: Hiệu suất, Khả năng và Ứng dụng trong Thế giới thực
+
+Phần này sẽ dựa trên các bằng chứng thực nghiệm bằng cách phân tích hiệu suất của agent trên các điểm chuẩn được tiêu chuẩn hóa. Sau đó, nó sẽ kết nối các khả năng này với các ứng dụng hữu hình trong thế giới thực, minh họa cách AI agent đang bắt đầu chuyển đổi các ngành công nghiệp.
+
+4.1. Đánh giá Hiệu suất Agent: Thực tế Phũ phàng
+
+
+Phân tích Bảng xếp hạng WebArena
+
+WebArena đánh giá sự thành công của tác vụ chức năng trong một môi trường có thể tái tạo.54 Một phát hiện quan trọng là ngay cả các mô hình tiên tiến nhất như GPT-4 cũng đạt được tỷ lệ thành công thấp hơn nhiều so với hiệu suất của con người. Các agent GPT-4 ban đầu chỉ đạt 14.41% so với mức cơ bản của con người là 78.24%.30 Các agent chuyên biệt gần đây hơn như AWA 1.5 đã đẩy con số này lên 57.14%, nhưng vẫn còn một khoảng cách đáng kể.56 Bảng xếp hạng LMArena WebDev cho thấy các mô hình hàng đầu như GPT-5 và Claude 4.1 đạt điểm số cao, cho thấy sự tiến bộ nhanh chóng, nhưng thường là trong các môi trường cạnh tranh, có giới hạn hơn.57
+
+Phân tích Bảng xếp hạng Mind2Web
+
+Bảng xếp hạng Online-Mind2Web kiểm tra các agent trên các trang web trực tiếp, năng động.60 Hiệu suất trên các trang web trực tiếp thậm chí còn thách thức hơn. Các agent hoạt động tốt nhất như SeeAct (sử dụng GPT-5) và Browser-Use (sử dụng Claude Sonnet 4) đạt độ chính xác trong khoảng ~40%.60 Điều này nhấn mạnh khó khăn trong việc tổng quát hóa đối với bản chất không thể đoán trước của web mở. Một yếu tố quan trọng từ bảng xếp hạng Online-Mind2Web là việc bao gồm chi phí API. Có một sự đánh đổi rõ ràng giữa hiệu suất và chi phí, với các agent có độ chính xác cao nhất thường quá đắt để chạy ở quy mô lớn.60
+Các agent thường thất bại do từ bỏ nhiệm vụ quá sớm, ảo giác về nội dung, bị kẹt trong các vòng lặp hành động không hợp lệ và khả năng tổng quát hóa kém đối với các hướng dẫn được diễn giải lại.54
+Mặc dù các agent cho thấy kết quả đầy hứa hẹn trong các môi trường được kiểm soát của các điểm chuẩn như WebArena, hiệu suất của chúng giảm đáng kể trên internet trực tiếp, không thể đoán trước, như được thể hiện bởi Online-Mind2Web. Điều này cho thấy các mô hình hiện tại vẫn chưa giải quyết được vấn đề tổng quát hóa thực sự. WebArena cung cấp một môi trường ổn định, xác định, rất tốt để so sánh các mô hình trong các điều kiện giống hệt nhau.30 Online-Mind2Web đánh giá các agent trên các trang web trực tiếp, giới thiệu sự hỗn loạn của thế giới thực: cửa sổ bật lên, nội dung động, kiểm tra A/B và các biện pháp chống bot.60 Sự chênh lệch hiệu suất này tạo thành một "khoảng cách thực tế". Nó ngụ ý rằng trong khi các mô hình đang trở nên giỏi trong việc giải quyết các vấn đề đã biết, chúng vẫn còn mong manh khi đối mặt với sự phức tạp đầy đủ, không bị giới hạn của internet. Việc triển khai các agent hoàn toàn tự trị cho các nhiệm vụ quan trọng trên web mở vẫn còn rất rủi ro, củng cố sự cần thiết của các hệ thống có sự tham gia của con người trong tương lai gần.
+Table 2: Tóm tắt Bảng xếp hạng Điểm chuẩn WebArena & Mind2Web
+Điểm chuẩn
+Agent/Mô hình
+Tỷ lệ thành công (%)
+Mức cơ bản của con người (%)
+Cách tiếp cận kiến trúc chính
+WebArena
+AWA 1.5
+57.14%
+78.24%
+Đa phương thức, lai
+WebArena
+GPT-4 (ban đầu)
+14.41%
+78.24%
+Dựa trên văn bản (Cây truy cập)
+VisualWebArena
+GPT-4o (với SoM)
+19.78%
+88.70%
+Đa phương thức (Hình ảnh + Cây truy cập)
+Online-Mind2Web
+SeeAct (GPT-5 Medium)
+42.33%
+-
+Không xác định
+Online-Mind2Web
+Browser-Use (Claude Sonnet 4)
+40.00%
+-
+Không xác định
+Online-Mind2Web
+Browser-Use (Gemini 2.0 Flash)
+29.00%
+-
+Không xác định
+
+
+4.2. Các Ứng dụng và Trường hợp Sử dụng Thực tế
+
+
+Chuyển đổi Tự động hóa Quy trình bằng Robot (RPA)
+
+RPA truyền thống dựa vào các bot dựa trên quy tắc dễ bị hỏng.51 Các agent AI giới thiệu một lớp trí tuệ, cho phép chúng xử lý các trường hợp ngoại lệ, xử lý dữ liệu phi cấu trúc (như hóa đơn hoặc email), và thích ứng với các thay đổi giao diện người dùng, làm cho tự động hóa trở nên mạnh mẽ và có thể áp dụng cho một loạt các nhiệm vụ nhận thức rộng hơn.2 Các trường hợp sử dụng bao gồm xử lý hóa đơn, giới thiệu khách hàng, xác thực dữ liệu và báo cáo tài chính.63
+
+Đổi mới trong Kiểm thử Phần mềm Tự động
+
+Các agent cho phép các nhóm đảm bảo chất lượng viết các trường hợp kiểm thử bằng tiếng Anh đơn giản, sau đó agent sẽ dịch chúng thành các hành động có thể thực thi. Điều này dân chủ hóa việc kiểm thử và giảm nhu cầu về kỹ năng lập trình chuyên biệt.53 Các agent AI có thể thích ứng với các thay đổi giao diện người dùng mà thông thường sẽ làm hỏng một kịch bản kiểm thử. Nếu ID của một nút thay đổi, một agent hình ảnh vẫn có thể tìm và nhấp vào nó, làm cho các bộ kiểm thử trở nên linh hoạt hơn và giảm chi phí bảo trì.67 Các trường hợp sử dụng bao gồm kiểm thử giao diện người dùng từ đầu đến cuối, kiểm thử hồi quy hình ảnh, kiểm thử khả năng truy cập và tạo dữ liệu kiểm thử tự động.53
+
+Sự phát triển của Trợ lý Cá nhân Thông minh
+
+Các trợ lý hiện tại như Siri và Alexa chủ yếu phản hồi các lệnh trực tiếp bằng cách gọi API.68 Thế hệ trợ lý tiếp theo sẽ là các agent thực sự, có khả năng thực hiện các tác vụ nhiều bước thay mặt người dùng, chẳng hạn như đặt một chuyến đi nhiều chặng, nghiên cứu sản phẩm trên nhiều trang web, hoặc quản lý lịch thông qua tương tác giao diện người dùng trực tiếp.70 Các công cụ như Lindy và CalendarBridge đã thể hiện hành vi agent cho các tác vụ cụ thể như quản lý email và lên lịch bằng cách tương tác với các ứng dụng theo cách giống con người.71
+Tính khả thi về kinh tế của các agent AI là một nút thắt cổ chai lớn, ít được thảo luận. Việc tập trung vào tỷ lệ thành công của nhiệm vụ thường che khuất chi phí hoạt động khổng lồ liên quan đến việc chạy các mô hình SOTA. Chi phí API cao được tiết lộ bởi bảng xếp hạng Online-Mind2Web cho thấy rằng đối với nhiều doanh nghiệp, lợi tức đầu tư (ROI) của việc triển khai các agent này cho các tác vụ khối lượng lớn hiện đang là âm. Hầu hết các bài báo học thuật và bảng xếp hạng trong lịch sử chỉ tập trung vào các chỉ số hiệu suất như tỷ lệ thành công.30 Bảng xếp hạng Online-Mind2Web giới thiệu "Chi phí (USD)" như một chỉ số chính, tiết lộ rằng một lần chạy qua 300 tác vụ có thể tốn hàng trăm hoặc thậm chí hàng nghìn đô la.60 Điều này là do mỗi bước trong một tác vụ đòi hỏi một cửa sổ ngữ cảnh rất lớn (chứa ảnh chụp màn hình, DOM, lịch sử và lời nhắc) được gửi đến một mô hình cao cấp như GPT-4 hoặc Claude 3/4. Đối với một quy trình kinh doanh chạy hàng nghìn lần mỗi ngày, chi phí này trở nên khổng lồ, vượt xa chi phí lao động của con người mà nó thay thế. Điều này ngụ ý một nhu cầu thị trường mạnh mẽ đối với các mô hình nhỏ hơn, hiệu quả hơn và có khả năng là mã nguồn mở có thể đạt được hiệu suất "đủ tốt" với một phần nhỏ chi phí. Hiệu suất của Gemini 2.0 Flash trên biên giới hiệu suất-chi phí là một chỉ báo hàng đầu của xu hướng này.60
+
+Phần 5: Thách thức Quan trọng, Cân nhắc về An toàn và Hướng đi Tương lai
+
+Phần cuối cùng này sẽ cung cấp một đánh giá quan trọng về các trở ngại ngăn cản việc triển khai rộng rãi, đáng tin cậy của các agent GUI. Nó sẽ đi sâu vào các thách thức kỹ thuật và đạo đức, với sự tập trung mạnh mẽ vào an toàn và sự đáng tin cậy, trước khi kết luận bằng một góc nhìn hướng tới tương lai về sự phát triển của công nghệ này.
+
+5.1. Rào cản đối với Tự chủ Mạnh mẽ
+
+Lập kế hoạch và Thực thi Dài hạn: Các agent gặp khó khăn trong việc duy trì các kế hoạch mạch lạc qua nhiều bước. Chúng có thể bị kẹt trong các vòng lặp, mất dấu mục tiêu ban đầu, và gặp khó khăn trong việc quy kết trách nhiệm (liên kết một hành động sớm với một kết quả xảy ra muộn hơn nhiều).50
+Độ tin cậy và Tính không xác định: Hiệu suất của các agent dựa trên LLM có thể không nhất quán. Cùng một lời nhắc có thể tạo ra các kết quả khác nhau, làm cho chúng không đáng tin cậy cho các quy trình kinh doanh quan trọng. Đây là một thách thức lớn đối với việc kiểm thử và đảm bảo chất lượng.62
+Xử lý các Sự kiện Động và Bất ngờ: Thế giới thực rất lộn xộn. Các agent phải có khả năng xử lý một cách duyên dáng các sự kiện bất ngờ như quảng cáo bật lên, CAPTCHA, trang đăng nhập, lỗi mạng và tải trang chậm. Các hệ thống hiện tại thường mong manh trong các tình huống này.22
+Chất lượng Dữ liệu và Chuyên môn hóa Miền: Vấn đề "rác vào, rác ra" là rất nghiêm trọng. Các agent đòi hỏi dữ liệu chất lượng cao, chuyên biệt theo miền để hoạt động tốt, nhưng dữ liệu như vậy thường khan hiếm. Luôn có một sự căng thẳng giữa việc xây dựng một agent tổng quát và một agent chuyên môn hóa cao cho một miền cụ thể.75
+Chi phí và Tài nguyên Tính toán: Việc huấn luyện và chạy các agent đa phương thức lớn là cực kỳ tốn kém, cả về tài nguyên điện toán đám mây và chi phí API, đặt ra một rào cản đáng kể cho việc gia nhập và mở rộng quy mô.74
+
+5.2. Đảm bảo Hoạt động Đáng tin cậy và An toàn
+
+Niềm tin, chứ không phải khả năng, là nút thắt cổ chai cuối cùng đối với việc áp dụng. Mặc dù các thách thức kỹ thuật như lập kế hoạch và độ tin cậy là đáng kể, rào cản sâu sắc nhất đối với việc áp dụng rộng rãi các agent tự trị trong doanh nghiệp là sự thiếu tin tưởng. Chi phí cao của thất bại, cùng với các lỗ hổng bảo mật và bản chất "hộp đen" của các mô hình hiện tại, khiến các doanh nghiệp rất do dự trong việc giao quyền kiểm soát các quy trình quan trọng. Các nghiên cứu nhấn mạnh nhiều rủi ro: đầu ra có hại, lạm dụng công cụ, vi phạm an ninh và tuân thủ.74 Một thất bại lớn duy nhất (ví dụ: một agent thực hiện một giao dịch tài chính trái phép) có thể gây ra thiệt hại lớn về uy tín và tài chính, như đã thấy trong trường hợp chatbot của Air Canada.76 Do đó, ngay cả khi một agent có tỷ lệ thành công 95%, tỷ lệ thất bại 5% là không thể chấp nhận được đối với nhiều ứng dụng kinh doanh quan trọng. Điều này dẫn đến kết luận rằng tiến bộ kỹ thuật về khả năng phải đi đôi, nếu không muốn nói là đi trước, với tiến bộ về an toàn, khả năng giải thích và quản trị. Các khuôn khổ giám sát của con người, các dấu vết kiểm toán rõ ràng và bảo mật mạnh mẽ không phải là "những thứ nên có"; chúng là điều kiện tiên quyết để được áp dụng.77
+Lỗ hổng Bảo mật:
+Tấn công Chèn lời nhắc (Prompt Injection): Nội dung độc hại ẩn trên một trang web (ví dụ: bằng văn bản màu trắng hoặc phông chữ nhỏ) có thể được agent thu nhận và chiếm quyền điều khiển các hướng dẫn của nó, khiến nó thực hiện các hành động trái phép hoặc làm rò rỉ dữ liệu nhạy cảm.77
+Truy cập Trái phép: Các agent thường yêu cầu quyền truy cập rộng rãi vào các hệ thống và dữ liệu để trở nên hữu ích, khiến chúng trở thành mục tiêu có giá trị cao. Chúng phải được đối xử như những người dùng có đặc quyền với các chính sách quản trị danh tính nghiêm ngặt và quyền truy cập tối thiểu.76
+Độ tin cậy và Các Chế độ Thất bại:
+Thất bại Dây chuyền: Trong một tác vụ nhiều bước, một lỗi nhỏ ban đầu có thể lan truyền và dẫn đến thất bại hoàn toàn của tác vụ. Các agent cần các cơ chế phát hiện và phục hồi lỗi mạnh mẽ.78
+Ảo giác (Hallucination): Các agent có thể bịa đặt sự thật hoặc giải thích sai thông tin hình ảnh, dẫn đến việc chúng thực hiện các hành động không chính xác và có khả năng gây hại.62
+Minh bạch và Khả năng Giải thích: Để người dùng tin tưởng các agent, đặc biệt là trong các lĩnh vực có rủi ro cao như tài chính hoặc chăm sóc sức khỏe, quy trình ra quyết định của agent phải minh bạch và có thể giải thích được. Người dùng cần có khả năng hỏi "Tại sao bạn lại làm vậy?" và nhận được một câu trả lời mạch lạc.78
+Cân nhắc Đạo đức và Quản trị: Các agent phải được thiết kế để công bằng, không thiên vị và phù hợp với các giá trị của con người. Điều này đòi hỏi các khuôn khổ quản trị mạnh mẽ, cấu trúc trách nhiệm rõ ràng (tổ chức chịu trách nhiệm, không phải AI), và việc sử dụng nhất quán sự giám sát của con người (human-in-the-loop - HITL) cho các quyết định quan trọng.77
+
+5.3. Tương lai của Tính toán Agent
+
+Tương lai của trải nghiệm người dùng là một cuộc đàm phán giữa con người và agent. Sự trỗi dậy của các agent sẽ thay đổi cơ bản Tương tác Người-Máy. Mô hình truyền thống của một người dùng trực tiếp thao tác trên một giao diện đồ họa sẽ được bổ sung, và trong một số trường hợp, được thay thế bằng một mô hình trong đó người dùng chỉ đạo một agent, sau đó agent sẽ thao tác trên giao diện đồ họa. Điều này tạo ra một "lớp tương tác" mới và đòi hỏi một sự suy nghĩ lại hoàn toàn về thiết kế trải nghiệm người dùng (UX). Khi các agent trở thành người dùng chính của các trang web và ứng dụng, trọng tâm thiết kế sẽ chuyển từ việc tối ưu hóa cho nhận thức và kỹ năng vận động của con người sang tối ưu hóa cho nhận thức và hành động của agent.79 Điều này có thể dẫn đến sự phân đôi của web: một giao diện người dùng trực quan cho con người và một giao diện có cấu trúc, giống API hoặc "chế độ thân thiện với agent" cho AI. Thách thức cốt lõi của UX sẽ không còn là "làm thế nào để nút này dễ nhấp?" mà là "làm thế nào để làm cho mục tiêu và trạng thái của agent trở nên rõ ràng?" và "làm thế nào để cung cấp cho người dùng sự kiểm soát liền mạch và một lối thoát khi agent thất bại?".79 Điều này ngụ ý rằng các nhà thiết kế UX và các nhà nghiên cứu HCI sẽ cần trở thành chuyên gia về các hệ thống agent, tập trung vào các nguyên tắc minh bạch, kiểm soát và xử lý lỗi một cách duyên dáng trong bối cảnh hợp tác giữa người và agent.
+Sự trỗi dậy của "Đồng nghiệp Agent": Tương lai không phải là sự thay thế hoàn toàn mà là sự hợp tác. Các agent sẽ hoạt động như những "đồng nghiệp", xử lý các tác vụ kỹ thuật số tẻ nhạt và lặp đi lặp lại, giải phóng nhân viên con người cho các công việc chiến lược và sáng tạo hơn. Mô hình sẽ là có sự tham gia của con người, trong đó con người đặt ra mục tiêu, giám sát và xử lý các trường hợp ngoại lệ.50
+Thiết kế cho Agent, không chỉ cho Con người: Khi các agent trở thành một phương thức tương tác chính với các dịch vụ kỹ thuật số, các nguyên tắc thiết kế UX/UI sẽ cần phải phát triển. Các trang web có thể phát triển các phiên bản "thân thiện với agent", tương tự như cách họ đã tạo ra các phiên bản thân thiện với thiết bị di động, với các giao diện rõ ràng, ổn định và siêu dữ liệu phong phú để tạo điều kiện tự động hóa.79
+Hướng tới các Hệ thống có Năng lực và Đáng tin cậy hơn: Nghiên cứu trong tương lai sẽ tập trung nhiều vào việc cải thiện bộ nhớ dài hạn, cho phép lý luận phức tạp hơn, và xây dựng các đảm bảo về an toàn và sự phù hợp có thể kiểm chứng trực tiếp vào kiến trúc của agent. Việc phát triển các điểm chuẩn toàn diện hơn để kiểm tra sự an toàn và mạnh mẽ, chứ không chỉ là hoàn thành tác vụ, sẽ rất quan trọng.39
+Dân chủ hóa và Chuyên môn hóa: Chúng ta sẽ thấy sự gia tăng của cả các agent đa năng, mạnh mẽ từ các công ty công nghệ lớn và một loạt các agent nhỏ hơn, chuyên biệt, và thường là mã nguồn mở được thiết kế cho các tác vụ hoặc ngành công nghiệp cụ thể, được kích hoạt bởi các mô hình hiệu quả hơn và các framework phát triển tốt hơn.81
+
+Kết luận
+
+Báo cáo này đã trình bày một phân tích toàn diện về bối cảnh hiện tại của các agent AI được thiết kế để tương tác với giao diện người dùng đồ họa. Chúng ta đã khám phá các nền tảng kiến trúc, từ chu trình Nhận thức-Lý luận-Hành động cơ bản đến sự phân đôi quan trọng giữa các phương pháp tiếp cận dựa trên cấu trúc (DOM) và dựa trên thị giác (pixel). Rõ ràng là tương lai thuộc về các hệ thống lai, đa phương thức, kết hợp sự mạnh mẽ của thị giác với độ chính xác của dữ liệu có cấu trúc để điều hướng các môi trường kỹ thuật số ngày càng phức tạp.
+Hệ sinh thái dữ liệu, nền tảng của khả năng agent, đang trải qua một sự chuyển đổi cơ bản. Nút thắt cổ chai do việc thu thập thủ công các bản trình diễn của con người đã thúc đẩy sự đổi mới trong việc tổng hợp dữ liệu do AI điều khiển, hứa hẹn một tương lai về huấn luyện ở quy mô internet nhưng cũng mang lại những thách thức mới về thiên vị và chất lượng. Các điểm chuẩn như Mind2Web và WebArena đã trở thành những công cụ không thể thiếu, không chỉ đo lường hiệu suất mà còn định hình hướng nghiên cứu bằng cách liên tục nâng cao tiêu chuẩn về những gì tạo nên một agent thành công.
+Phân tích hiệu suất cho thấy một thực tế rõ ràng: mặc dù có những tiến bộ nhanh chóng, đặc biệt là với các mô hình như Fuyu-8B và Gemini 2.5 Computer Use, một "khoảng cách thực tế" đáng kể vẫn tồn tại giữa hiệu suất trong các môi trường được kiểm soát và sự hỗn loạn của web mở. Hơn nữa, chi phí kinh tế của việc vận hành các agent này ở quy mô lớn vẫn là một rào cản đáng kể, nhấn mạnh sự cần thiết của các mô hình hiệu quả hơn.
+Cuối cùng, rào cản lớn nhất đối với việc áp dụng rộng rãi không phải là khả năng kỹ thuật mà là sự tin tưởng. Các vấn đề về an toàn, bảo mật, độ tin cậy và khả năng giải thích là tối quan trọng. Việc xây dựng các hệ thống agent đáng tin cậy đòi hỏi một cách tiếp cận đa diện, tích hợp các khuôn khổ quản trị mạnh mẽ, giám sát của con người, và một sự thay đổi cơ bản trong thiết kế UX để tạo điều kiện cho sự hợp tác hiệu quả giữa người và máy. Khi công nghệ này trưởng thành, nó sẽ không chỉ tự động hóa các tác vụ mà còn định hình lại bản chất của tương tác người-máy, biến các agent từ công cụ đơn thuần thành những "đồng nghiệp" kỹ thuật số không thể thiếu trong các quy trình làm việc của tương lai.
+Nguồn trích dẫn
+What are AI agents? Definition, examples, and types | Google Cloud, truy cập vào tháng 11 3, 2025, https://cloud.google.com/discover/what-are-ai-agents
+What are AI Agents? | UiPath, truy cập vào tháng 11 3, 2025, https://www.uipath.com/ai/ai-agents
+What are AI Agents?- Agents in Artificial Intelligence Explained - Amazon AWS, truy cập vào tháng 11 3, 2025, https://aws.amazon.com/what-is/ai-agents/
+What is an AI Agent? Your Ultimate Guide - SoluteLabs, truy cập vào tháng 11 3, 2025, https://www.solutelabs.com/blog/ai-agents-guide
+What Are AI Agents? | IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/ai-agents
+Human-Centered AI Agents for Healthcare and Education: A Systematic Literature Review, truy cập vào tháng 11 3, 2025, https://www.researchgate.net/publication/394312988_Human-Centered_AI_Agents_for_Healthcare_and_Education_A_Systematic_Literature_Review
+The Rise of Computer Use and Agentic Coworkers | Andreessen Horowitz, truy cập vào tháng 11 3, 2025, https://a16z.com/the-rise-of-computer-use-and-agentic-coworkers/
+Visual vs. DOM-based Web Locators: An Empirical Study | Request PDF - ResearchGate, truy cập vào tháng 11 3, 2025, https://www.researchgate.net/publication/266205865_Visual_vs_DOM-based_Web_Locators_An_Empirical_Study
+applitools.com, truy cập vào tháng 11 3, 2025, https://applitools.com/blog/visual-ai-vs-pixel-matching-dom-based-comparisons/#:~:text=DOM%2Dbased%20tools%20result%20in,'t%20make%20evaluations%2C%20either.
+Why Visual AI Beats Pixel and DOM Diffs for Web App Testing - InfoQ, truy cập vào tháng 11 3, 2025, https://www.infoq.com/articles/visual-ai-web-app-testing/
+Using generative AI to imitate human behavior - Microsoft Research, truy cập vào tháng 11 3, 2025, https://www.microsoft.com/en-us/research/blog/using-generative-ai-to-imitate-human-behavior/
+[2504.13865] A Survey on (M)LLM-Based GUI Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2504.13865
+Towards Internet-Scale Training For Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2502.06776v1
+Mind2Web: Towards a Generalist Agent for the Web - GitHub Pages, truy cập vào tháng 11 3, 2025, https://osu-nlp-group.github.io/Mind2Web/
+What are the key differences between reinforcement learning and supervised learning?, truy cập vào tháng 11 3, 2025, https://milvus.io/ai-quick-reference/what-are-the-key-differences-between-reinforcement-learning-and-supervised-learning
+Supervised learning vs deep learning vs reinforcement learning - Wandb, truy cập vào tháng 11 3, 2025, https://wandb.ai/gladiator/Reinforcement-learning-reports/reports/Supervised-learning-vs-deep-learning-vs-reinforcement-learning--VmlldzoxMjE0MzQ0NQ
+Reinforcement learning: advantages over supervised learning - neuland.ai, truy cập vào tháng 11 3, 2025, https://neuland.ai/en/news/reinforcement-learning-advantages-over-supervised-learning/
+Best 30+ Open Source Web Agents - Research AIMultiple, truy cập vào tháng 11 3, 2025, https://research.aimultiple.com/open-source-web-agents/
+awesomedata/awesome-public-datasets: A topic-centric list of HQ open datasets. - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/awesomedata/awesome-public-datasets
+20 Open-Source Datasets for Generative and Agentic AI - Analytics Vidhya, truy cập vào tháng 11 3, 2025, https://www.analyticsvidhya.com/blog/2025/02/open-source-datasets-for-generative-and-agentic-ai/
+AgentTrek: Agent Trajectory Synthesis via Guiding Replay with Web ..., truy cập vào tháng 11 3, 2025, https://openreview.net/forum?id=EEgYUccwsV
+A Comprehensive Dataset for Testing GUI Agent Robustness in Real-World Anomalies, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2506.14477v1
+Khang-9966/Computer-Browser-Phone-Use-Agent-Datasets: This repository hosts a collection of datasets for training and evaluating CUA / GUI agents. - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/Khang-9966/Computer-Browser-Phone-Use-Agent-Datasets
+Towards Internet-Scale Training For Agents, truy cập vào tháng 11 3, 2025, https://data-for-agents.github.io/
+NNetscape navigator: complex demonstrations for web agents without a demonstrator, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2410.02907v1
+GUIDE: Graphical User Interface Data for Execution - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2404.16048v1
+Train AI agents on Web UI with WaveUI-25K dataset - Codingscape, truy cập vào tháng 11 3, 2025, https://codingscape.com/blog/train-ai-agents-on-web-ui-with-waveui-25k-dataset
+Android in the Wild: A Large-Scale Dataset for Android Device Control, truy cập vào tháng 11 3, 2025, https://crawles.com/aitw/
+MIND2WEB: Towards a Generalist Agent for the Web, truy cập vào tháng 11 3, 2025, https://proceedings.neurips.cc/paper_files/paper/2023/file/5950bf290a1570ea401bf98882128160-Paper-Datasets_and_Benchmarks.pdf
+WebArena: A Realistic Web Environment for Building Autonomous Agents - OpenReview, truy cập vào tháng 11 3, 2025, https://openreview.net/forum?id=oKn9c6ytLx
+A Realistic Web Environment for Building Autonomous ... - WebArena, truy cập vào tháng 11 3, 2025, https://webarena.dev/static/paper.pdf
+Mind2Web: Towards a Generalist Agent for the Web - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/OSU-NLP-Group/Mind2Web
+Multimodal-Mind2Web - Dataset details, truy cập vào tháng 11 3, 2025, https://modelscope.cn/datasets/swift/Multimodal-Mind2Web
+osunlp/Multimodal-Mind2Web · Datasets at Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/datasets/osunlp/Multimodal-Mind2Web
+WebArena: A Realistic Web Environment for Building Autonomous Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2307.13854v4
+web-arena-x/webarena: Code repo for "WebArena: A Realistic Web Environment for Building Autonomous Agents" - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/web-arena-x/webarena
+VisualWebArena is a benchmark for multimodal agents. - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/web-arena-x/visualwebarena
+WebChoreArena: Evaluating Web Browsing Agents on Realistic Tedious Web Tasks, truy cập vào tháng 11 3, 2025, https://webchorearena.github.io/
+ST-WebAgentBench: A Benchmark for Evaluating Safety and Trustworthiness in Web Agents, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2410.06703v3
+adept / fuyu-8b - NVIDIA API Documentation, truy cập vào tháng 11 3, 2025, https://docs.api.nvidia.com/nim/reference/adept-fuyu-8b
+adept/fuyu-8b · Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/adept/fuyu-8b
+Exploring Fuyu-8B: The Game-Changer in Multimodal AI Technology | by Lynn Mikami, truy cập vào tháng 11 3, 2025, https://chatgpt-cheatsheet.medium.com/exploring-fuyu-8b-the-game-changer-in-multimodal-ai-technology-7c85a61b343d?source=rss-3d864414141a------2
+fuyu-8b model | Clarifai - The World's AI, truy cập vào tháng 11 3, 2025, https://clarifai.com/adept/fuyu/models/fuyu-8b
+Fuyu 8b · Models - Dataloop AI, truy cập vào tháng 11 3, 2025, https://dataloop.ai/library/model/adept_fuyu-8b/
+Google's New AI Can Navigate Websites Like a Human—And It's ..., truy cập vào tháng 11 3, 2025, https://www.maginative.com/article/googles-new-ai-can-navigate-websites-like-a-human-and-its-faster-than-the-competition/
+Multi-Agent System Architecture: Building Blocks for Effective Collaboration - SmythOS, truy cập vào tháng 11 3, 2025, https://smythos.com/developers/agent-development/multi-agent-system-architecture/
+Multi-Agent Architecture – How Intelligent Systems Work Together - Lyzr AI, truy cập vào tháng 11 3, 2025, https://www.lyzr.ai/blog/multi-agent-architecture/
+How we built our multi-agent research system - Anthropic, truy cập vào tháng 11 3, 2025, https://www.anthropic.com/engineering/multi-agent-research-system
+Building Multi-Agent Architectures → Orchestrating Intelligent Agent Systems | by Akanksha Sinha | Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@akankshasinha247/building-multi-agent-architectures-orchestrating-intelligent-agent-systems-46700e50250b
+The Future of AI Agents: Opportunities and Challenges in Business : r/AI_Agents - Reddit, truy cập vào tháng 11 3, 2025, https://www.reddit.com/r/AI_Agents/comments/1k6lc4j/the_future_of_ai_agents_opportunities_and/
+AI agents versus RPA: A guide for accountants - Thomson Reuters, truy cập vào tháng 11 3, 2025, https://tax.thomsonreuters.com/blog/ai-agents-versus-rpa-a-guide-for-accountants-tri/
+Browser Use - The AI browser agent, truy cập vào tháng 11 3, 2025, https://browser-use.com/
+We made an open source testing agent for UI, API, Visual, Accessibility and Security testing : r/softwarearchitecture - Reddit, truy cập vào tháng 11 3, 2025, https://www.reddit.com/r/softwarearchitecture/comments/1ig1zlk/we_made_an_open_source_testing_agent_for_ui_api/
+WebArena Benchmark: Evaluating Web Agents - Emergent Mind, truy cập vào tháng 11 3, 2025, https://www.emergentmind.com/topics/webarena-benchmark
+WebArena - BenchFlow, truy cập vào tháng 11 3, 2025, https://www.benchflow.ai/benchmarks/benchflow/webarena
+AWA 1.5 Achieves Breakthrough Performance on WebArena Benchmark | Jace AI Blog, truy cập vào tháng 11 3, 2025, https://jace.ai/blog/awa-1-5-achieves-breakthrough-performance-on-web-arena-benchmark
+WebDev Arena Leaderboard - LMArena, truy cập vào tháng 11 3, 2025, https://web.lmarena.ai/leaderboard
+LMArena Leaderboard - a Hugging Face Space by lmarena-ai, truy cập vào tháng 11 3, 2025, https://huggingface.co/spaces/lmarena-ai/lmarena-leaderboard
+WebDev Arena - LMArena, truy cập vào tháng 11 3, 2025, https://lmarena.ai/leaderboard/webdev
+HAL: Online Mind2Web Leaderboard, truy cập vào tháng 11 3, 2025, https://hal.cs.princeton.edu/online_mind2web
+[2504.01382] An Illusion of Progress? Assessing the Current State of Web Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2504.01382
+The Achilles' heel of AI Agents: Reliability - by Jian Zhang - Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@jianzhang_23841/reliability-of-ai-agents-f43a5dbf7642
+What are AI Agents? - Automation Anywhere, truy cập vào tháng 11 3, 2025, https://www.automationanywhere.com/rpa/ai-agents
+AI and RPA: How they work together and why your business needs both - Celonis, truy cập vào tháng 11 3, 2025, https://www.celonis.com/blog/ai-and-rpa-how-they-work-together-and-why-your-business-needs-both
+Top 100 RPA Use Cases with Real Life Examples - Research AIMultiple, truy cập vào tháng 11 3, 2025, https://research.aimultiple.com/robotic-process-automation-use-cases/
+AI Agents in Software Testing - testRigor AI-Based Automated Testing Tool, truy cập vào tháng 11 3, 2025, https://testrigor.com/ai-agents-in-software-testing/
+AI Agents in Testing: Smarter Automation Beyond Chatbots & Assistants - ACCELQ, truy cập vào tháng 11 3, 2025, https://www.accelq.com/blog/ai-agents-in-software-testing/
+Virtual assistant - Wikipedia, truy cập vào tháng 11 3, 2025, https://en.wikipedia.org/wiki/Virtual_assistant
+27 Popular AI Assistants to Know | Built In, truy cập vào tháng 11 3, 2025, https://builtin.com/artificial-intelligence/ai-assistant
+Top 22 Intelligent Personal Assistants or Automated Personal Assistants in 2024 - Reviews, Features, Pricing, Comparison - PAT RESEARCH: B2B Reviews, Buying Guides & Best Practices, truy cập vào tháng 11 3, 2025, https://www.predictiveanalyticstoday.com/top-intelligent-personal-assistants-automated-personal-assistants/
+Top 10 AI Personal Assistants to Help You Ease Your Life [2025] - Lindy, truy cập vào tháng 11 3, 2025, https://www.lindy.ai/blog/ai-personal-assistant
+What AI personal assistant have you built or are using that's GENUINELY helpful? - Reddit, truy cập vào tháng 11 3, 2025, https://www.reddit.com/r/AI_Agents/comments/1o10xs6/what_ai_personal_assistant_have_you_built_or_are/
+VisualWebArena: Evaluating Multimodal Agents on Realistic Visual Web Tasks, truy cập vào tháng 11 3, 2025, https://jykoh.com/vwa
+2025 Insights into AI Agent Challenges: Deployment & Governance - Kanerika, truy cập vào tháng 11 3, 2025, https://kanerika.com/blogs/ai-agent-challenges/
+Top Challenges in AI Agent Development and How to Overcome Them, truy cập vào tháng 11 3, 2025, https://www.aalpha.net/articles/challenges-in-ai-agent-development-and-how-to-overcome-them/
+Understanding AI Agents Challenges and Impact on Work - Ema, truy cập vào tháng 11 3, 2025, https://www.ema.co/additional-blogs/addition-blogs/ai-agents-challenges-impact-on-work
+Why agents are the next frontier of generative AI - McKinsey, truy cập vào tháng 11 3, 2025, https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/why-agents-are-the-next-frontier-of-generative-ai
+Towards Trustworthy GUI Agents: A Survey - ResearchGate, truy cập vào tháng 11 3, 2025, https://www.researchgate.net/publication/390354908_Towards_Trustworthy_GUI_Agents_A_Survey
+Hello AI Agents: Goodbye UI Design, RIP Accessibility - UX Tigers, truy cập vào tháng 11 3, 2025, https://www.uxtigers.com/post/ai-agents
+[2503.23434] Towards Trustworthy GUI Agents: A Survey - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2503.23434
+AI Agents are disrupting automation: Current approaches, market solutions and recommendations | Insight Partners, truy cập vào tháng 11 3, 2025, https://www.insightpartners.com/ideas/ai-agents-disrupting-automation/

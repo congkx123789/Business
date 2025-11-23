@@ -1,0 +1,53 @@
+groups:
+  - name: core-reliability
+    interval: 30s
+    rules:
+      # High HTTP error ratio overall
+      - alert: HighErrorRate
+        expr: (
+          sum(rate(http_requests_total{code=~"5.."}[5m]))
+        ) / (
+          sum(rate(http_requests_total[5m]))
+        ) > 0.05
+        for: 10m
+        labels: {severity: critical, service: api}
+        annotations:
+          summary: "High 5xx error rate (>5% for 10m)"
+          description: "Investigate recent deploys, dependencies, and DB health."
+
+      # High latency (general) p99 > 1000ms across API
+      - alert: HighLatencyP99
+        expr: histogram_quantile(0.99, sum by (le) (rate(http_server_duration_seconds_bucket[5m]))) > 1
+        for: 10m
+        labels: {severity: warning, service: api}
+        annotations:
+          summary: "High API latency p99 (>1s for 10m)"
+          description: "Latency elevated across API. Check downstreams and saturation."
+
+      # DB pool saturation (Hikari)
+      - alert: DbPoolSaturation
+        expr: (
+          avg_over_time(hikaricp_connections_active[5m])
+          /
+          avg_over_time(hikaricp_connections_max[5m])
+        ) > 0.9
+        for: 10m
+        labels: {severity: warning, service: api}
+        annotations:
+          summary: "DB connection pool saturation (>90% for 10m)"
+          description: "Pool is near exhaustion. Investigate slow queries, limits, and spikes."
+
+      # Webhook failures (4xx/5xx) ratio > 2% on webhook routes
+      - alert: WebhookFailuresElevated
+        expr: (
+          sum(rate(http_requests_total{route=~"/webhook.*", code=~"4..|5.."}[10m]))
+        ) / (
+          sum(rate(http_requests_total{route=~"/webhook.*"}[10m]))
+        ) > 0.02
+        for: 15m
+        labels: {severity: warning, service: api}
+        annotations:
+          summary: "Webhook failure ratio >2%"
+          description: "Check provider status and signature/timeout handling."
+
+

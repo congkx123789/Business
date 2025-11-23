@@ -1,0 +1,32 @@
+query GetStories($limit: Int, $offset: Int) {
+  stories(limit: $limit, offset: $offset) {
+    id
+    title
+    author
+    description
+    coverImage
+    genreId
+    genre
+    status
+    totalChapters
+    createdAt
+    updatedAt
+  }
+}
+
+query GetStory($id: ID!) {
+  story(id: $id) {
+    id
+    title
+    author
+    description
+    coverImage
+    genreId
+    genre
+    status
+    totalChapters
+    createdAt
+    updatedAt
+  }
+}
+

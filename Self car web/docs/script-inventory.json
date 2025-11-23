@@ -1,0 +1,11 @@
+{
+  "approvedScripts": [
+    { "name": "app-bundle", "path": "/static/js/app.*.js", "owner": "frontend" },
+    { "name": "psp-momo", "origin": "https://*.momo.vn", "owner": "payments" },
+    { "name": "psp-zalopay", "origin": "https://*.zalopay.vn", "owner": "payments" },
+    { "name": "psp-stripe", "origin": "https://js.stripe.com", "owner": "payments" }
+  ],
+  "approvalProcess": "PR review with security sign-off for any new third-party JS"
+}
+
+

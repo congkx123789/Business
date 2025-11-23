@@ -1,0 +1,77 @@
+{
+  "app": {
+    "name": "SelfCar",
+    "tagline": "Rent Your Perfect Car Today"
+  },
+  "nav": {
+    "home": "Home",
+    "cars": "Cars",
+    "login": "Login",
+    "register": "Register",
+    "profile": "Profile",
+    "messages": "Messages",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "main": "Main navigation"
+  },
+  "skipToMain": "Skip to main content",
+  "skipToNav": "Skip to navigation",
+  "sort": {
+    "title": "Sort results",
+    "priceLow": "Price: Low to High",
+    "priceHigh": "Price: High to Low",
+    "nameAsc": "Name: A to Z",
+    "nameDesc": "Name: Z to A",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "featured": "Featured"
+  },
+  "badges": {
+    "freeShipping": "Free Shipping",
+    "flashSale": "Flash Sale",
+    "voucher": "Voucher",
+    "new": "New",
+    "hot": "Hot",
+    "bestSeller": "Best Seller",
+    "verified": "Verified"
+  },
+  "chat": {
+    "contactSeller": "Contact Seller",
+    "startChat": "Start Chat",
+    "message": "Message"
+  },
+  "search": {
+    "label": "Search cars",
+    "placeholder": "Search by brand, model, or location...",
+    "submit": "Submit search",
+    "savedSearch": "Saved search"
+  },
+  "cta": {
+    "contact": "Contact",
+    "testDrive": "Test Drive",
+    "finance": "Finance",
+    "bookNow": "Book Now",
+    "unavailable": "Unavailable"
+  },
+  "footer": {
+    "securePayment": "Secure Payment",
+    "securePaymentDesc": "SSL encrypted transactions",
+    "verifiedSellers": "Verified Sellers",
+    "verifiedSellersDesc": "All sellers verified",
+    "returnPolicy": "Return Policy",
+    "returnPolicyDesc": "7-day return guarantee",
+    "cancellationPolicy": "Cancellation Policy",
+    "cancellationPolicyDesc": "Free cancellation up to 24h",
+    "description": "Premium car rental service offering the best vehicles at competitive prices. Your journey, our priority.",
+    "help": "Help & Support",
+    "helpCenter": "Help Center",
+    "contactUs": "Contact Us",
+    "faq": "FAQ",
+    "guides": "Buying Guides",
+    "policies": "Policies",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "language": "Language",
+    "allRightsReserved": "All rights reserved."
+  }
+}

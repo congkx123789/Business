@@ -1,0 +1,30 @@
+name: Deploy Istio Policies
+
+on:
+  push:
+    paths:
+      - 'infrastructure/istio/**'
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure kubectl
+        uses: azure/setup-kubectl@v3
+      - name: Configure AWS credentials (optional)
+        if: ${{ secrets.AWS_ROLE_ARN != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+      - name: Apply Istio policies
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        run: |
+          mkdir -p $HOME/.kube && echo "$KUBE_CONFIG_DATA" | base64 -d > $HOME/.kube/config
+          kubectl apply -f infrastructure/istio/peer-authentication-permissive.yaml
+          kubectl apply -f infrastructure/istio/authorization-policy-block-non-mesh.yaml || true
+

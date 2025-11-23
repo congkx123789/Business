@@ -1,0 +1,18 @@
+# H2 Database files
+data/
+*.mv.db
+*.trace.db
+*.lock.db
+
+# Maven
+target/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+logs/
+

@@ -1,0 +1,43 @@
+repos:
+  - repo: https://github.com/gitguardian/ggshield
+    rev: v1.24.0
+    hooks:
+      - id: ggshield-secret
+        name: GitGuardian secret scan (pre-commit)
+        stages: [commit, push]
+        args:
+          - "--all-policies"
+          - "--verbose"
+          # Uncomment to exclude specific paths
+          # - "--exclude" ".github"
+
+  # Optional: basic sanity checks; does not replace SCA
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+repos:
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+
+  - repo: https://github.com/returntocorp/semgrep
+    rev: v1.75.0
+    hooks:
+      - id: semgrep
+        args: ['--config', 'p/owasp-top-ten']
+
+  - repo: local
+    hooks:
+      - id: eslint-frontend
+        name: eslint (frontend)
+        entry: bash -c "cd frontend && npx eslint ."
+        language: system
+        types: [javascript]
+        pass_filenames: false
+

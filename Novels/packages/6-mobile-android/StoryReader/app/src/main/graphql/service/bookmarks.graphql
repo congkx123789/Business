@@ -1,0 +1,34 @@
+query GetBookmarks($userId: ID!, $storyId: ID) {
+  bookmarks(userId: $userId, storyId: $storyId) {
+    id
+    userId
+    storyId
+    chapterId
+    position
+    note
+    createdAt
+    updatedAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation CreateBookmark($input: BookmarkInput!) {
+  createBookmark(input: $input) {
+    id
+    userId
+    storyId
+    chapterId
+    position
+    note
+    createdAt
+    updatedAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation DeleteBookmark($id: ID!) {
+  deleteBookmark(id: $id)
+}
+

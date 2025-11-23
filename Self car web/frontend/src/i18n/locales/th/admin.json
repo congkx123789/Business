@@ -1,0 +1,13 @@
+{
+  "dashboard": "แดชบอร์ด",
+  "analytics": "การวิเคราะห์",
+  "bookings": "การจอง",
+  "cars": "รถยนต์",
+  "users": "ผู้ใช้",
+  "revenue": "รายได้",
+  "totalCars": "รถยนต์ทั้งหมด",
+  "totalBookings": "การจองทั้งหมด",
+  "totalUsers": "ผู้ใช้ทั้งหมด",
+  "totalRevenue": "รายได้ทั้งหมด"
+}
+

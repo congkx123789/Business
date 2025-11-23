@@ -1,0 +1,35 @@
+groups:
+  - name: kafka-consumer-lag
+    interval: 30s
+    rules:
+      # If you expose Kafka via JMX Exporter, this metric is commonly available
+      # recording: per-group-topic partition lag
+      - record: kafka:consumer_lag:sum
+        expr: sum by (cluster, consumergroup, topic) (kafka_consumergroup_lag)
+
+      # Rate of change (lag growth per minute)
+      - record: kafka:consumer_lag_growth_per_min
+        expr: rate(kafka:consumer_lag:sum[5m]) * 60
+
+      # Alerts: fast growth indicates consumer falling behind
+      - alert: KafkaConsumerLagGrowingFast
+        expr: kafka:consumer_lag_growth_per_min > 1000
+        for: 10m
+        labels:
+          severity: warning
+          service: inventory-pipeline
+        annotations:
+          summary: "Kafka consumer lag growing fast"
+          description: "Consumer group {{ $labels.consumergroup }} for topic {{ $labels.topic }} growing >1000 msgs/min for 10m."
+
+      - alert: KafkaConsumerLagCritical
+        expr: kafka:consumer_lag:sum > 50000
+        for: 15m
+        labels:
+          severity: critical
+          service: inventory-pipeline
+        annotations:
+          summary: "Kafka consumer lag critical"
+          description: "Consumer group {{ $labels.consumergroup }} for topic {{ $labels.topic }} exceeds 50k messages for 15m."
+
+

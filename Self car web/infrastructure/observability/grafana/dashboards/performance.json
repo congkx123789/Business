@@ -1,0 +1,38 @@
+{
+  "title": "Performance (Web Vitals & API)",
+  "uid": "perf-vitals-api",
+  "schemaVersion": 37,
+  "editable": true,
+  "refresh": "30s",
+  "time": {"from": "now-24h", "to": "now"},
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "API p95 Latency (s)",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 0},
+      "targets": [
+        {"expr": "sli:api_p95_latency:seconds", "refId": "A"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Cache Hit Ratios",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8},
+      "targets": [
+        {"expr": "cache:hit_ratio_overall:5m", "legendFormat": "overall", "refId": "A"},
+        {"expr": "cache:hit_ratio:5m{namespace=\"vdp\"}", "legendFormat": "vdp", "refId": "B"},
+        {"expr": "cache:hit_ratio:5m{namespace=\"search\"}", "legendFormat": "search", "refId": "C"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "DB Reads / sec",
+      "gridPos": {"h": 8, "w": 24, "x": 0, "y": 16},
+      "targets": [
+        {"expr": "db:reads_per_sec", "refId": "A"}
+      ]
+    }
+  ]
+}
+
+

@@ -1,0 +1,42 @@
+{
+  "results": [
+    {
+      "name": "compile_all",
+      "ok": true,
+      "code": 0,
+      "out": "Listing 'ai_agent'...\nListing 'ai_agent\\\\action'...\nListing 'ai_agent\\\\apps'...\nListing 'ai_agent\\\\control'...\nListing 'ai_agent\\\\data_collection'...\nListing 'ai_agent\\\\eval'...\nListing 'ai_agent\\\\grounding'...\nListing 'ai_agent\\\\memory'...\nListing 'ai_agent\\\\monitoring'...\nListing 'ai_agent\\\\perception'...\nListing 'ai_agent\\\\safety'...\nListing 'ai_agent\\\\training'...\nListing 'ai_agent\\\\understanding'...\n",
+      "err": ""
+    },
+    {
+      "name": "demo_lam",
+      "ok": true,
+      "code": 0,
+      "out": "\n============================================================\nLAM Agent Demo\n============================================================\nWarning: No notification library available. Install 'win10toast' (Windows) or 'plyer' (cross-platform)\n\nGoal: Move mouse to center of screen\nRunning LAM agent (heuristic mode)...\n\n\nExecution complete!\nSuccess: True\nSteps executed: 5\nTrajectory saved for training!\nLocation: trajectories/\n\nTrajectory Summary:\n  Step 1: TYPE -> ok\n  Step 2: TYPE -> ok\n  Step 3: TYPE -> ok\n\n============================================================\n",
+      "err": ""
+    },
+    {
+      "name": "cli_desktop_move",
+      "ok": true,
+      "code": 0,
+      "out": "",
+      "err": ""
+    },
+    {
+      "name": "programmatic_executor_move",
+      "ok": true,
+      "code": 0,
+      "out": "{'action_id': 'a4cfe4c1-d068-4909-a7aa-202e9c439bf8', 'status': 'ok', 'evidence': {'moved_to': [960, 540], 'mouse_before': [1031, 318], 'mouse_after': [960, 540], 'overlay_active': True, 'footprint_active': True}}\n",
+      "err": ""
+    },
+    {
+      "name": "trajectories_written",
+      "ok": true,
+      "count": 25,
+      "samples": [
+        "D:\\Business\\LAM\\ai-agent\\trajectories\\trajectory-e99c590b-f909-4304-95ea-0b4353a0b8d4.json",
+        "D:\\Business\\LAM\\ai-agent\\trajectories\\trajectory-ee36bb6e-b3c8-4791-a225-b93133dd9c94.json",
+        "D:\\Business\\LAM\\ai-agent\\trajectories\\trajectory-fab6d697-e05e-4389-8abd-16eed71aa67d.json"
+      ]
+    }
+  ]
+}

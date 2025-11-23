@@ -1,0 +1,60 @@
+Chào bạn, đây là một chủ đề rất thú vị và đang là một trong những hướng phát triển nóng nhất của AI hiện nay. Những gì bạn mô tả chính xác là công nghệ đằng sau các AI Agent (Tác nhân AI) tự hành hoặc Large Action Model (LAM - Mô hình Hành động Lớn).
+Hoàn toàn có các mô hình và bộ dữ liệu huấn luyện chuyên dụng cho việc này. Chúng không chỉ quét nội dung mà còn nhìn giao diện để hành động.
+Dưới đây là tổng hợp chi tiết về dữ liệu huấn luyện, các mô hình nổi tiếng và cách chúng hoạt động.
+
+1. 🤖 Dữ liệu huấn luyện Không chỉ là văn bản
+
+Để AI có thể nhấp chuột hay gõ phím, chúng cần được huấn luyện trên một loại dữ liệu đặc biệt gọi là dữ liệu quỹ đạo (trajectory data) hoặc dữ liệu trình diễn (demonstration data).
+Loại dữ liệu này không phải là văn bản thô, mà là một chuỗi các cặp (Trạng thái, Hành động) được con người ghi lại.
+Trạng thái (State) Là những gì AI nhìn thấy tại một thời điểm. Đây là dữ liệu đa phương thức (multimodal), thường bao gồm
+Ảnh chụp màn hình (Screenshot) Để mô hình nhìn thấy giao diện y như người dùng.
+Mã HTMLDOM Để mô hình hiểu cấu trúc của trang web (đâu là nút bấm, đâu là ô nhập liệu).
+Mô tả mục tiêu Ví dụ Tìm và đặt một vé máy bay từ Hà Nội đến TP.HCM.
+Hành động (Action) Là hành động mà con người thực hiện tại trạng thái đó.
+CLICK(element_A) Nhấp chuột vào một phần tử cụ thể (ví dụ nút Đăng nhập).
+TYPE(text_box_B, nội dung...) Gõ một chuỗi văn bản vào ô tìm kiếm.
+SCROLL(down) Cuộn trang xuống.
+SELECT(dropdown_C, Lựa chọn 1) Chọn một mục trong danh sách.
+Các bộ dữ liệu (dataset) nổi tiếng dùng để huấn luyện
+Mind2Web Một trong những bộ dữ liệu lớn và đa dạng nhất, chứa hàng ngàn tác vụ trên hàng trăm trang web thực tế, được ghi lại từ các trình diễn của con người.
+WebArena Một môi trường sandbox (hộp cát) mô phỏng nhiều trang web thực tế (mua sắm, mạng xã hội, công cụ làm việc) để đo lường và huấn luyện khả năng hoàn thành mục tiêu của AI agent.
+WebVoyager & WebLINX Các bộ dữ liệu khác cũng tập trung vào việc điều hướng web và thực hiện các tác vụ phức tạp theo hướng dẫn bằng ngôn ngữ tự nhiên.
+
+2. 🚀 Các mô hình nổi tiếng và công nghệ cốt lõi
+
+Các mô hình bạn đang hỏi đến không phải là LLM (Mô hình Ngôn ngữ Lớn) thông thường, mà là Mô hình Đa phương thức (Multimodal Models) hoặc cụ thể hơn là Mô hình Hành động Lớn (Large Action Models - LAMs).
+Sự khác biệt cốt lõi
+LLM (như GPT-3.5) Nhận văn bản vào $rightarrow$ Trả ra văn bản.
+LAM (như Adept) Nhận mục tiêu (văn bản) và trạng thái (ảnh màn hình) $rightarrow$ Trả ra hành động (click, gõ phím).
+Các mô hìnhcông ty tiên phong nổi tiếng
+Adept (Mô hình ACT-1, Fuyu)
+Đây là công ty tiên phong trong việc thương mại hóa LAM.
+Mô hình của họ, ACT-1 (Action Transformer), có thể nhận một lệnh đơn giản như Thêm Lê Văn A vào danh sách khách hàng tiềm năng trên Salesforce và tự động thực hiện một chuỗi hàng chục thao tác click, gõ phím trên giao diện Salesforce để hoàn thành tác vụ.
+Rabbit R1 (Rabbit OS)
+Thiết bị Rabbit R1 được nói là chạy trên một Large Action Model (LAM).
+Thay vì bạn phải mở app Spotify, tìm bài hát, rồi nhấn play, bạn chỉ cần ra lệnh cho R1. LAM của nó đã được huấn luyện cách dùng app Spotify (và hàng ngàn app khác) và sẽ thực hiện chuỗi hành động đó thay bạn.
+OpenAI (GPT-4o)
+Trong các bản demo, GPT-4o đã thể hiện khả năng nhìn màn hình (qua chia sẻ màn hình) và hướng dẫn người dùng từng bước (hoặc thậm chí là tự điều khiển) để thực hiện các tác vụ trên phần mềm. Đây chính là ứng dụng của khả năng đa phương thức (nhìn và hiểu).
+Google (WebAgent, Project IDX)
+Google có nhiều nghiên cứu về các tác nhân tự hành có thể duyệt web để tìm thông tin hoặc hoàn thành tác vụ, sử dụng kết hợp Computer Vision và LLM.
+
+3. 🧠 Cách thức hoạt động AI quét và click như thế nào
+
+Quá trình này thường diễn ra theo một vòng lặp gọi là ReAct (Reason + Act)
+Perception (Nhận thức - Quét)
+AI Agent chụp lại màn hình hiện tại.
+Nó sử dụng Computer Vision (Thị giác máy tính) để phân tích ảnh chụp.
+Kỹ thuật Set-of-Marks (SoM) Một kỹ thuật phổ biến là chạy một đoạn script nhỏ để vẽ các ô vuông và gán ID (ví dụ [1], [2], [3]...) cho tất cả các yếu tố có thể tương tác trên màn hình (nút bấm, link, ô nhập liệu).
+Nó cũng đọc cả mã HTMLDOM để hiểu ngữ nghĩa (ví dụ element [1] là một button với chữ Submit).
+Reasoning (Lý luận - Suy nghĩ)
+Mô hình (LLM) nhận tất cả thông tin này
+Mục tiêu cuối cùng (ví dụ Mua cuốn sách 'Nhà Giả Kim').
+Ảnh chụp màn hình (đã được đánh số).
+Thông tin DOMHTML.
+Nó tự đặt câu hỏi Tôi đang ở đâu Để mua sách, bước tiếp theo tôi cần làm là gì À, tôi thấy ô tìm kiếm [14] và nút tìm kiếm [15]. Tôi nên gõ 'Nhà Giả Kim' vào ô [14] trước.
+Action (Hành động - Click)
+Mô hình phát ra một lệnh hành động cụ thể.
+Ví dụ TYPE(element [14], Nhà Giả Kim) và sau đó là CLICK(element [15]).
+Một công cụ tự động hóa (như Playwright hoặc Selenium) sẽ thực thi lệnh này trên trình duyệt.
+Sau khi hành động được thực thi, trang web tải lại $rightarrow$ AI Agent chụp màn hình mới $rightarrow$ Vòng lặp (ReAct) bắt đầu lại cho đến khi mục tiêu được hoàn thành.
+Bạn có muốn tôi tìm hiểu sâu hơn về một mô hình cụ thể (như Adept) hay một bộ dữ liệu (như Mind2Web) không

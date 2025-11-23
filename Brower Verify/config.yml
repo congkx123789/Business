@@ -1,0 +1,32 @@
+# Example configuration. Replace values.
+accounts:
+  - name: account1
+    email: user1@example.com
+    profile: profiles/account1.json
+  - name: account2
+    email: user2@example.com
+    profile: profiles/account2.json
+
+proxies:
+  sticky:
+    - server: http://82.26.208.218:5525
+      username: "proxygine"
+      password: "proxygine"
+  rotating_pool:
+    - server: socks5://127.0.0.1:1081
+      username: "u2"
+      password: "p2"
+
+rotation:
+  session_min_seconds: 600    # keep sticky session at least 10 minutes
+  session_max_seconds: 3600   # at most 1 hour before switching
+  scraping_rotate_per_request: true
+
+user_agent_profiles:
+  - ua: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"
+    locale: "en-US"
+    timezone: "America/New_York"
+
+logging:
+  level: INFO
+

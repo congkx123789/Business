@@ -1,0 +1,317 @@
+
+Từ Nhận Thức đến Hành Động Báo Cáo Kỹ Thuật Toàn Diện về Mô Hình Hành Động Lớn và Sự Trỗi Dậy của AI Tác Tử
+
+
+Giới thiệu
+
+
+Sự chuyển dịch mô hình từ tạo sinh thụ động sang thực thi chủ động
+
+Trí tuệ nhân tạo (AI) đang trải qua một sự chuyển dịch mô hình mang tính nền tảng, tiến hóa từ các hệ thống xử lý và tạo ra thông tin sang các hệ thống có khả năng hành động tự chủ để đạt được mục tiêu trong các môi trường phức tạp.1 Giai đoạn này đánh dấu một thời điểm then chốt, khi AI chuyển từ vai trò là một công cụ thụ động sang một đối tác tích cực.3 Trọng tâm của sự biến đổi này là sự khác biệt giữa Mô hình Ngôn ngữ Lớn (Large Language Models - LLMs) và một thế hệ công nghệ mới nổi Mô hình Hành động Lớn (Large Action Models - LAMs). Trong khi các LLM có thể hướng dẫn người dùng cách thực hiện một nhiệm vụ, thì các tác tử (agent) được trang bị LAM có thể thực hiện nhiệm vụ đó thay cho người dùng.4 Sự chuyển đổi này không chỉ là một cải tiến gia tăng mà là một bước nhảy vọt về mặt khái niệm hướng tới một AI tổng quát và hữu ích hơn.7
+
+Xác định phạm vi và mục tiêu
+
+Báo cáo này nhằm mục đích cung cấp một phân tích kỹ thuật sâu sắc và có cấu trúc về các Tác tử AI và các Mô hình Hành động Lớn cung cấp năng lượng cho chúng. Báo cáo sẽ bao quát các khái niệm nền tảng, kiến trúc cốt lõi, phương pháp huấn luyện, các triển khai nổi bật, ứng dụng trong thế giới thực và những thách thức trong tương lai. Lĩnh vực này đang thu hút sự quan tâm ngày càng lớn từ cả giới học thuật và ngành công nghiệp, được minh chứng qua sự gia tăng của các bài báo tổng quan và báo cáo kỹ thuật về AI tác tử (agentic AI).9
+
+Tổng quan cấu trúc báo cáo
+
+Báo cáo này được cấu trúc một cách logic để dẫn dắt người đọc qua các khía cạnh khác nhau của chủ đề. Phần 1 thiết lập các định nghĩa nền tảng. Phần 2 đi sâu vào kiến trúc kỹ thuật của LAMs. Phần 3 khám phá các mô hình huấn luyện chuyên biệt. Phần 4 phân tích các trường hợp triển khai cụ thể. Phần 5 đánh giá các ứng dụng và tác động kinh tế. Cuối cùng, Phần 6 xem xét các thách thức và định hướng tương lai.
+
+Phần 1 Các Khái Niệm Nền Tảng của AI Tác Tử
+
+Phần này thiết lập một bộ từ vựng kỹ thuật rõ ràng và có cơ sở cho toàn bộ báo cáo, giải quyết các thuật ngữ thường được sử dụng thay thế cho nhau và gây nhầm lẫn trong lĩnh vực này.
+
+1.1 Định nghĩa Tác tử AI Một góc nhìn chính thức
+
+Về mặt chính thức, một tác tử được định nghĩa là một thực thể nhận thức môi trường của nó thông qua các cảm biến (sensors) và hành động lên môi trường đó thông qua các cơ cấu chấp hành (actuators) để đạt được mục tiêu.11 Định nghĩa cổ điển này, bắt nguồn từ các tài liệu AI kinh điển, cung cấp một nền tảng vững chắc.12 Các tác tử AI hiện đại được đặc trưng bởi các thuộc tính chính tính tự chủ (hoạt động độc lập), khả năng suy luận, lập kế hoạch, bộ nhớ, và khả năng học hỏi và thích ứng.11 Chúng là các thực thể duy lý, hướng đến mục tiêu và nhằm tối đa hóa một hàm hữu dụng hoặc một thước đo hiệu suất.11
+
+1.2 Phân loại các kiến trúc Tác tử AI
+
+Việc phân loại một cách có hệ thống các loại tác tử giúp minh họa sự tiến hóa về độ phức tạp và khả năng của chúng, điều này rất quan trọng để hiểu được nền tảng kiến trúc của việc ra quyết định.
+Tác tử phản xạ đơn giản (Simple Reflex Agents) Hành động hoàn toàn dựa trên nhận thức hiện tại bằng cách sử dụng các quy tắc điều kiện-hành động (logic if-then). Chúng không có bộ nhớ và phù hợp nhất với các môi trường có thể quan sát đầy đủ.14
+Tác tử phản xạ dựa trên mô hình (Model-Based Reflex Agents) Duy trì một mô hình nội tại về thế giới, cho phép chúng theo dõi trạng thái và hoạt động trong các môi trường có thể quan sát một phần.14
+Tác tử dựa trên mục tiêu (Goal-Based Agents) Vượt ra ngoài các phản ứng đơn giản để sử dụng tìm kiếm và lập kế hoạch. Chúng lựa chọn các hành động dẫn chúng đến một trạng thái mục tiêu cụ thể.14
+Tác tử dựa trên hữu dụng (Utility-Based Agents) Một dạng tinh vi hơn của tác tử dựa trên mục tiêu. Chúng sử dụng một hàm hữu dụng để đánh giá mức độ hài lòng hoặc mong muốn của các trạng thái thế giới khác nhau, cho phép chúng đưa ra các quyết định đánh đổi hợp lý giữa các mục tiêu xung đột hoặc trong môi trường không chắc chắn.15
+Tác tử học hỏi (Learning Agents) Sở hữu một thành phần học hỏi cho phép chúng cải thiện hiệu suất theo thời gian thông qua kinh nghiệm, điều chỉnh các mô hình nội tại và chính sách ra quyết định của mình.15
+
+1.3 Sự trỗi dậy của các Mô hình Hành động Lớn (LAMs)
+
+LAMs được định nghĩa là một loại AI tạo sinh được thiết kế đặc biệt để chuyển hóa ý định của con người thành một chuỗi các hành động có thể thực thi.1 Chúng là động cơ nhận thức hay bộ não cung cấp năng lượng cho các khả năng lập kế hoạch và suy luận phức tạp của các tác tử AI hiện đại.18 Sự khác biệt cốt lõi so với LLMs nằm ở chỗ LLMs xử lý và tạo ra ngôn ngữ, trong khi LAMs hướng đến hành động, được thiết kế để tương tác với phần mềm, API và các hệ thống khác để hoàn thành nhiệm vụ.5 Điều này đưa AI từ vai trò cung cấp thông tin thụ động sang hoàn thành nhiệm vụ chủ động.
+Trong bối cảnh một lĩnh vực mới nổi đang hình thành bộ từ vựng của mình, các thuật ngữ như LAM, Tác tử AI và LLM tác tử thường được sử dụng với sự chồng chéo đáng kể.9 Điều này không phải là một mâu thuẫn mà là một dấu hiệu của sự phát triển. Để mang lại sự rõ ràng, một khuôn khổ phân cấp là cần thiết. AI tác tử là mô hình bao trùm. Một Tác tử AI là hệ thống vận hành với nhận thức, bộ nhớ và các công cụcơ cấu chấp hành. Mô hình Hành động Lớn (LAM) là động cơ nhận thức chuyên biệt bên trong tác tử, thực hiện việc lập kế hoạch và suy luận phức tạp. Mô hình Ngôn ngữ Lớn (LLM) thường là thành phần nền tảng cung cấp cho LAM kiến thức cốt lõi về ngôn ngữ và thế giới. Khuôn khổ phân cấp này giải quyết sự mơ hồ về ngữ nghĩa và cung cấp một mô hình tư duy vững chắc cho phần còn lại của báo cáo.
+Bảng 1 So sánh giữa LLMs và LAMs
+Tính năng
+Mô hình Ngôn ngữ Lớn (LLMs)
+Mô hình Hành động Lớn (LAMs)
+Trọng tâm chính
+Tạo nội dung
+Thực thi nhiệm vụ
+Chức năng cốt lõi
+Xử lý văn bản, trả lời câu hỏi, tóm tắt
+Thực thi quy trình công việc, lập kế hoạch, tương tác với hệ thống
+Kiến trúc
+Chủ yếu dựa trên Transformer (ví dụ GPT, BERT)
+Kết hợp (Hybrid), Neuro-symbolic, tích hợp nhiều loại mạng nơ-ron
+Dữ liệu huấn luyện
+Kho văn bản khổng lồ
+Chuỗi hành động, tương tác giao diện người dùng (UI), dữ liệu đa phương thức
+Đầu ra
+Văn bản, mã nguồn, hình ảnh
+Các hành động có thể thực thi (ví dụ lệnh gọi API, nhấp chuột)
+Trường hợp sử dụng
+Chatbot, tạo nội dung, dịch thuật
+Tự động hóa quy trình, robot, trợ lý thông minh
+
+Nguồn Tổng hợp từ.18
+
+1.4 Mối quan hệ cộng sinh LAMs là bộ não của Tác tử
+
+Mối quan hệ này mang tính phân cấp tác tử AI là hệ thống rộng hơn, nhận thức và hành động, trong khi LAM là thành phần chuyên biệt chịu trách nhiệm diễn giải mục tiêu, lập kế hoạch các chuỗi hành động phức tạp và ra quyết định.18 Một tác tử cung cấp khuôn khổ cho hành động (ví dụ bộ nhớ, quyền truy cập công cụ, môi trường thực thi), và LAM cung cấp trí thông minh để sử dụng khuôn khổ đó một cách hiệu quả. LLM thường đóng vai trò là lớp hiểu ngôn ngữ nền tảng mà LAM được xây dựng trên đó.11
+
+Phần 2 Kiến Trúc Cốt Lõi của các Mô Hình Hành Động Lớn
+
+Phần này phân tích các cơ chế bên trong của LAMs, đi từ một quy trình cấp cao đến các thành phần mạng nơ-ron cụ thể và vai trò quan trọng của tích hợp neuro-symbolic.
+
+2.1 Quy trình xử lý của LAM Từ nhận thức đến hành động
+
+Một LAM chuyển đổi một mục tiêu cấp cao thành một chuỗi các hành động cấp thấp, có thể thực thi thông qua một quy trình tuần tự, đa giai đoạn.24
+Nhận thức và Mã hóa (Perception and Encoding) Mô hình tiếp nhận các đầu vào đa phương thức (văn bản, hình ảnh, dữ liệu cảm biến) và mã hóa chúng thành một biểu diễn số chiều cao thống nhất. Quá trình này sử dụng các mạng nơ-ron chuyên biệt cho từng loại dữ liệu, chẳng hạn như Vision Transformers (ViTs) hoặc Mạng nơ-ron tích chập (CNNs) cho hình ảnh, và các bộ mã hóa dựa trên Transformer cho ngôn ngữ.24
+Diễn giải Mục tiêu (Goal Interpretation) LAM sử dụng khả năng hiểu ngôn ngữ nền tảng của mình (thường từ một LLM cơ sở như T5 hoặc BERT) để phân tích cú pháp lệnh ngôn ngữ tự nhiên của người dùng thành một mục tiêu hoặc đặc tả nhiệm vụ có cấu trúc, máy có thể đọc được.17
+Mô hình hóa Thế giới (World Modeling) LAM xây dựng hoặc tham chiếu đến một mô hình dự đoán về môi trường của nó. Điều này cho phép nó mô phỏng kết quả của các hành động tiềm năng và dự báo các trạng thái tương lai, một yếu tố quan trọng để lập kế hoạch hiệu quả.24
+Lập kế hoạch Hành động (Action Planning) Đây là bước suy luận cốt lõi. Mô hình tạo ra một chính sách hoặc một chuỗi các hành động để đạt được mục tiêu đã diễn giải. Điều này bao gồm việc chia nhỏ mục tiêu phức tạp thành các nhiệm vụ con nhỏ hơn, dễ quản lý.11 Các kỹ thuật như Điều khiển dự báo mô hình (Model-Predictive Control - MPC) hoặc Học tăng cường phân cấp (Hierarchical Reinforcement Learning - HRL) được sử dụng để chọn chuỗi hành động tối ưu.24
+Điều khiển và Thực thi (Motor Control and Execution) Kế hoạch cuối cùng được chuyển thành các tín hiệu điều khiển cấp thấp. Trong bối cảnh kỹ thuật số, điều này có nghĩa là tạo ra các lệnh gọi API, thực thi mã nguồn, hoặc mô phỏng các tương tác UI (nhấp chuột, gõ phím).24 Trong bối cảnh vật lý (robotics), điều này có nghĩa là tạo ra các giá trị mô-men xoắn hoặc góc khớp cho các cơ cấu chấp hành.24
+
+2.2 Vai trò của các Mạng Nơ-ron trong Kiến trúc LAM
+
+Phần này đi sâu vào các kiến trúc mạng nơ-ron cụ thể cho phép quy trình xử lý được mô tả ở trên.25
+Transformers (ví dụ BERT, GPT) Đóng vai trò là xương sống cho các lớp Nhận thức và Diễn giải Mục tiêu, xử lý dữ liệu văn bản và hiểu ý định của người dùng.25
+Mạng Nơ-ron Tích chập (CNNs)  Vision Transformers (ViTs) Được sử dụng trong lớp Nhận thức để trích xuất các đặc trưng từ các đầu vào hình ảnh như ảnh chụp màn hình của một giao diện người dùng hoặc nguồn cấp dữ liệu camera từ một robot.24
+Mạng Nơ-ron Hồi quy (RNNs)  LSTMs Quan trọng đối với các nhiệm vụ đòi hỏi bộ nhớ và theo dõi trạng thái qua nhiều bước, chẳng hạn như duy trì ngữ cảnh trong một quy trình công việc dài.25
+Mạng Nơ-ron Đồ thị (GNNs) Được sử dụng trong lớp suy luận để mô hình hóa và hiểu dữ liệu quan hệ và các phụ thuộc, chẳng hạn như mối quan hệ giữa các yếu tố UI khác nhau hoặc các bước trong một quy trình công việc.25
+
+2.3 Tích hợp Neuro-Symbolic Sự kết hợp giữa Học máy và Logic
+
+Một trong những đổi mới kiến trúc quan trọng mang lại sự mạnh mẽ cho LAMs là sự kết hợp giữa AI nơ-ron và AI biểu tượng (symbolic).5 Các hệ thống thuần nơ-ron xuất sắc trong việc nhận dạng mẫu nhưng thiếu khả năng suy luận tường minh và có thể không đáng tin cậy (ảo giác). Ngược lại, AI biểu tượng (dựa trên logic và quy tắc) thì chính xác và có thể giải thích được nhưng lại cứng nhắc và không học tốt từ dữ liệu.29 AI neuro-symbolic nhằm mục đích kết hợp thế mạnh của cả hai.31
+LAMs sử dụng mạng nơ-ron để diễn giải dữ liệu nhận thức phi cấu trúc (ví dụ đặt một chuyến bay) và ánh xạ nó vào một biểu diễn biểu tượng có cấu trúc của nhiệm vụ và các hành động cần thiết.29 Biểu diễn biểu tượng này sau đó có thể được một công cụ suy luận logic thao tác để tạo ra một kế hoạch có thể kiểm chứng.33 Điều này phù hợp với Lý thuyết Xử lý Kép trong khoa học nhận thức Hệ thống 1 (nhận dạng mẫu nhanh, trực quan thông qua mạng nơ-ron) và Hệ thống 2 (suy luận chậm, có chủ ý thông qua logic biểu tượng).31
+Kiến trúc của một LAM khác biệt cơ bản so với một LLM vì đầu ra của nó có hậu quả trong thế giới thực. Một LLM tạo ra văn bản không chính xác là một lỗi; một LAM thực hiện một giao dịch tài chính không chính xác là một thảm họa. Thực tế này tạo ra một yêu cầu cấp thiết về mặt kiến trúc cho việc xác minh và độ tin cậy. Do đó, thành phần neuro-symbolic không chỉ là một phương pháp suy luận thay thế; nó hoạt động như một lớp có thể kiểm chứng hay lan can biểu tượng quan trọng. Nó lấy các kế hoạch xác suất, thường là mơ hồ, được tạo ra bởi lõi nơ-ron và chuyển chúng thành một chuỗi logic, có cấu trúc có thể được kiểm tra về tính đúng đắn, an toàn và tuân thủ trước khi thực thi. Điều này kết nối trực tiếp thiết kế kiến trúc với những thách thức chính về an toàn và độ tin cậy.
+
+Phần 3 Các Mô Hình Huấn Luyện cho Mô Hình Hướng Hành Động
+
+Phần này trình bày chi tiết các kỹ thuật chuyên biệt cần thiết để huấn luyện các mô hình có khả năng hành động, vượt ra ngoài việc huấn luyện dự đoán văn bản của LLMs.
+
+3.1 Học từ Minh họa Học Bắt chước (Imitation Learning - IL)
+
+Học Bắt chước (IL), hay Học từ Minh họa (Learning from Demonstration - LfD), là một mô hình trong đó một tác tử học một chính sách bằng cách quan sát các minh họa của chuyên gia.35 Đối với LAMs, điều này liên quan đến việc huấn luyện trên các bộ dữ liệu khổng lồ về chuỗi hành động của người dùng, chẳng hạn như các bản ghi lại tương tác của con người với giao diện người dùng phần mềm.17
+Sao chép Hành vi (Behavior Cloning - BC) Dạng đơn giản nhất của IL. Nó sử dụng học có giám sát để ánh xạ trực tiếp các trạng thái quan sát được (ví dụ ảnh chụp màn hình của một trang web) tới hành động của chuyên gia (ví dụ một cú nhấp chuột vào một nút cụ thể). Đây là một bài toán hồi quy hoặc phân loại trực tiếp.35
+Học Tăng cường Nghịch đảo (Inverse Reinforcement Learning - IRL) Một phương pháp tiên tiến hơn. Thay vì học chính sách trực tiếp, IRL cố gắng suy ra hàm phần thưởng hoặc hàm chi phí tiềm ẩn của chuyên gia từ các minh họa. Một khi hàm phần thưởng này được học, học tăng cường truyền thống có thể được sử dụng để tìm ra một chính sách tối ưu.35
+
+3.2 Học thông qua Trải nghiệm Học Tăng cường (Reinforcement Learning - RL)
+
+RL huấn luyện một tác tử để đưa ra một chuỗi các quyết định bằng cách cung cấp phần thưởng hoặc hình phạt cho các hành động của nó. Tác tử học một chính sách nhằm tối đa hóa tổng phần thưởng tích lũy theo thời gian.11
+Học Tăng cường từ Phản hồi của Con người (Reinforcement Learning from Human Feedback - RLHF) Đây là một kỹ thuật quan trọng để điều chỉnh hành vi của tác tử phù hợp với các sở thích tinh tế, khó xác định của con người.36 Đây là một quy trình ba giai đoạn
+Tinh chỉnh có Giám sát (Supervised Fine-Tuning - SFT) Một mô hình ban đầu được tinh chỉnh trên một bộ dữ liệu nhỏ, chất lượng cao gồm các minh họa do con người viết để học phong cách và định dạng mong muốn.36
+Huấn luyện một Mô hình Phần thưởng Con người được xem nhiều đầu ra từ mô hình SFT và được yêu cầu xếp hạng chúng theo sở thích. Một mô hình phần thưởng riêng biệt sau đó được huấn luyện trên dữ liệu so sánh này để dự đoán đầu ra nào mà con người sẽ ưa thích.36
+Tối ưu hóa Chính sách bằng RL Mô hình SFT (nay là mô hình chính sách) được tinh chỉnh thêm bằng một thuật toán RL (như PPO). Mô hình phần thưởng từ bước 2 cung cấp tín hiệu phần thưởng. Điều này hướng mô hình chính sách tạo ra các đầu ra phù hợp với sở thích của con người, trong khi một hình phạt phân kỳ KL (KL-divergence) ngăn nó đi quá xa so với mô hình SFT ban đầu.36
+
+3.3 Tổng hợp và Tăng cường Dữ liệu Hành động
+
+Một trong những nút thắt lớn nhất trong việc huấn luyện LAMs là sự khan hiếm của các bộ dữ liệu hành động quy mô lớn, chất lượng cao.39 Việc ghi lại các minh họa của con người rất tốn kém và mất thời gian.27 Để khắc phục điều này, các phương pháp tiên tiến, như phương pháp được sử dụng cho dòng Salesforce xLAM, sử dụng một quy trình dữ liệu phức tạp 42
+Thống nhất hóa (Unification) Các bộ dữ liệu hiện có đa dạng (ví dụ ToolBench, Webshop) được chuyển đổi sang một định dạng thống nhất.
+Tăng cường và Thanh lọc (Augmentation and Purging) Dữ liệu được làm sạch và tăng cường để cải thiện chất lượng và sự đa dạng.
+Tổng hợp (Synthesis) Các mô hình mạnh hiện có được sử dụng để tạo ra các điểm dữ liệu huấn luyện tổng hợp mới (ví dụ tạo ra một nhiệm vụ và chuỗi hành động chính xác tương ứng), giúp mở rộng quy mô dữ liệu có sẵn một cách ồ ạt.42
+Tự tiến hóaKhám phá (Self-EvolutionExploration) Chính mô hình được sử dụng để khám phá môi trường nhiệm vụ và giải quyết vấn đề. Các quỹ đạo hành động thành công sau đó được thêm trở lại vào bộ dữ liệu huấn luyện, tạo ra một vòng lặp tự cải thiện.40
+Các mô hình huấn luyện này không hoạt động một cách cô lập mà tạo thành một quy trình tuần hoàn, cộng hưởng, giải quyết vấn đề cơ bản về sự khan hiếm dữ liệu trong AI tác tử. IL cung cấp khởi đầu lạnh ban đầu. Sau đó, mô hình sử dụng hạt giống này để khám phá và tạo ra dữ liệu hành động mới, thành công thông qua RL và tự tiến hóa. Dữ liệu mới này lại được sử dụng để cải thiện mô hình hơn nữa. Trong suốt quá trình, RLHF liên tục điều chỉnh toàn bộ hệ thống phù hợp với sở thích của con người. Động cơ tạo dữ liệu năng động, tự cải thiện này là chìa khóa để mở rộng quy mô khả năng của LAM vượt ra ngoài giới hạn của các bộ dữ liệu được quản lý thủ công, tạo thành một bánh đà dữ liệu tự củng cố.
+
+Phần 4 Các Triển Khai Nổi Bật và Nghiên Cứu Tình Huống Kỹ Thuật
+
+Phần này chuyển từ lý thuyết sang thực tiễn, phân tích các ví dụ cụ thể, nổi bật về LAMs và các hệ thống tác tử liên quan để củng cố các khái niệm về kiến trúc và huấn luyện.
+
+4.1 Rabbit R1 Một LAM hướng đến người tiêu dùng
+
+Thiết bị Rabbit R1, chạy trên Rabbit OS, là một trong những sản phẩm tiêu dùng đầu tiên được quảng bá rõ ràng là sử dụng Mô hình Hành động Lớn.16 Ý tưởng là cung cấp một giao diện ngôn ngữ tự nhiên có thể vận hành các ứng dụng hiện có của người dùng, bỏ qua nhu cầu về các ứng dụng và API riêng lẻ.28 Về mặt kỹ thuật, LAM được cho là đã được huấn luyện bằng phương pháp học qua minh họa, trong đó nó quan sát con người sử dụng các ứng dụng khác nhau để học cách giao diện người dùng của chúng hoạt động.28 Mặc dù đột phá về mặt khái niệm, những đánh giá ban đầu đã ghi nhận những hạn chế và sự thừa thãi so với điện thoại thông minh.18
+
+4.2 Salesforce xLAM Một dòng Mô hình Hành động cấp doanh nghiệp
+
+Dự án xLAM nhằm mục đích tạo ra một dòng LAMs mã nguồn mở được thiết kế và tối ưu hóa đặc biệt cho các nhiệm vụ của tác tử AI, đặc biệt là việc sử dụng công cụ và gọi hàm trong môi trường doanh nghiệp.41 Dòng xLAM bao gồm các mô hình có kích thước khác nhau (từ 1 tỷ đến 8x22 tỷ tham số) sử dụng cả kiến trúc dày đặc và Hỗn hợp Chuyên gia (Mixture-of-Experts - MoE).41 Việc huấn luyện của chúng dựa trên quy trình dữ liệu phức tạp được mô tả trong Phần 3.3. Báo cáo kỹ thuật nhấn mạnh hiệu suất vượt trội trên các benchmark như Berkeley Function-Calling Leaderboard, nơi các mô hình xLAM đã vượt qua các mô hình độc quyền như GPT-4 và Claude-3 trong các nhiệm vụ sử dụng công cụ.41
+
+4.3 Mô hình Thị giác-Ngôn ngữ-Hành động (VLA) trong Robot
+
+VLA là một lớp LAMs chuyên biệt cho AI hiện thân (embodied AI), tích hợp nhận thức thị giác, hiểu ngôn ngữ và tạo hành động vật lý để điều khiển robot.47 Các bài báo tổng quan đã phân định hai mô hình kiến trúc chính
+Mô hình Nguyên khối (Monolithic Models) Một mô hình duy nhất, đầu cuối, nhận đầu vào là thị giác và ngôn ngữ và trực tiếp xuất ra các lệnh điều khiển vận động cấp thấp.
+Mô hình Phân cấp (Hierarchical Models) Tách vấn đề thành lập kế hoạch cấp cao và thực thi cấp thấp. Một LLM hoặc VLM có thể hoạt động như một bộ lập kế hoạch cấp cao, tạo ra một chuỗi các mục tiêu con, sau đó được chuyển đến một chính sách cấp thấp riêng biệt để điều khiển vận động.47
+Các nghiên cứu tình huống này cho thấy một xu hướng rõ ràng các LLM đa dụng không đủ cho các nhiệm vụ tác tử hiệu suất cao. Các kiến trúc và huấn luyện chuyên biệt là cần thiết để thu hẹp khoảng cách từ ngôn ngữ đến hành động đáng tin cậy. Nỗ lực của Rabbit R1 trong việc tạo ra một mô hình tổng quát đã gặp phải những thách thức đáng kể. Ngược lại, các mô hình xLAM, bằng cách tập trung vào một lĩnh vực quan trọng nhưng hạn chế hơn là sử dụng công cụ, đã đạt được hiệu suất hàng đầu.43 Các mô hình VLA đại diện cho một sự chuyên môn hóa sâu hơn nữa cho các thách thức độc đáo của việc điều khiển vật lý.47 Điều này cho thấy rằng con đường để triển khai LAM thành công là thông qua chuyên môn hóa theo lĩnh vực. Tương lai có thể sẽ chứng kiến sự trỗi dậy của nhiều loài LAM khác nhau, mỗi loài được tối ưu hóa cao cho một lĩnh vực hành động cụ thể.
+
+Phần 5 Ứng Dụng và Tác Động Kinh Tế trong các Ngành
+
+Phần này khám phá các ứng dụng thực tế của các tác tử được trang bị LAM và cung cấp một khuôn khổ để đo lường giá trị kinh doanh hữu hình của chúng, được hỗ trợ bởi các bằng chứng định lượng.
+
+5.1 Tự động hóa Doanh nghiệp và Tối ưu hóa Quy trình
+
+Dịch vụ Khách hàng Các tác tử có thể vượt ra ngoài việc trả lời câu hỏi để thực hiện các hành động như xử lý trả hàng, cập nhật thông tin tài khoản hoặc lên lịch hẹn mà không cần sự can thiệp của con người.17 Các nghiên cứu tình huống cho thấy các tác tử AI giảm thời gian phản hồi hỗ trợ khách hàng lên đến 90%.51
+Tài chính Các ứng dụng bao gồm phân tích rủi ro tự động, giao dịch thuật toán, giám sát tuân thủ và xử lý hóa đơn.19 Một công ty đi chung xe đã sử dụng một tác tử để giảm thời gian xử lý hóa đơn 60% và cải thiện độ chính xác 90%.4
+Logistics và Chuỗi cung ứng Các tác tử có thể theo dõi mức tồn kho, dự đoán tình trạng thiếu hụt và tự động khởi tạo đơn đặt hàng với các nhà cung cấp.18 Công ty logistics Domina đã sử dụng một nền tảng AI để tăng hiệu quả giao hàng 15% và cải thiện quyền truy cập dữ liệu thời gian thực 80%.54
+Bán hàng và Tiếp thị Các tác tử có thể tự động hóa việc đánh giá khách hàng tiềm năng, cá nhân hóa các chiến dịch tiếp thị và cập nhật hệ thống CRM.53 Một nghiên cứu tình huống cho thấy giảm 70% thời gian xây dựng chiến dịch tiếp thị và tăng gấp 2 lần tỷ lệ chuyển đổi.51
+
+5.2 Robot và AI Hiện thân
+
+Sản xuất LAMs cho phép robot thực hiện các nhiệm vụ phức tạp hơn, ít cấu trúc hơn trên sàn nhà máy, tối ưu hóa dây chuyền sản xuất và thực hiện kiểm soát chất lượng với khả năng thích ứng cao hơn so với robot được lập trình truyền thống.19
+Chăm sóc sức khỏe LAMs có thể hỗ trợ robot phẫu thuật, tự động hóa việc phân tích dữ liệu bệnh nhân và hình ảnh y tế, và đẩy nhanh quá trình khám phá thuốc.56
+Xe tự hành Xe tự lái sử dụng các hệ thống giống LAM để nhận thức các môi trường phức tạp, dự đoán hành vi của các tác nhân khác và đưa ra quyết định lái xe trong thời gian thực.57
+
+5.3 Đo lường Lợi tức Đầu tư (ROI) của AI Tác tử
+
+Các mô hình ROI truyền thống tập trung vào các chỉ số chi phí trên mỗi nhiệm vụ đơn giản là không đủ cho AI tác tử, vốn mang lại giá trị trên nhiều phương diện hiệu quả, chất lượng và chiến lược.58 Một khuôn khổ ROI đa chiều là cần thiết để đánh giá tác động một cách toàn diện.
+Việc chỉ tập trung vào các chỉ số ROI ở cấp độ nhiệm vụ có nguy cơ bỏ lỡ tiềm năng biến đổi của AI tác tử và có thể dẫn đến các dự án thí điểm rời rạc, thất bại. Phân tích của McKinsey chỉ ra rằng một lý do chính cho việc không thể mở rộng quy mô AI là các sáng kiến rời rạc và cách tiếp cận từ dưới lên, dẫn đến các sáng kiến vi mô không kết nối.60 Lời hứa thực sự của các tác tử là tự động hóa các quy trình kinh doanh phức tạp, từ đầu đến cuối trải dài trên nhiều hệ thống.4 Điều này tạo ra một nghịch lý nếu một doanh nghiệp chỉ phê duyệt các dự án dựa trên ROI đơn giản, ngay lập tức của việc tự động hóa một nhiệm vụ duy nhất, nó có thể không bao giờ tài trợ cho các dự án lớn hơn, phức tạp hơn mang lại giá trị biến đổi. Do đó, những người áp dụng AI tác tử thành công nhất sẽ là những người chuyển tư duy ROI của họ từ tự động hóa nhiệm vụ chiến thuật sang tái cấu trúc quy trình chiến lược.
+Bảng 2 Các Chỉ số Hiệu suất Chính (KPIs) để Đo lường ROI của Tác tử AI
+Hạng mục
+KPI
+Mô tảCông thức
+Ví dụ sử dụng
+Hiệu suất & Hiệu quả
+Tỷ lệ Tự động hóa
+Tỷ lệ phần trăm các truy vấn được xử lý hoàn toàn bởi tác tử.
+Hỗ trợ khách hàng
+
+
+Thời gian Tiết kiệmNhân viên
+(Thời gian hoàn thành trung bình) x (Số nhiệm vụ do AI xử lý).
+Tự động hóa IT
+
+
+Giảm Thời gian Giải quyết
+So sánh thời gian giải quyết trung bình trước và sau khi triển khai.
+Hỗ trợ nhân sự
+ROI & Tiết kiệm Chi phí
+Tiết kiệm Chi phí Vận hành
+Giảm giờ làm việc, nhu cầu nhân sự hoặc chi tiêu dịch vụ bên ngoài.
+Trung tâm liên lạc
+
+
+Tăng doanh thu
+Tăng tỷ lệ chuyển đổi hoặc giá trị vòng đời khách hàng.
+Hỗ trợ bán hàng
+Giá trị cho Người dùngKhách hàng
+Giảm Tỷ lệ Lỗi
+Tỷ lệ phần trăm giảm lỗi trong các quy trình được tự động hóa.
+Xử lý hóa đơn
+
+
+Điểm Hài lòng Khách hàng (CSAT)
+Đo lường sự hài lòng của người dùng cuối với các tương tác của tác tử.
+Chatbot dịch vụ
+Hiệu suất Kỹ thuật
+Tỷ lệ Hoàn thành Nhiệm vụ
+Tỷ lệ phần trăm các nhiệm vụ được chỉ định mà tác tử hoàn thành thành công.
+Quản lý quy trình
+
+
+Tỷ lệ Chuyển giao (Fallback Rate)
+Tần suất tác tử cần chuyển giao cho một nhân viên con người.
+Hỗ trợ kỹ thuật
+
+Nguồn Tổng hợp từ.58
+
+Phần 6 Thách Thức, Rủi Ro và Hướng Phát Triển Tương Lai
+
+Phần cuối cùng này sẽ cung cấp một đánh giá khách quan về những hạn chế và rủi ro hiện tại liên quan đến LAMs và AI tác tử, trước khi nhìn về phía trước đến các biên giới tiếp theo của nghiên cứu và phát triển.
+
+6.1 Rào cản và Hạn chế Kỹ thuật
+
+Nền tảng Thế giới thực và Lỗi Nhận thức LAMs gặp khó khăn trong việc ánh xạ chính xác dữ liệu cảm biến thô vào các biểu diễn môi trường có ý nghĩa, đặc biệt là trong các môi trường phi cấu trúc và năng động. Lỗi nhận thức nhỏ có thể dẫn đến thất bại thảm khốc trong hành động.24
+Yêu cầu Dữ liệu và Vấn đề Khởi đầu Lạnh LAMs đòi hỏi các bộ dữ liệu đa phương thức, đa dạng và khổng lồ, rất khó và tốn kém để thu thập.24
+Khả năng Mở rộng và Chi phí Tính toán Chu trình lặp đi lặp lại của nhận thức-suy luận-hành động đòi hỏi tính toán cao, làm cho việc triển khai quy mô lớn, thời gian thực trở thành một thách thức đáng kể.27
+Cuộc chiến chống Bot Khi các tác tử trở nên có năng lực hơn, các trang web và ứng dụng đang triển khai các biện pháp chống bot tinh vi hơn (ví dụ phân tích hành vi trong reCAPTCHA v3) mà các tác tử khó có thể vượt qua.27
+
+6.2 An toàn, Đạo đức và Quản trị
+
+An toàn và Độ chính xác của Hành động Không giống như LLMs, nơi chi phí của một lỗi là thấp, một LAM thực hiện một hành động vật lý hoặc kỹ thuật số đòi hỏi độ chính xác cực cao. Một lỗi nhỏ có thể gây ra thiệt hại phần cứng, tổn thất tài chính hoặc tổn hại vật chất.24
+Hậu quả không lường trước và Lạm dụng Tính tự chủ của các tác tử tạo ra rủi ro chúng theo đuổi mục tiêu theo những cách có hại hoặc không mong muốn. Cần có các giao thức an toàn mạnh mẽ, sự tương thích về giá trị và sự xác minh của con người trong vòng lặp cho các nhiệm vụ có rủi ro cao.27
+Trách nhiệm giải trình và Tính minh bạch Việc xác định trách nhiệm khi một tác tử tự chủ mắc lỗi là một thách thức pháp lý và đạo đức phức tạp. Bản chất hộp đen của mạng nơ-ron làm trầm trọng thêm vấn đề này.10
+Tác động Kinh tế và Xã hội Tiềm năng của LAMs trong việc tự động hóa bất kỳ vai trò nào chủ yếu liên quan đến việc sử dụng máy tính đặt ra những câu hỏi quan trọng về sự thay thế việc làm và tương lai của công việc.27
+
+6.3 Biên giới Tiếp theo Hướng Nghiên cứu Tương lai
+
+Suy luận và Phản tư Nâng cao Các tác tử trong tương lai sẽ tích hợp các khả năng suy luận (ví dụ Chuỗi Tư duy - Chain of Thought) và phản tư tiên tiến hơn, cho phép chúng tự phê bình kế hoạch của mình, học hỏi từ sai lầm và cải thiện chiến lược theo thời gian.65
+Kiến trúc Bộ nhớ Cải tiến Phát triển các hệ thống bộ nhớ dài hạn và ngắn hạn tinh vi hơn là rất quan trọng để các tác tử duy trì ngữ cảnh, học hỏi từ các tương tác trong quá khứ và xây dựng kiến thức lâu dài.13
+Hệ thống Đa Tác tử Nghiên cứu đang hướng tới các hệ thống hợp tác, nơi nhiều tác tử chuyên biệt có thể giao tiếp, đàm phán và làm việc cùng nhau để giải quyết các vấn đề quá phức tạp đối với một tác tử duy nhất.9
+Tác tử Tự cải thiện và Tự tiến hóa Mục tiêu cuối cùng là tạo ra các tác tử có thể tự chủ cải thiện các kỹ năng và kiến thức của chính chúng thông qua tương tác liên tục với môi trường, giải quyết hiệu quả nút thắt dữ liệu và đẩy nhanh sự phát triển của chính chúng.65
+
+Kết luận
+
+
+Tổng hợp các phát hiện chính
+
+Báo cáo này đã làm rõ sự chuyển dịch đáng kể từ các mô hình ngôn ngữ sang các mô hình hành động; phân tích kiến trúc đa thành phần phức tạp cần thiết để hiện thực hóa sự chuyển dịch này; mô tả các mô hình huấn luyện tinh vi tạo ra một bánh đà dữ liệu tự cải thiện; và đánh giá tiềm năng to lớn về tác động kinh tế được cân bằng bởi những thách thức kỹ thuật và đạo đức đáng kể.
+
+Nhận định cuối cùng về một công nghệ mang tính biến đổi
+
+Các Mô hình Hành động Lớn và mô hình AI tác tử không chỉ đơn thuần là một sự mở rộng của LLMs mà là một bước đi nền tảng hướng tới trí tuệ nhân tạo tổng quát hơn, có năng lực hơn và tích hợp hơn. Hành trình phía trước bao gồm việc giải quyết các thách thức kỹ thuật sâu sắc và điều hướng các câu hỏi xã hội phức tạp, nhưng tiềm năng định hình lại sự tương tác của chúng ta với thế giới kỹ thuật số và vật lý là vô cùng to lớn.
+Nguồn trích dẫn
+www.salesforce.com, truy cập vào tháng 11 3, 2025, httpswww.salesforce.comagentforcelarge-action-models#~text=Simply%20put%2C%20a%20large%20action,large%20language%20model%20(LLM).
+Large Action Models, toward operational artificial intelligence - Tech4Future, truy cập vào tháng 11 3, 2025, httpstech4future.infoenlarge-action-models-operational-ai
+What Are Large Action Models (LAMs) - Salesforce, truy cập vào tháng 11 3, 2025, httpswww.salesforce.comapagentforcelarge-action-models
+Why Large Action Models Are the Future of Business AI Automation  Uniphore, truy cập vào tháng 11 3, 2025, httpswww.uniphore.comblogwhy-large-action-models-are-the-future-of-business-ai-automation
+Large Action Models (LAMs) With Examples and Challenges - Analytics Vidhya, truy cập vào tháng 11 3, 2025, httpswww.analyticsvidhya.comblog202412large-action-models
+Understanding Large Action Models Part 1 - DataOps Labs, truy cập vào tháng 11 3, 2025, httpsblog.dataopslabs.comprompt-to-action-large-action-models-i
+[2412.10047] Large Action Models From Inception to Implementation - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orgabs2412.10047
+Artificial Intelligence Agents & Large Action Models in Digital Government, truy cập vào tháng 11 3, 2025, httpsdga.gov.saendigital-knowledgeAI-agents-large-action-models-digital-government
+[2503.23037] Agentic Large Language Models, a survey - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orgabs2503.23037
+(PDF) AI Agents A Systematic Review of Architectures, Components, and Evolutionary Trajectories in Autonomous Digital Systems - ResearchGate, truy cập vào tháng 11 3, 2025, httpswww.researchgate.netpublication389562150_AI_Agents_A_Systematic_Review_of_Architectures_Components_and_Evolutionary_Trajectories_in_Autonomous_Digital_Systems
+What are AI Agents- Agents in Artificial Intelligence Explained - Amazon AWS, truy cập vào tháng 11 3, 2025, httpsaws.amazon.comwhat-isai-agents
+Intelligent agent - Wikipedia, truy cập vào tháng 11 3, 2025, httpsen.wikipedia.orgwikiIntelligent_agent
+What are AI agents Definition, examples, and types  Google Cloud, truy cập vào tháng 11 3, 2025, httpscloud.google.comdiscoverwhat-are-ai-agents
+What Are AI Agents  IBM, truy cập vào tháng 11 3, 2025, httpswww.ibm.comthinktopicsai-agents
+Agents in AI - GeeksforGeeks, truy cập vào tháng 11 3, 2025, httpswww.geeksforgeeks.orgartificial-intelligenceagents-artificial-intelligence
+What Are Large Action Models and How Do They Work  Trinetix, truy cập vào tháng 11 3, 2025, httpswww.trinetix.cominsightswhat-are-large-action-models-and-how-do-they-work
+Large Action Models (LAMs) A Guide With Examples  DataCamp, truy cập vào tháng 11 3, 2025, httpswww.datacamp.combloglarge-action-models
+Large action models (LAMs) The foundation of AI agents  SuperAnnotate, truy cập vào tháng 11 3, 2025, httpswww.superannotate.combloglarge-action-models
+Large Action Models (LAMs) The Future of AI Agents - Bluebash, truy cập vào tháng 11 3, 2025, httpswww.bluebash.cobloglarge-action-models-next-frontier-ai
+www.salesforce.com, truy cập vào tháng 11 3, 2025, httpswww.salesforce.comagentforcelarge-action-models#~text=How%20do%20LAMs%20differ%20from,systems%20to%20achieve%20those%20goals.
+Beyond Large Language Models; The Large Action Model - Arion Research LLC, truy cập vào tháng 11 3, 2025, httpswww.arionresearch.comblogbeyond-large-language-models-the-large-action-model
+The Rise of Large Action Models, LAMs How AI Can Understand and Execute Human Intentions  by Rosemary J Thomas, PhD - Medium, truy cập vào tháng 11 3, 2025, httpsmedium.comversion-1the-rise-of-large-action-models-lams-how-ai-can-understand-and-execute-human-intentions-f59c8e78bc09
+What is an AI agent - McKinsey, truy cập vào tháng 11 3, 2025, httpswww.mckinsey.comfeatured-insightsmckinsey-explainerswhat-is-an-ai-agent
+What are Large Action Models The Next Frontier in AI Decision-Making  DigitalOcean, truy cập vào tháng 11 3, 2025, httpswww.digitalocean.comresourcesarticleslarge-action-models
+A Beginner's Guide to Understanding Large Action Models - CEPTES, truy cập vào tháng 11 3, 2025, httpsceptes.comblogsa-beginners-guide-to-understanding-large-action-models
+What are Components of AI Agents - IBM, truy cập vào tháng 11 3, 2025, httpswww.ibm.comthinktopicscomponents-of-ai-agents
+Limitations of Large Action Models (LAMs) An analysis of OpenAI's Operator - Medium, truy cập vào tháng 11 3, 2025, httpsmedium.com@theshaharyarkhanlimitations-of-large-action-models-lams-an-analysis-of-openais-operator-5d300cc98bcd
+Large action models transforming human-computer interaction - Toloka AI, truy cập vào tháng 11 3, 2025, httpstoloka.aibloglarge-action-models
+Large Action Models Beyond Language, Into Action - Viso Suite, truy cập vào tháng 11 3, 2025, httpsviso.aideep-learninglarge-action-models-beyond-language-into-action
+Large Action Models A Game-Changer for AI-Driven Automation - Relevant Software, truy cập vào tháng 11 3, 2025, httpsrelevant.softwarebloglarge-action-models
+Neuro-symbolic AI - Wikipedia, truy cập vào tháng 11 3, 2025, httpsen.wikipedia.orgwikiNeuro-symbolic_AI
+Neuro-Symbolic Artificial Intelligence Towards Improving the Reasoning Abilities of Large Language Models - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orghtml2508.13678v1
+Rabbit AI Large Action Models (LAMs) - GeeksforGeeks, truy cập vào tháng 11 3, 2025, httpswww.geeksforgeeks.orgdata-sciencerabbit-ai-large-action-models-lams
+Large Action Models A Deep Learning and Neuro-Symbolic Approach to Embodied Artificial Intelligence  AWS Builder Center, truy cập vào tháng 11 3, 2025, httpsbuilder.aws.comcontent2p0jfp0pQuNDHa8MwlGmsFaqySblarge-action-models-a-deep-learning-and-neuro-symbolic-approach-to-embodied-artificial-intelligence
+Ch. 21 - Imitation Learning - Underactuated Robotics, truy cập vào tháng 11 3, 2025, httpsunderactuated.mit.eduimitation.html
+Reinforcement learning from human feedback - Wikipedia, truy cập vào tháng 11 3, 2025, httpsen.wikipedia.orgwikiReinforcement_learning_from_human_feedback
+arXiv2307.15217v2 [cs.AI] 11 Sep 2023, truy cập vào tháng 11 3, 2025, httpsarxiv.orgpdf2307.15217
+Reinforcement Learning from Human Feedback - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orghtml2504.12501v1
+Large Action Models From Inception to Implementation - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orghtml2412.10047v1
+xLAM A Family of Large Action Models to Empower AI Agent Systems - ResearchGate, truy cập vào tháng 11 3, 2025, httpswww.researchgate.netpublication392507020_xLAM_A_Family_of_Large_Action_Models_to_Empower_AI_Agent_Systems
+xLAM A Family of Large Action Models to Empower AI Agent Systems - Hugging Face, truy cập vào tháng 11 3, 2025, httpshuggingface.copapers2409.03215
+What Are Large Action Models  The AI Research Lab - Explained - YouTube, truy cập vào tháng 11 3, 2025, httpswww.youtube.comwatchv=vlvv4ZehrcY
+[2409.03215] xLAM A Family of Large Action Models to Empower AI Agent Systems - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orgabs2409.03215
+xLAM A Family of Large Action Models for AI Agents - Salesforce, truy cập vào tháng 11 3, 2025, httpswww.salesforce.combloglarge-action-model-ai-agent
+Large Action Models From Inception to Implementation - alphaXiv, truy cập vào tháng 11 3, 2025, httpswww.alphaxiv.orgkooverview2412.10047v1
+SalesforcexLAM-7b-fc-r-gguf - Hugging Face, truy cập vào tháng 11 3, 2025, httpshuggingface.coSalesforcexLAM-7b-fc-r-gguf
+[2508.13073] Large VLM-based Vision-Language-Action Models for Robotic Manipulation A Survey - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orgabs2508.13073
+[2508.15201] Survey of Vision-Language-Action Models for Embodied Manipulation - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orgabs2508.15201
+[2405.14093] A Survey on Vision-Language-Action Models for Embodied AI - arXiv, truy cập vào tháng 11 3, 2025, httpsarxiv.orgabs2405.14093
+What are Large Action Models (LAM) and How They Work - Ionio, truy cập vào tháng 11 3, 2025, httpswww.ionio.aiblogwhat-are-large-action-models-lam-and-how-they-work
+17 Useful AI Agent Case Studies - Multimodal, truy cập vào tháng 11 3, 2025, httpswww.multimodal.devpostuseful-ai-agent-case-studies
+AI Agent Use Cases - IBM, truy cập vào tháng 11 3, 2025, httpswww.ibm.comthinktopicsai-agent-use-cases
+Enterprise AI in Action—10 Real-World Use Cases 2025, truy cập vào tháng 11 3, 2025, httpswww.trootech.comblogai-use-cases-in-real-world
+Real-world gen AI use cases from the world's leading organizations  Google Cloud Blog, truy cập vào tháng 11 3, 2025, httpscloud.google.comtransform101-real-world-generative-ai-use-cases-from-industry-leaders
+AI Agent Case Studies Real-World Success Stories Transforming Enterprise Operations, truy cập vào tháng 11 3, 2025, httpswww.unleash.sopostai-agent-case-studies-real-world-success-stories-transforming-enterprise-operations
+Large Action Models Applications and Benefits in 2025  Label Your ..., truy cập vào tháng 11 3, 2025, httpslabelyourdata.comarticleslarge-action-models
+Smarter AI Agents Why LAMs Are Changing Automation - Intellectyx, truy cập vào tháng 11 3, 2025, httpswww.intellectyx.comthe-evolution-of-ai-agents-why-large-action-models-lams-are-the-key-to-smarter-automation
+Unlocking Agentic AI ROI for the Modern Enterprise - Moveworks, truy cập vào tháng 11 3, 2025, httpswww.moveworks.comusenresourcesbloghow-to-measure-and-communicate-agentic-ai-roi
+Enterprise AI Agents ROI Framework — 2025 Guide - Ampcome, truy cập vào tháng 11 3, 2025, httpswww.ampcome.compostenterprise-ai-agents-roi-framework-the-2025
+Seizing the agentic AI advantage - McKinsey, truy cập vào tháng 11 3, 2025, httpswww.mckinsey.comcapabilitiesquantumblackour-insightsseizing-the-agentic-ai-advantage
+Why agents are the next frontier of generative AI - McKinsey, truy cập vào tháng 11 3, 2025, httpswww.mckinsey.comcapabilitiesmckinsey-digitalour-insightswhy-agents-are-the-next-frontier-of-generative-ai
+10 Biggest Limitations of Large Language Models - ProjectPro, truy cập vào tháng 11 3, 2025, httpswww.projectpro.ioarticlellm-limitations1045
+AI Agents Need Blockchain to Scale Safely, Says Edge & Node CEO, truy cập vào tháng 11 3, 2025, httpsnews.bitcoin.comai-agents-need-blockchain-to-scale-safely-says-edge-node-ceo
+AI in the workplace A report for 2025 - McKinsey, truy cập vào tháng 11 3, 2025, httpswww.mckinsey.comcapabilitiestech-and-aiour-insightssuperagency-in-the-workplace-empowering-people-to-unlock-ais-full-potential-at-work
+AI Agents The Next Frontier In Intelligent Automation - Forbes, truy cập vào tháng 11 3, 2025, httpswww.forbes.comcouncilsforbestechcouncil20250102ai-agents-the-next-frontier-in-intelligent-automation
+(PDF) Agentic Large Language Models, a survey - ResearchGate, truy cập vào tháng 11 3, 2025, httpswww.researchgate.netpublication390354708_Agentic_Large_Language_Models_a_survey
+A collection of AI Agents papers (Updated biweekly) - GitHub, truy cập vào tháng 11 3, 2025, httpsgithub.commasamasa59ai-agent-papers
+How to Measure Agent Success KPIs, ROI, and Human-AI Interaction Metrics - Netguru, truy cập vào tháng 11 3, 2025, httpswww.netguru.combloghow-to-measure-agent-success
+AI Agents From AI to ROI - Biztory, truy cập vào tháng 11 3, 2025, httpswww.biztory.comblogai-agents-from-ai-to-roi

@@ -1,0 +1,461 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/@prisma/monetization-service-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("MONETIZATION_SERVICE_DATABASE_URL")
+}
+
+enum TransactionType {
+  TOPUP
+  PURCHASE
+  REFUND
+  REWARD
+  DEDUCTION
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  REFUNDED
+  FAILED
+}
+
+enum MembershipStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+enum PrivilegeStatus {
+  ACTIVE
+  EXPIRED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+enum BillingPeriod {
+  MONTHLY
+  YEARLY
+}
+
+// Virtual Currency Models
+model Wallet {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  balance     Decimal  @default(0) @db.Decimal(18, 2)
+  currency    String   @default("points")
+  totalEarned Decimal  @default(0) @db.Decimal(18, 2)
+  totalSpent  Decimal  @default(0) @db.Decimal(18, 2)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transactions CurrencyTransaction[]
+  topUps       TopUp[]
+  purchases    Purchase[]
+  bulkPurchases BulkPurchase[]
+
+  @@map("wallets")
+}
+
+model CurrencyTransaction {
+  id           String          @id @default(uuid())
+  walletId     String
+  userId       String
+  type         TransactionType
+  amount       Decimal         @db.Decimal(18, 2)
+  balanceBefore Decimal        @db.Decimal(18, 2)
+  balanceAfter  Decimal        @db.Decimal(18, 2)
+  description  String?
+  referenceId  String?
+  createdAt    DateTime        @default(now())
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([walletId])
+  @@index([createdAt])
+  @@map("currency_transactions")
+}
+
+model TopUp {
+  id            String   @id @default(uuid())
+  userId        String
+  walletId      String?
+  amount        Decimal  @db.Decimal(18, 2) // Real money amount
+  currency      String   @default("CNY")
+  pointsAwarded Decimal  @db.Decimal(18, 2)
+  exchangeRate  Decimal  @default(100) @db.Decimal(10, 4) // 1 point = 1/100 CNY
+  paymentMethod String
+  paymentId     String?
+  status        String   @default("completed")
+  completedAt   DateTime?
+  createdAt     DateTime @default(now())
+
+  wallet Wallet? @relation(fields: [walletId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([paymentId])
+  @@map("top_ups")
+}
+
+// Pricing Models
+model ChapterPrice {
+  id              String   @id @default(uuid())
+  chapterId       String   @unique
+  storyId         String
+  characterCount  Int
+  basePrice       Decimal  @db.Decimal(18, 2)
+  currentPrice    Decimal  @db.Decimal(18, 2)
+  pricePer1000    Decimal  @default(4) @db.Decimal(10, 2)
+  discount        Decimal  @default(0) @db.Decimal(5, 2)
+  calculatedAt    DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([storyId])
+  @@index([chapterId])
+  @@map("chapter_prices")
+}
+
+model PricingRule {
+  id                String   @id @default(uuid())
+  storyId           String?
+  ruleType          String   // 'base_rate', 'popular_story', 'first_purchase', 'bulk'
+  pricePer1000      Decimal  @db.Decimal(10, 2)
+  discountPercent   Decimal  @default(0) @db.Decimal(5, 2)
+  minChapters       Int?
+  minPrice          Decimal  @default(3) @db.Decimal(10, 2)
+  maxPrice          Decimal  @default(120) @db.Decimal(10, 2)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([storyId])
+  @@index([ruleType])
+  @@map("pricing_rules")
+}
+
+// Paywall Models
+model StoryPaywall {
+  id            String   @id @default(uuid())
+  storyId       String   @unique
+  freeChapters  Int      @default(100)
+  isEnabled     Boolean  @default(true)
+  previewLength Int      @default(500)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  chapterAccesses ChapterAccess[]
+
+  @@map("story_paywalls")
+}
+
+model ChapterAccess {
+  id          String    @id @default(uuid())
+  userId      String
+  chapterId   String
+  storyId     String
+  accessType  String    // 'free', 'purchased', 'subscription', 'privilege', 'preview'
+  purchasedAt DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  storyPaywall StoryPaywall? @relation(fields: [storyId], references: [storyId], onDelete: Cascade)
+
+  @@unique([userId, chapterId])
+  @@index([userId])
+  @@index([chapterId])
+  @@index([storyId])
+  @@map("chapter_accesses")
+}
+
+// Payment Models
+model Purchase {
+  id             String        @id @default(uuid())
+  userId         String
+  chapterId      String
+  storyId        String
+  walletId       String?
+  price          Decimal       @db.Decimal(18, 2)
+  characterCount Int
+  status         PurchaseStatus @default(COMPLETED)
+  paymentId      String?       // FK to CurrencyTransaction
+  balanceBefore  Decimal?      @db.Decimal(18, 2)
+  paymentMethod  String        @default("wallet")
+  purchasedAt    DateTime      @default(now())
+  refundedAt     DateTime?
+  refundReason   String?
+
+  wallet Wallet? @relation(fields: [walletId], references: [id], onDelete: SetNull)
+
+  receipts PurchaseReceipt[]
+
+  @@unique([userId, chapterId]) // Idempotent - Rule #12
+  @@index([userId])
+  @@index([chapterId])
+  @@index([storyId])
+  @@index([purchasedAt])
+  @@map("purchases")
+}
+
+model BulkPurchase {
+  id             String        @id @default(uuid())
+  userId         String
+  storyId        String
+  walletId       String?
+  chapterIds     String[]      // Array of chapter IDs
+  totalPrice     Decimal       @db.Decimal(18, 2)
+  discountApplied Decimal      @default(0) @db.Decimal(18, 2)
+  status         PurchaseStatus @default(COMPLETED)
+  paymentId      String?
+  purchasedAt    DateTime      @default(now())
+
+  wallet Wallet? @relation(fields: [walletId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([storyId])
+  @@map("bulk_purchases")
+}
+
+model PurchaseReceipt {
+  id            String   @id @default(uuid())
+  purchaseId    String   @unique
+  userId        String
+  receiptNumber String   @unique
+  items         Json     // Array of purchased items
+  totalAmount   Decimal  @db.Decimal(18, 2)
+  paymentMethod String
+  issuedAt      DateTime @default(now())
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([receiptNumber])
+  @@map("purchase_receipts")
+}
+
+// Membership Models (Coin Packages)
+model MembershipPlan {
+  id            String        @id @default(uuid())
+  name          String
+  type          String        @default("membership")
+  price         Decimal       @db.Decimal(18, 2)
+  currency      String        @default("CNY")
+  coinsGranted  Decimal       @db.Decimal(18, 2) // Immediate grant
+  dailyBonus    Decimal       @db.Decimal(18, 2) // Daily login bonus
+  billingPeriod BillingPeriod
+  isActive      Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  memberships Membership[]
+
+  @@map("membership_plans")
+}
+
+model Membership {
+  id          String          @id @default(uuid())
+  userId      String          @unique
+  planId      String
+  status      MembershipStatus @default(ACTIVE)
+  startDate   DateTime        @default(now())
+  endDate     DateTime
+  autoRenew   Boolean         @default(true)
+  cancelledAt DateTime?
+
+  plan MembershipPlan @relation(fields: [planId], references: [id])
+  dailyBonuses MembershipDailyBonus[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("memberships")
+}
+
+model MembershipDailyBonus {
+  id           String   @id @default(uuid())
+  membershipId String
+  userId       String
+  date         DateTime @db.Date
+  coinsAwarded Decimal  @db.Decimal(18, 2)
+  claimed      Boolean  @default(false)
+  claimedAt    DateTime?
+
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@unique([membershipId, date])
+  @@index([userId])
+  @@map("membership_daily_bonuses")
+}
+
+// Privilege Models (Advanced Chapters)
+model Privilege {
+  id          String         @id @default(uuid())
+  userId      String
+  storyId     String
+  purchasedAt DateTime       @default(now())
+  expiresAt   DateTime       // 1st of next month
+  status      PrivilegeStatus @default(ACTIVE)
+
+  privilegePurchases PrivilegePurchase[]
+
+  @@unique([userId, storyId]) // One privilege per user per book
+  @@index([userId])
+  @@index([storyId])
+  @@index([expiresAt])
+  @@map("privileges")
+}
+
+model AdvancedChapter {
+  id               String   @id @default(uuid())
+  storyId          String
+  chapterId        String
+  chapterNumber    Int
+  isAdvanced       Boolean  @default(true)
+  releaseDate      DateTime // Future date when chapter becomes public
+  privilegeRequired Boolean @default(true)
+  premiumPrice     Decimal  @db.Decimal(18, 2) // Higher price for advanced chapters
+  createdAt        DateTime @default(now())
+
+  @@unique([storyId, chapterId])
+  @@index([storyId])
+  @@index([chapterId])
+  @@index([releaseDate])
+  @@map("advanced_chapters")
+}
+
+model PrivilegePurchase {
+  id          String   @id @default(uuid())
+  privilegeId String
+  userId      String
+  storyId     String
+  coinsSpent  Decimal  @db.Decimal(18, 2)
+  purchasedAt DateTime @default(now())
+
+  privilege Privilege @relation(fields: [privilegeId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([storyId])
+  @@map("privilege_purchases")
+}
+
+// Subscription Models (All-You-Can-Read)
+model SubscriptionPlan {
+  id            String        @id @default(uuid())
+  name          String
+  type          String        @default("all-you-can-read")
+  price         Decimal       @db.Decimal(18, 2)
+  currency      String        @default("CNY")
+  billingPeriod BillingPeriod
+  libraryScope  String?       // Optional library scope
+  maxBooks      Int?          // Optional max books limit
+  isActive      Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("subscription_plans")
+}
+
+model Subscription {
+  id          String            @id @default(uuid())
+  userId      String            @unique
+  planId      String
+  status      SubscriptionStatus @default(ACTIVE)
+  startDate   DateTime          @default(now())
+  endDate     DateTime
+  autoRenew   Boolean           @default(true)
+  cancelledAt DateTime?
+
+  plan SubscriptionPlan @relation(fields: [planId], references: [id])
+  transactions SubscriptionTransaction[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+model SubscriptionTransaction {
+  id            String        @id @default(uuid())
+  subscriptionId String
+  userId        String
+  planId        String
+  amount        Decimal       @db.Decimal(18, 2)
+  currency      String
+  paymentMethod String
+  status        String
+  billingPeriod BillingPeriod
+  periodStart   DateTime
+  periodEnd     DateTime
+  createdAt     DateTime      @default(now())
+
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([subscriptionId])
+  @@map("subscription_transactions")
+}
+
+// VIP/Loyalty Models
+model VIPLevel {
+  id             String   @id @default(uuid())
+  name           String
+  level          Int      @unique
+  minSpending    Decimal  @db.Decimal(18, 2) // Minimum spending to unlock
+  discountPercent Decimal @db.Decimal(5, 2)  // Discount on PPC
+  pricePer1000   Decimal  @db.Decimal(10, 2) // Points per 1000 chars at this level
+  monthlyVotes   Int      @default(0) // Guaranteed monthly votes
+  benefits       Json?    // Additional benefits (JSON)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  members VIPMember[]
+
+  @@index([level])
+  @@map("vip_levels")
+}
+
+model VIPMember {
+  id                    String   @id @default(uuid())
+  userId                String   @unique
+  currentLevel          Int
+  totalSpending         Decimal  @default(0) @db.Decimal(18, 2)
+  currentPeriodSpending Decimal  @default(0) @db.Decimal(18, 2)
+  periodStart           DateTime @default(now())
+  nextEvaluation        DateTime
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  level VIPLevel @relation(fields: [currentLevel], references: [level])
+  history VIPHistory[]
+
+  @@index([userId])
+  @@index([currentLevel])
+  @@map("vip_members")
+}
+
+model VIPHistory {
+  id              String   @id @default(uuid())
+  memberId        String
+  userId          String
+  levelFrom       Int
+  levelTo         Int
+  reason          String
+  spendingAtUpgrade Decimal @db.Decimal(18, 2)
+  upgradedAt      DateTime @default(now())
+
+  member VIPMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([memberId])
+  @@index([upgradedAt])
+  @@map("vip_history")
+}
+

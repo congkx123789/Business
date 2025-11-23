@@ -1,0 +1,11 @@
+{
+  "name": "com.my_company.social_analyzer",
+  "description": "Native host for social media analysis.",
+  "path": "..\\scripts\\win\\host.cmd",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://abcdefghijklmnopqrstuvwxyz123456/"
+  ]
+}
+
+

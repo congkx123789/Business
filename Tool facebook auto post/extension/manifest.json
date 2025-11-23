@@ -1,0 +1,14 @@
+{
+  "name": "Social Media Analyzer",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "description": "Baseline MV3 extension connecting to a native host for content analysis.",
+  "permissions": [
+    "nativeMessaging"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
+
+

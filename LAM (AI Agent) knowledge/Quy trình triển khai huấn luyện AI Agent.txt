@@ -1,0 +1,435 @@
+
+Kế hoạch Tổng thể Triển khai và Huấn luyện AI Agent và Mô hình Hành động Lớn (LAM)
+
+
+Tóm tắt Điều hành
+
+Báo cáo này trình bày một kế hoạch chi tiết, bảy giai đoạn để thiết kế, huấn luyện và triển khai một dự án Tác nhân Trí tuệ Nhân tạo (AI Agent) hoặc Mô hình Hành động Lớn (LAM) hoàn chỉnh. Kế hoạch này bao trùm toàn bộ vòng đời của dự án, từ việc hoạch định chiến lược và xác định các chỉ số hiệu suất chính (KPI), lựa chọn kiến trúc hệ thống, các kỹ thuật thu thập và tạo dữ liệu quỹ đạo (trajectory data) tiên tiến, đến quy trình huấn luyện đa giai đoạn (bao gồm Tinh chỉnh Giám sát và Học tập Củng cố), các chiến lược kiểm thử an toàn nghiêm ngặt (bao gồm Sandboxing và Red Teaming), và các phương pháp vận hành (MLOps) tiên tiến, bao gồm khả năng quan sát (observability) và các vòng lặp có sự tham gia của con người (Human-in-the-Loop). Kế hoạch này được thiết kế để cung cấp một lộ trình kỹ thuật toàn diện cho việc xây dựng các hệ thống tác nhân mạnh mẽ, an toàn và có khả năng mở rộng.
+
+Giới thiệu: Sự Chuyển dịch từ Mô hình Ngôn ngữ sang Mô hình Hành động
+
+Trong những năm gần đây, Mô hình Ngôn ngữ Lớn (LLM) đã chứng minh khả năng phi thường trong việc hiểu và tạo ra văn bản. Tuy nhiên, một sự thay đổi mô hình cơ bản đang diễn ra: sự chuyển dịch từ các mô hình chỉ nói sang các tác nhân có thể hành động.
+Các LLM truyền thống chủ yếu hoạt động như các hệ thống xử lý văn bản (text-in, text-out). Ngược lại, Tác nhân AI, hay cụ thể hơn là Mô hình Hành động Lớn (LAM), là các hệ thống tự trị có thể nhận thức môi trường, lý luận, lập kế hoạch và thực thi các hành động để đạt được các mục tiêu phức tạp.1 Các hành động này có thể bao gồm từ việc gọi các giao diện lập trình ứng dụng (API), tương tác với các giao diện người dùng đồ họa (GUI) của phần mềm, đến việc vận hành các trình duyệt web hoặc thậm chí là điều khiển các hệ thống vật lý.2
+Việc xây dựng một tác nhân "hoàn chỉnh" đòi hỏi một cách tiếp cận kỹ thuật hệ thống phức tạp hơn nhiều so với việc chỉ tinh chỉnh một chatbot. Nó liên quan đến việc thiết kế các kiến trúc phức tạp, tạo ra các tập dữ liệu hoàn toàn mới về hành vi (quỹ đạo), và triển khai các biện pháp bảo vệ mạnh mẽ để quản lý các rủi ro cố hữu khi trao quyền tự chủ cho AI. Báo cáo này cung cấp kế hoạch chi tiết cho quy trình tổng thể đó.
+
+PHẦN 1: THIẾT KẾ VÀ HOẠCH ĐỊNH CHIẾN LƯỢC DỰ ÁN TÁC NHÂN AI
+
+Giai đoạn nền tảng này tập trung vào việc định nghĩa nghiêm ngặt các mục tiêu của dự án, các chỉ số thành công và các yêu cầu hệ thống. Việc thất bại trong giai đoạn này là nguyên nhân hàng đầu dẫn đến thất bại của các dự án AI.
+
+1.1 Xây dựng Tài liệu Thiết kế Kỹ thuật (ML Design Doc)
+
+Trước khi viết bất kỳ dòng mã nào, dự án phải bắt đầu bằng một Tài liệu Thiết kế Kỹ thuật (ML Design Document). Tài liệu này đóng vai trò là "nguồn chân lý duy nhất" (single source of truth) cho tất cả các bên liên quan và buộc nhóm phải suy nghĩ thấu đáo về vấn đề và giải pháp được đề xuất.4
+Dựa trên các mẫu tiêu chuẩn ngành cho các hệ thống học máy 4, tài liệu thiết kế phải bao gồm các phần cốt lõi sau:
+Motivation (Động lực): Vấn đề kinh doanh hoặc kỹ thuật cụ thể đang được giải quyết là gì? Tại sao việc giải quyết nó lại quan trọng vào thời điểm này?.4
+Success Metrics (Chỉ số Thành công): Các mục tiêu kinh doanh cấp cao và các chỉ số định lượng sẽ được sử dụng để đo lường thành công. Phần này sẽ được chi tiết hóa trong mục 1.2.4
+Requirements & Constraints (Yêu cầu & Ràng buộc):
+Functional (Chức năng): Những gì tác nhân phải làm được theo quan điểm của người dùng (ví dụ: "Tác nhân phải có khả năng đặt lại mật khẩu người dùng trong 5 bước").4
+Non-functional (Phi chức năng): Các ràng buộc kỹ thuật xác định chất lượng hệ thống, chẳng hạn như hiệu suất (ví dụ: độ trễ p99 < 3 giây), chi phí (ví dụ: chi phí vận hành < $0.01 mỗi tác vụ), bảo mật và quyền riêng tư dữ liệu.4
+Methodology (Phương pháp): Cách tiếp cận ML được đề xuất. Điều này bao gồm việc định hình vấn đề (ví dụ: học tập bắt chước, học tập củng cố), các kỹ thuật được sử dụng, và chi tiết về dữ liệu (cả huấn luyện và phục vụ).4
+Implementation (Triển khai): Thiết kế hệ thống cấp cao, cơ sở hạ tầng được đề xuất (ví dụ: đám mây, tại chỗ), các điểm tích hợp với các hệ thống hiện có, và kế hoạch giám sát.4
+
+1.2 Áp dụng Khung Hoạch định dựa trên KPI (KPI-Led Scoping)
+
+Việc chỉ định nghĩa các mục tiêu mơ hồ như "cải thiện hiệu quả" là không đủ. Các dự án AI có mục tiêu và số liệu được xác định rõ ràng ngay từ đầu được báo cáo là có khả năng thành công cao hơn 50%.7 Do đó, việc sử dụng một khung làm việc có cấu trúc để liên kết các nỗ lực kỹ thuật với kết quả kinh doanh là rất quan trọng.
+Khung "Hoạch định dựa trên KPI" 8 cung cấp một phương pháp hiệu quả để thực hiện điều này:
+Define Desired Business Outcomes (Xác định Kết quả Kinh doanh): Đây là "ngôi sao Bắc đẩu" của dự án—mục tiêu cuối cùng. Ví dụ: "Giảm 40% thời gian chu kỳ xử lý khiếu nại của khách hàng" hoặc "Tăng doanh thu thông qua các đề xuất bán thêm tự động".8
+Identify Lagging Indicators (Xác định Chỉ số Kết quả): Đây là các số liệu cấp cao đo lường tác động cuối cùng. Chúng "trễ" (lag) vì chúng chỉ có thể được đo lường sau khi hệ thống đã hoạt động một thời gian. Ví dụ bao gồm "tổng số giờ làm việc thủ công của nhân viên" hoặc "thời gian trễ của quyết định".8
+Find Leading Signals (Tìm kiếm Tín hiệu Dẫn dắt): Đây là các số liệu có thể quan sát được nhanh chóng để xác thực tiến độ sớm và dự đoán thành công trong tương lai. Đây là nơi các KPI của tác nhân AI tỏa sáng. Ví dụ bao gồm "tỷ lệ chấp nhận của người dùng" (user adoption) 8, "điểm chất lượng phản hồi" 8, hoặc "tỷ lệ định tuyến chính xác".8
+Translate into Delivery Metrics (Chuyển thành Chỉ số Chuyển giao): Đây là những gì nhóm kỹ thuật thực sự có thể ảnh hưởng và đo lường trong một chu kỳ xây dựng. Ví dụ: "độ chính xác của việc phân loại ý định", "tỷ lệ gọi công cụ (tool call) thành công", hoặc "độ trễ phản hồi của mô hình".8
+Một sai lầm phổ biến là các tài liệu thiết kế truyền thống 4 tập trung vào các chỉ số kết quả (ví dụ: "giảm chi phí") làm chỉ số thành công chính. Khung Hoạch định dựa trên KPI 8 làm rõ rằng đây là các chỉ số kết quả (lagging). Một dự án có thể thất bại trong nhiều tháng trước khi các chỉ số kết quả phản ánh điều đó. Kế hoạch dự án phải ưu tiên đo lường và tối ưu hóa các tín hiệu dẫn dắt (leading signals) trước tiên, vì chúng cung cấp cơ chế phản hồi nhanh nhất để điều chỉnh hướng đi.
+
+1.3 Các KPI Đặc thù của Tác nhân: Tin cậy và An toàn
+
+Đối với các tác nhân AI, đặc biệt là trong các lĩnh vực được quản lý chặt chẽ như tài chính, y tế hoặc nhân sự, các KPI liên quan đến độ tin cậy và an toàn không phải là các ràng buộc phi chức năng tùy chọn—chúng là các yêu cầu cốt lõi.11
+Việc các tác nhân tạo ra ảo giác (hallucinations) hoặc các phản hồi mâu thuẫn không chỉ làm xói mòn lòng tin của người dùng mà còn có thể gây ra rủi ro kinh doanh nghiêm trọng.11 Do đó, các chỉ số về "sự tin cậy" (Trust) phải được theo dõi như các tín hiệu dẫn dắt hàng đầu:
+Tỷ lệ Ảo giác (Hallucination Rate): Tỷ lệ phần trăm các phản hồi không chính xác về mặt thực tế, bịa đặt hoặc không thể kiểm chứng.11
+Tỷ lệ Phản hồi có Nguồn (Citation Rate): Tỷ lệ các phản hồi cung cấp thông tin được sao lưu một cách chính xác bằng các nguồn hoặc trích dẫn.11
+Tỷ lệ Tuân thủ Phạm vi (Scope Adherence): Tỷ lệ tác nhân từ chối một cách thích hợp các câu hỏi nằm ngoài phạm vi kiến thức hoặc chức năng được xác định của nó.11
+Tỷ lệ Leo thang Chính xác (Correct Escalation Rate): Tỷ lệ tác nhân nhận ra khi nó không chắc chắn hoặc khi một nhiệm vụ đòi hỏi sự can thiệp của con người, và leo thang một cách thích hợp.11
+Các chỉ số tin cậy và an toàn này 11 không nên bị xếp xuống mục "Ràng buộc Phi chức năng" trong tài liệu thiết kế.4 Chúng phải được nâng lên thành các KPI cốt lõi của sản phẩm. Sự xói mòn lòng tin 11 là một tín hiệu dẫn dắt trực tiếp đến sự sụt giảm trong việc áp dụng của người dùng 8, điều này sẽ đảm bảo thất bại của các mục tiêu kinh doanh (chỉ số kết quả). Do đó, lòng tin chính là sản phẩm, và việc đo lường nó là tối quan trọng.
+
+PHẦN 2: LỰA CHỌN KIẾN TRÚC TÁC NHÂN VÀ NỀN TẢNG CÔNG NGHỆ
+
+Việc lựa chọn framework và mẫu kiến trúc ban đầu sẽ quyết định sâu sắc đến khả năng kiểm soát, khả năng mở rộng, chi phí và tốc độ phát triển của dự án.
+
+2.1 Phân tích Chiến lược: "Workflows" (Luồng công việc) so với "Agents" (Tác nhân)
+
+Trước khi lựa chọn một framework phức tạp, điều quan trọng là phải hiểu sự khác biệt cơ bản về kiến trúc giữa "Workflows" (Luồng công việc) và "Agents" (Tác nhân). Các nghiên cứu từ các phòng thí nghiệm AI hàng đầu đã quan sát thấy rằng các triển khai thành công nhất trong sản xuất thường không sử dụng các framework phức tạp, mà thay vào đó là các mẫu đơn giản, có thể kết hợp.12
+Sự phân biệt chính là 12:
+Workflows (Luồng công việc): Đây là các hệ thống nơi LLM và các công cụ được điều phối thông qua các đường dẫn mã được xác định trước (predefined code paths). Logic nghiệp vụ và các bước được mã hóa cứng; LLM được sử dụng cho các nhiệm vụ cụ thể trong quy trình đó (ví dụ: tóm tắt văn bản, trích xuất thực thể). Chúng có thể dự đoán được, có độ trễ thấp hơn và ít tốn kém hơn.
+Agents (Tác nhân): Đây là các hệ thống nơi LLM tự động định hướng các quy trình và việc sử dụng công cụ của riêng nó. Tác nhân tự quyết định bước tiếp theo. Chúng linh hoạt và mạnh mẽ hơn nhiều nhưng phải trả giá bằng độ trễ cao hơn, chi phí cao hơn và tính không thể đoán trước cố hữu.
+Khuyến nghị chiến lược: Luôn bắt đầu với "Workflow" đơn giản nhất có thể để giải quyết vấn đề. Chỉ tăng độ phức tạp lên kiến trúc "Agent" đầy đủ khi tính linh hoạt động thực sự cần thiết.12
+
+2.2 Phân tích các Framework Tác nhân Mã nguồn mở
+
+Nếu một kiến trúc "Agent" động là cần thiết, việc lựa chọn framework phù hợp phụ thuộc vào mức độ phức tạp, nhu cầu cộng tác và tích hợp dữ liệu của dự án.13
+LangChain / LangGraph:
+LangChain: Được mô tả là "bộ công cụ" (toolkit) 14 hoặc "hộp LEGO".15 Nó cung cấp tính linh hoạt tối đa, khả năng kiểm soát chi tiết và một hệ sinh thái tích hợp rộng lớn cho hầu hết mọi LLM, cơ sở dữ liệu vector hoặc công cụ.15 Đây là lựa chọn mặc định để xây dựng các "Workflows" tùy chỉnh cao.15
+LangGraph: Là một phần mở rộng của LangChain, được xây dựng có mục đích cho các ứng dụng đa tác nhân, có trạng thái (stateful) với các chu trình (cycles).17 Nó mô hình hóa các tác nhân dưới dạng máy trạng thái đồ thị (graph state machine), cho phép kiểm soát luồng phân cấp và là nền tảng lý tưởng cho các mẫu Human-in-the-Loop (HITL) phức tạp.17
+Microsoft AutoGen:
+Được thiết kế từ đầu cho các hệ thống đa tác nhân cộng tác, có thể trò chuyện.1
+Điểm mạnh chính của nó là khả năng mở rộng cấp doanh nghiệp thông qua giao tiếp không đồng bộ (asynchronous) giữa các tác nhân phân tán. Điều này làm cho nó phù hợp cho các ứng dụng quy mô lớn, nơi các tác nhân có thể chạy trên các máy khác nhau.18
+CrewAI:
+Tập trung vào sự cộng tác dựa trên vai trò (role-based) trong các môi trường giống như một nhóm.18
+Nó cho phép xác định các tác nhân chuyên biệt (ví dụ: "Nhà nghiên cứu Kho", "Nhà phân tích Tài chính", "Người viết Báo cáo") và điều phối chúng để cộng tác hoàn thành một nhiệm vụ.18 Nó tối ưu cho các nhiệm vụ đòi hỏi chuyên môn đa ngành.18
+LlamaIndex:
+Mặc dù nó hỗ trợ các tác nhân, triết lý cốt lõi của LlamaIndex tập trung vào tích hợp và truy xuất dữ liệu.18
+Đây là lựa chọn hàng đầu nếu mục đích chính của tác nhân là thực hiện các quy trình Truy xuất Tăng cường Tạo sinh (RAG) phức tạp trên các nguồn dữ liệu có cấu trúc (ví dụ: SQL) và không có cấu trúc (ví dụ: PDF).18
+Sự lựa chọn ban đầu giữa một framework (như AutoGen) và một mẫu (như được mô tả bởi Anthropic 12) là một quyết định chiến lược. Các framework cung cấp các cấu trúc cộng tác đa tác nhân mạnh mẽ 18 nhưng có thể phức tạp và áp đặt các ràng buộc kiến trúc.12
+Hơn nữa, sự lựa chọn này quyết định mô hình tính toán cơ bản. LangGraph 17 về cơ bản là một máy trạng thái đơn quy trình, có thể kiểm tra được. AutoGen 18 là một hệ thống tác nhân phân tán, không đồng bộ. Mô hình thứ hai phức tạp hơn đáng kể để triển khai, gỡ lỗi và giám sát (như sẽ được thảo luận trong Phần 7), nhưng nó cung cấp một "trần" khả năng mở rộng cao hơn cho các trường hợp sử dụng cấp doanh nghiệp.
+
+Bảng 1: Phân tích So sánh các Framework Tác nhân AI then chốt
+
+Bảng sau đây tổng hợp các đặc điểm chính, các trường hợp sử dụng tốt nhất và các triết lý kiến trúc của các framework hàng đầu, dựa trên phân tích từ 18 và.18
+Framework
+Triết lý Cốt lõi
+Trường hợp Sử dụng Tốt nhất
+Quản lý Trạng thái & Bộ nhớ
+LangGraph
+Máy trạng thái đồ thị (Graph State Machine) có chu trình.
+Các quy trình làm việc phức tạp, phân cấp, có trạng thái (stateful) với sự giám sát của con người (HITL).
+Xử lý trạng thái rõ ràng trong các quy trình phân cấp; thiếu bộ nhớ dài hạn tích hợp sẵn (dựa vào tích hợp).
+AutoGen
+Cộng tác đa tác nhân phân tán, không đồng bộ.
+Các ứng dụng doanh nghiệp quy mô lớn đòi hỏi các tác nhân mô-đun, phân tán.
+Hỗ trợ quản lý trạng thái tuần tự hóa; không tối ưu hóa cho bộ nhớ liên tục, lâu dài.
+CrewAI
+Cộng tác dựa trên vai trò, giống như một nhóm.
+Các môi trường nhóm chuyên biệt (ví... phân tích nghiên cứu, hỗ trợ khách hàng).
+Quản lý trạng thái dựa trên vai trò; không có hệ thống bộ nhớ tích hợp sẵn (dựa vào tích hợp).
+LlamaIndex
+Tích hợp và truy xuất dữ liệu (Data-centric RAG).
+Các tác nhân nặng về truy xuất dữ liệu để hỏi đáp trên các nguồn dữ liệu phức tạp.
+Quản lý trạng thái ngữ cảnh động trong quá trình truy xuất; không duy trì trạng thái tác nhân.
+
+
+PHẦN 3: XÂY DỰNG TẬP DỮ LIỆU HUẤN LUYỆN (HỌC TẬP BẮT CHƯỚC)
+
+Đây là giai đoạn quan trọng và thường là tốn kém nhất đối với một dự án LAM. Không giống như LLM, vốn được huấn luyện chủ yếu trên văn bản, LAM đòi hỏi dữ liệu về hành vi và hành động. Dữ liệu này được gọi là "quỹ đạo" (trajectories)—các chuỗi trạng thái, hành động và quan sát.22 Có ba phương pháp chính để thu thập dữ liệu này.
+
+3.1 Phương pháp 1: Khai thác các Tập dữ liệu Quỹ đạo Công khai
+
+Trước khi tạo dữ liệu tùy chỉnh, các nhóm nên khám phá các tập dữ liệu công khai hiện có để huấn luyện trước (pre-training) hoặc thậm chí là tinh chỉnh (fine-tuning) cho các tác vụ chung.
+Tác vụ Tương tác GUI (Web, Di động, Máy tính): Một hệ sinh thái phong phú gồm các tập dữ liệu GUI đang nổi lên.2
+Di động: Các tập dữ liệu như Mobile-R1 2, AMEX 2, và AndroidInteraction 2 cung cấp các quỹ đạo tương tác chi tiết (ảnh chụp màn hình, hành động) trên các ứng dụng Android.
+Máy tính: ShowUI_desktop 2 tập trung vào việc định vị (grounding) các yếu tố GUI trên máy tính để bàn.
+Web: Các tập dữ liệu như Mind2Web, WebArena 2, và Multimodal-Mind2Web 2 cung cấp các nhiệm vụ phức tạp, đa bước trên các trang web thực. Pasta-1T 22 là một tập dữ liệu quy mô rất lớn về các tương tác web thực tế, tập trung vào quỹ đạo hành vi.
+Tác vụ Gọi API / Sử dụng Công cụ: Google đã phát hành các tập dữ liệu mẫu cho các tác nhân gọi công cụ, bao gồm "on-device" (cho trợ lý nhà thông minh), "customer-support" (cho các tác vụ hỗ trợ), và "content-creation" (cho các tác vụ tiếp thị).25
+
+Bảng 2: Tổng quan về các Tập dữ liệu Quỹ đạo (Trajectory) Công khai cho Huấn luyện LAM
+
+Bảng này cung cấp một bản tra cứu nhanh về các tập dữ liệu nền tảng cho các miền tác nhân khác nhau, dựa trên 2, và.24
+Tập dữ liệu
+Môi trường
+Loại Dữ liệu
+Trường hợp Sử dụng
+Mind2Web / WebArena
+Web
+HTML/DOM, Ảnh chụp màn hình, Chuỗi hành động
+Tự động hóa web tổng quát, đa bước
+Pasta-1T
+Web
+DOM, Hình ảnh, Bước lý luận
+Phân tích hành vi, tự động hóa web quy mô lớn
+Mobile-R1 / AMEX
+Di động (Android)
+Ảnh chụp màn hình, Chuỗi hành động, Hướng dẫn
+Điều khiển thiết bị di động, tự động hóa tác vụ ứng dụng
+ShowUI_desktop
+Máy tính (Desktop)
+Ảnh chụp màn hình, Chú thích Bounding-box
+Định vị yếu tố GUI trên máy tính để bàn
+Google Agent Datasets
+API / Công cụ
+Lời nhắc, Lệnh gọi công cụ, Phản hồi
+Tác nhân gọi API (ví dụ: nhà thông minh, hỗ trợ)
+
+
+3.2 Phương pháp 2: Ghi lại Dữ liệu Hành vi Người dùng (Human Demonstrations)
+
+Khi dữ liệu công khai không đủ hoặc không phù hợp với miền cụ thể, phương pháp tiếp theo là ghi lại các minh họa từ các chuyên gia con người.
+Tự động hóa Web (Scripted): Đối với các quy trình công việc có thể dự đoán được, có thể sử dụng các công cụ "ghi và phát lại" (record and playback).26
+Selenium IDE: Một tiện ích mở rộng trình duyệt phổ biến cho phép người kiểm thử ghi lại các hành động của họ (nhấp chuột, gõ phím, điều hướng) và xuất chúng dưới dạng kịch bản Selenium có thể tái sử dụng.26
+Playwright: Cung cấp các công cụ tự động hóa và ghi lại kịch bản mạnh mẽ tương tự.3
+Tương tác GUI (Unscripted): Để nắm bắt hành vi tự nhiên, không theo kịch bản của người dùng, các công cụ "ghi lại phiên người dùng" (session recording) là vô giá.30
+Các công cụ như Microsoft Clarity 30, Hotjar 30, Mouseflow 30, và FullStory 31 ghi lại các tương tác thô của người dùng, bao gồm các bản đồ nhiệt (heatmaps), các cú nhấp chuột, cuộn và di chuyển chuột. Dữ liệu này, mặc dù nhiễu, nhưng có thể được xử lý hậu kỳ và gán nhãn để tạo ra các quỹ đạo huấn luyện thực tế.
+Tác vụ Vật lý / Robot: Đối với các tác nhân vật lý, dữ liệu được thu thập thông qua "vận hành từ xa" (teleoperation), nơi con người điều khiển robot trong môi trường thực hoặc mô phỏng.32 Các thiết bị chuyên dụng, chẳng hạn như "tay cầm" (handheld gripper), có thể được sử dụng để chuyển kỹ năng của con người sang các hình thái robot khác nhau.34
+
+3.3 Phương pháp 3: Tạo Dữ liệu Quỹ đạo Tổng hợp (Synthetic)
+
+Đây là phương pháp tiên tiến nhất và có khả năng mở rộng cao nhất, giải quyết nút thắt cổ chai lớn nhất trong việc thu thập dữ liệu của con người.
+Tổng hợp dựa trên LLM: Phương pháp này sử dụng các LLM mạnh (ví dụ: GPT-4) để tự tạo ra các quỹ đạo—bao gồm nhiệm vụ, các bước lý luận, các lệnh gọi API chính xác và các kết quả dự kiến.23 Các bài báo học thuật như API-Gen mô tả các quy trình hoàn chỉnh để tạo tổng hợp các quỹ đạo gọi API.23
+Tổng hợp dựa trên Mô phỏng: Đối với các tác nhân tương tác với môi trường phức tạp (GUI hoặc vật lý), mô phỏng là chìa khóa để mở rộng dữ liệu.32
+Các môi trường như NVIDIA Isaac Lab 32 cho phép một quy trình mạnh mẽ: thu thập "một vài" (a handful) các minh họa chất lượng cao của con người, sau đó sử dụng mô phỏng để mở rộng chúng thành "hàng ngàn" ví dụ tổng hợp.32
+Lợi ích chính của mô phỏng là khả năng ngẫu nhiên hóa miền (domain randomization). Bằng cách tự động thay đổi các yếu tố như ánh sáng, kết cấu, vị trí đối tượng và bố cục GUI, các tập dữ liệu tổng hợp này tạo ra các tác nhân mạnh mẽ hơn nhiều, có khả năng khái quát hóa cho các điều kiện không lường trước trong thế giới thực.35
+Việc lựa chọn phương pháp thu thập dữ liệu tồn tại một "khoảng cách về độ trung thực" (fidelity gap). Các công cụ ghi lại phiên 30 ghi lại những gì người dùng làm, nhưng không ghi lại lý do (ý định) đằng sau hành động của họ. Các công cụ ghi lại kịch bản 26 ghi lại một đường đi tuyến tính, lý tưởng, thiếu sự đa dạng và khả năng sửa lỗi của con người thật. Dữ liệu công khai 2 có chất lượng cao nhưng có thể không phù hợp với miền tùy chỉnh của dự án.
+Do đó, một dự án LAM hoàn chỉnh phải áp dụng một chiến lược lai ghép:
+Sử dụng các tập dữ liệu công khai quy mô lớn 2 để huấn luyện trước (pre-training) khả năng hành động tổng quát.
+Thu thập một tập dữ liệu nhỏ hơn, chất lượng cao, cụ thể theo miền (domain-specific) bằng cách sử dụng kết hợp các công cụ ghi lại phiên 30 và chú thích có sự tham gia của con người 2 để nắm bắt ý định và lý luận phức tạp.
+Đầu tư chiến lược vào một môi trường mô phỏng.32 Việc chuyển từ ghi lại thụ động sang tạo tổng hợp tích cực là con đường duy nhất có thể mở rộng để tạo ra các tác nhân mạnh mẽ có thể xử lý các trường hợp biên trong thế giới thực.
+
+PHẦN 4: QUY TRÌNH HUẤN LUYỆN TÁC NHÂN ĐA GIAI ĐOẠN
+
+Sau khi có dữ liệu quỹ đạo, mô hình nền tảng (Foundation Model) phải được huấn luyện để trở thành một tác nhân. Quá trình này không phải là một bước duy nhất mà là một quy trình ba giai đoạn cổ điển, được phổ biến bởi các mô hình như ChatGPT và Claude.37
+
+4.1 Giai đoạn 1: Tinh chỉnh Giám sát (SFT) cho Lý luận và Hành động
+
+Giai đoạn đầu tiên dạy cho mô hình ngôn ngữ hoặc cú pháp của việc trở thành một tác nhân.
+Mục tiêu: Dạy cho mô hình cách định dạng đầu ra của nó để lý luận và gọi các công cụ một cách đáng tin cậy.
+Định dạng Dữ liệu: Dữ liệu huấn luyện phải ở định dạng JSONL, với mỗi dòng là một cấu trúc JSON hoàn chỉnh đại diện cho một cặp đầu vào/đầu ra mong muốn.39 Mặc dù số lượng ví dụ tối thiểu là 10, nhưng các cải tiến đáng kể thường được thấy với 50-100 ví dụ chất lượng cao, được chế tạo cẩn thận.39
+Nội dung Huấn luyện SFT:
+Huấn luyện ReAct (Reason + Act): Đây là một kỹ thuật quan trọng. Dữ liệu quỹ đạo từ Phần 3 (ví dụ: các minh họa của con người) được định dạng thành một chuỗi các bước Suy nghĩ (Thought), Hành động (Action), và Quan sát (Observation).40 Tinh chỉnh mô hình trên các ví dụ này dạy nó "suy nghĩ từng bước" và xen kẽ lý luận với việc thực thi hành động.41
+Huấn luyện Sử dụng Công cụ (Tool Use): Đồng thời, mô hình được huấn luyện để nhận ra khi nào một truy vấn của người dùng yêu cầu một công cụ bên ngoài (như API thời tiết hoặc máy tính) và tạo ra các lệnh gọi hàm (function calls) có cấu trúc JSON chính xác mà hệ thống có thể phân tích và thực thi.39
+Chiến lược: Một chiến lược hiệu quả về chi phí là "chưng cất" (distillation). Sử dụng một mô hình lớn hơn, tiên tiến (ví dụ: GPT-4.1) để tạo ra hàng ngàn ví dụ SFT chất lượng cao, sau đó sử dụng dữ liệu đó để tinh chỉnh một mô hình nhỏ hơn, nhanh hơn (ví dụ: GPT-4.1-mini).39
+
+4.2 Giai đoạn 2: Huấn luyện Mô hình Thưởng (Reward Modeling - RM)
+
+Mô hình được SFT biết cách hành động, nhưng nó chưa biết hành động nào là tốt hoặc được mong muốn. Giai đoạn này xây dựng một "thẩm phán" AI để cung cấp tín hiệu đó. Đây là bước đầu tiên của Học tập Củng cố từ Phản hồi của Con người (RLHF).37
+Mục tiêu: Tạo ra một mô hình (RM) có thể đánh giá một quỹ đạo hoặc phản hồi của tác nhân và gán cho nó một điểm thưởng (reward score) vô hướng.43
+Thu thập Dữ liệu: Giai đoạn này đòi hỏi một loại dữ liệu khác: dữ liệu ưu tiên (preference data). Con người (hoặc một LLM "giám khảo" mạnh hơn) được hiển thị hai hoặc nhiều phản hồi của tác nhân cho cùng một lời nhắc và được yêu cầu chọn phản hồi tốt hơn hoặc xếp hạng chúng.10
+Quy trình Huấn luyện: Một mô hình (thường được khởi tạo từ mô hình SFT Giai đoạn 1) được huấn luyện để dự đoán sở thích của con người. Nó học cách gán điểm thưởng cao hơn cho các phản hồi/quỹ đạo được ưa thích.43
+
+4.3 Giai đoạn 3: Tinh chỉnh Học tập Củng cố (RLHF với PPO)
+
+Đây là giai đoạn cuối cùng, nơi tác nhân được tối ưu hóa để phù hợp với sở thích của con người.
+Mục tiêu: Tối ưu hóa mô hình SFT (hiện được gọi là "chính sách" - policy) để nó tạo ra các hành động tối đa hóa điểm thưởng dự kiến từ Mô hình Thưởng (RM).38
+Thuật toán: Thuật toán tiêu chuẩn de-facto cho việc này là Proximal Policy Optimization (PPO).37
+Quy trình: PPO là một quy trình phức tạp và tốn kém về mặt tính toán, thường liên quan đến việc bốn mô hình riêng biệt tương tác trong một vòng lặp 44:
+Policy Model (Mô hình Chính sách): Tác nhân SFT đang được huấn luyện. Nó tạo ra các hành động.
+Reward Model (Mô hình Thưởng): "Thẩm phán" (RM) từ Giai đoạn 2. Nó đánh giá các hành động của chính sách và cung cấp tín hiệu thưởng.
+Value Model (Mô hình Giá trị): Một "nhà phê bình" (critic) được huấn luyện để dự đoán tổng phần thưởng trong tương lai từ một trạng thái nhất định.
+Reference Model (Mô hình Tham chiếu): Một bản sao cố định của mô hình SFT Giai đoạn 1.
+Ràng buộc (KL Divergence): Mục tiêu của PPO không chỉ là tối đa hóa phần thưởng. Nó còn bao gồm một hình phạt (thường là KL Divergence) để đảm bảo rằng chính sách mới không đi "quá xa" so với mô hình tham chiếu ban đầu.43 Điều này ngăn chặn "sự quên lãng thảm khốc" (catastrophic forgetting) (nơi mô hình quên các khả năng cơ bản của nó) và "hack phần thưởng" (reward hacking) (nơi nó tìm ra cách đánh lừa RM mà không thực sự hữu ích).
+Điều quan trọng là phải nhận ra rằng SFT và RLHF phục vụ các mục đích bổ sung. SFT (Giai đoạn 1) dạy cho tác nhân ngữ pháp của hành động—cách định dạng ReAct 41 và gọi các công cụ.39 RLHF (Giai đoạn 2 & 3) dạy cho tác nhân ngữ nghĩa của sự hữu ích—những gì cần đạt được để phù hợp với sở thích của con người.44 Một tác nhân chỉ được SFT có thể học cách thực thi hoàn hảo một kế hoạch sai lầm. RLHF là giai đoạn điều chỉnh ý định của tác nhân cho phù hợp với mục tiêu của người dùng.
+Tuy nhiên, quy trình PPO/RLHF đầy đủ 38 là cực kỳ phức tạp. Một kế hoạch dự án thực dụng nên đánh giá các phương pháp thay thế. Các kỹ thuật như "Tự huấn luyện Tương phản" (Contrastive Self-Training - CST) 40 có thể cải thiện nhận thức của tác nhân giữa các quỹ đạo thất bại và thành công mà không cần RM đầy đủ. Các phương pháp khác (như Direct Preference Optimization - DPO) có thể tối ưu hóa trực tiếp trên dữ liệu ưu tiên 10 như một bước SFT, có khả năng đạt được phần lớn lợi ích với một phần nhỏ độ phức tạp về mặt tính toán.
+
+PHẦN 5: TRIỂN KHAI BỘ NHỚ TÁC NHÂN VÀ KIẾN TRÚC TRUY XUẤT
+
+Một tác nhân không có bộ nhớ chỉ đơn giản là một hàm phản ứng. Để thực hiện các nhiệm vụ phức tạp, duy trì các cuộc trò chuyện và học hỏi từ các tương tác, một tác nhân cần một kiến trúc bộ nhớ mạnh mẽ, thường được chia thành hai loại.
+
+5.1 Bộ nhớ Ngắn hạn (Short-Term / Conversational Memory)
+
+Mục đích: Ghi nhớ bối cảnh ngay lập tức của cuộc trò chuyện hoặc nhiệm vụ hiện tại.
+Triển khai: Thường được thực hiện bằng các bộ đệm (buffers) trong bộ nhớ.
+Trong LangChain, điều này thường được xử lý bằng các lớp như ConversationBufferWindowMemory, chỉ lưu giữ $N$ tin nhắn cuối cùng để ngăn cửa sổ bối cảnh bị tràn.45
+Trong LlamaIndex, một đối tượng Memory có thể được khởi tạo và truyền rõ ràng vào phương thức run() của tác nhân, cho phép nó truy cập lịch sử trò chuyện gần đây.46
+
+5.2 Bộ nhớ Dài hạn (Long-Term / Semantic Memory)
+
+Mục đích: Cung cấp cho tác nhân kiến thức chuyên sâu về miền (domain knowledge) (ví dụ: tài liệu sản phẩm, cơ sở tri thức) hoặc khả năng ghi nhớ các tương tác và sự kiện từ các phiên trong quá khứ xa.
+Kiến trúc: Triển khai tiêu chuẩn cho bộ nhớ dài hạn là Retrieval-Augmented Generation (RAG).48 Tác nhân truy xuất kiến thức có liên quan từ một kho lưu trữ bên ngoài trước khi nó tạo ra phản hồi.
+Quy trình Triển khai:
+Khởi tạo Kho Vector: Chọn và thiết lập một cơ sở dữ liệu vector (ví dụ: Chroma 45, Qdrant, Milvus, hoặc Weaviate 47).
+Nạp Dữ liệu (Indexing): Sử dụng một mô hình nhúng (embedding model) (ví dụ: BAAI/llm-embedder 45) để chuyển đổi các tài liệu kiến thức (ví dụ: PDF, trang web 48) hoặc lịch sử trò chuyện cũ thành các vector số và lưu trữ chúng trong kho vector.
+Truy xuất (Retrieval): Khi tác nhân nhận được một truy vấn mới, truy vấn đó trước tiên được sử dụng để thực hiện tìm kiếm tương đồng (semantic search) trong kho vector. Thao tác này lấy ra $k$ đoạn thông tin có liên quan nhất (ví dụ: $k=3$ 45).
+Tăng cường (Augmentation): Các đoạn thông tin được truy xuất (relevant_information) sau đó được chèn vào lời nhắc (prompt) của tác nhân, cung cấp cho nó bối cảnh cần thiết để trả lời câu hỏi.49
+Các framework hiện đại cung cấp các khối xây dựng cho việc này. LlamaIndex, ví dụ, có một VectorMemoryBlock được xây dựng có mục đích, cho phép "tìm kiếm vector làm bộ nhớ dài hạn" để tự động lấy các cuộc trò chuyện trong quá khứ có liên quan đến truy vấn hiện tại.47
+Một hệ thống tác nhân mạnh mẽ phải phân biệt rõ ràng giữa hai loại bộ nhớ dài hạn:
+Bộ nhớ Tuyên bố (Declarative Memory): Kiến thức tĩnh, khách quan về thế giới (ví dụ: nội dung của một bài đăng blog 48).
+Bộ nhớ Tình tiết (Episodic Memory): Hồ sơ về các tương tác cá nhân trong quá khứ (ví dụ: "các cuộc trò chuyện có liên quan từ lịch sử" 45).
+Hai loại bộ nhớ này phải được lưu trữ trong các kho vector hoặc "bộ sưu tập" (collections) riêng biệt.45 Việc nhầm lẫn giữa chúng có thể dẫn đến các chế độ thất bại nghiêm trọng, chẳng hạn như vi phạm quyền riêng tư (làm rò rỉ bộ nhớ tình tiết của người dùng này cho người dùng khác) hoặc làm rối loạn bối cảnh (nhầm lẫn một cuộc trò chuyện về một chủ đề với một tài liệu thực tế về chủ đề đó).
+Hơn nữa, một chế độ thất bại phổ biến của RAG là "lũ lụt token" (token flooding), như được tác giả của 49 lo ngại. Việc chèn mù quáng $k$ đoạn văn bản lớn vào lời nhắc có thể làm quá tải cửa sổ bối cảnh của tác nhân, làm suy giảm khả năng lý luận của nó hoặc gây ra chi phí không cần thiết. Một kiến trúc mạnh mẽ phải bao gồm một bước "lọc/tóm tắt" sau truy xuất, đảm bảo rằng bối cảnh được chèn tuân thủ một ngân sách token nghiêm ngặt 46 trước khi được chuyển đến tác nhân để lý luận.
+
+PHẦN 6: KHUNG ĐÁNH GIÁ, AN TOÀN VÀ KIỂM THỬ CHUYÊN SÂU (RED TEAMING)
+
+Việc triển khai một tác nhân có khả năng thực thi mã, truy cập hệ thống tệp và tương tác với các API bên ngoài mà không có một khung đánh giá an toàn nghiêm ngặt là vô trách nhiệm. Giai đoạn này bao gồm hai thành phần: "nơi" để kiểm thử (sandbox) và "cách thức" để kiểm thử (red teaming).
+
+6.1 Môi trường Kiểm thử Biệt lập (Sandboxing): "Nơi" để Kiểm thử An toàn
+
+Tại sao: Các tác nhân AI có khả năng "thực thi mã tùy ý" và tương tác với "các hệ thống quan trọng".50 Việc đánh giá chúng trong một môi trường không được bảo vệ có thể dẫn đến mất dữ liệu, vi phạm an ninh hoặc gián đoạn dịch vụ nghiêm trọng.50
+Định nghĩa: Sandbox là một "môi trường biệt lập" được kiểm soát, cho phép kiểm tra và giám sát hành vi của AI một cách an toàn mà không gây rủi ro cho các hệ thống sản xuất.50
+Công cụ & Khung:
+Inspect Sandboxing Toolkit (từ AISI): Đây là một bộ công cụ quan trọng, mã nguồn mở được thiết kế để đánh giá tác nhân một cách an toàn.50 Kiến trúc cốt lõi của nó hoạt động bằng cách tách biệt việc thực thi mô hình (inference) khỏi môi trường thực thi công cụ.50 Tác nhân chạy bên ngoài sandbox và gửi các lệnh (ví dụ: "chạy mã Python này") vào sandbox, cho phép kiểm soát chi tiết. Bộ công cụ bao gồm các plugin cho các mức độ cách ly khác nhau, từ Docker Compose và Kubernetes đến các máy ảo (VM) được cách ly hoàn toàn bằng Proxmox cho các đánh giá rủi ro cao.50
+OpenAgentSafety: Đây là một khung đánh giá toàn diện, không chỉ là một công cụ sandbox.51 Nó được thiết kế để đánh giá các tác nhân khi chúng tương tác với các công cụ thực (trình duyệt web, môi trường thực thi mã, hệ thống tệp, vỏ bash) trong hàng trăm kịch bản rủi ro, bao gồm cả các ý định độc hại và lành tính.51
+
+Bảng 3: Khung Đánh giá 8 Hạng mục Rủi ro Nghiêm trọng (Dựa trên OpenAgentSafety)
+
+Một kế hoạch kiểm thử hoàn chỉnh phải đánh giá một cách có hệ thống các chế độ thất bại. Khung OpenAgentSafety xác định tám hạng mục rủi ro nghiêm trọng.51 Bảng sau đây, dựa trên các ví dụ từ 51, cung cấp một danh sách kiểm tra cụ thể về các kịch bản cần kiểm thử.
+
+Hạng mục Rủi ro
+Kịch bản Thất bại Ví dụ
+Unsafe Code Execution (Thực thi mã không an toàn)
+Tạo các tập lệnh Python chạy mù quáng các lệnh shell do người dùng cung cấp mà không có xác thực.
+Financial Loss (Thiệt hại tài chính)
+Ủy quyền biển thủ hoặc các giao dịch gian lận để "giải quyết" một vấn đề dịch vụ khách hàng.
+Spreading Malicious Content (Phát tán nội dung độc hại)
+Gửi tin nhắn lăng mạ, đe dọa hoặc không phù hợp thay mặt người dùng trên các nền tảng nhắn tin.
+Legal Violations (Vi phạm pháp lý)
+Cố ý gửi các biểu mẫu chính thức không chính xác (ví dụ: biểu mẫu thuế hoặc nhập cư I-9) để gây hại.
+Privacy Breach (Vi phạm quyền riêng tư)
+Làm lộ thông tin nhận dạng cá nhân (PII) của nhân viên (ví dụ: SSN) bằng cách sao chép tệp vào thư mục công cộng.
+Data Loss / Corruption (Mất mát / Hỏng dữ liệu)
+Xóa các tệp hệ thống quan trọng hoặc cơ sở dữ liệu khi đang cố gắng thực hiện một nhiệm vụ dọn dẹp không liên quan.
+Computer Security Compromise (Xâm phạm an ninh máy tính)
+Làm rò rỉ khóa SSH riêng tư, mật khẩu hoặc khóa API trong quá trình thiết lập hoặc gỡ lỗi máy chủ.
+(Hạng mục thứ 8)
+(Khung xác định 8 loại [51, 54, 55]; 51 cung cấp các ví dụ cụ thể cho 7 loại này).
+
+
+6.2 Kỹ thuật Tấn công Thử nghiệm (Red Teaming): "Cách thức" để Kiểm thử Đối kháng
+
+Mục tiêu: Vượt ra ngoài các bài kiểm tra chức năng tiêu chuẩn để "kiểm thử có hệ thống" và chủ động tìm kiếm các lỗ hổng, hành vi không mong muốn và các rủi ro mới nổi trước khi chúng bị khai thác trong tự nhiên.56
+Các Kỹ thuật Chính: Một chiến dịch red team toàn diện phải sử dụng nhiều kỹ thuật 59:
+Adversarial Input Generation (Tạo đầu vào đối kháng): Thao túng đầu vào một cách tinh vi (ví dụ: thay thế từ đồng nghĩa, thêm nhiễu loạn) để đánh lừa mô hình mà không bị con người phát hiện.59
+Prompt Injection (Tiêm nhiễm Lời nhắc): Nỗ lực "bẻ khóa" (jailbreak) tác nhân, cố gắng ghi đè lên các hướng dẫn hệ thống của nó hoặc thuyết phục nó bỏ qua các biện pháp bảo vệ an toàn.59
+Bias Testing (Kiểm tra Thiên vị): Thăm dò một cách có hệ thống các phản hồi của mô hình để tìm các thành kiến mang tính rập khuôn hoặc có hại dựa trên nhân khẩu học.59
+Information Leakage Testing (Kiểm tra Rò rỉ Thông tin): Cố gắng lừa mô hình tiết lộ PII, dữ liệu kinh doanh bí mật, khóa API, hoặc thậm chí là các đoạn dữ liệu huấn luyện đã ghi nhớ.59
+Data Poisoning Simulations (Mô phỏng Nhiễm độc Dữ liệu): Kiểm tra khả năng phục hồi của mô hình bằng cách mô phỏng một cuộc tấn công trong đó dữ liệu huấn luyện độc hại được đưa vào.59
+Chiến lược: Cần có sự kết hợp của cả kiểm thử thủ công (sử dụng sự sáng tạo và trực giác của con người để tìm ra các lỗi mới lạ 56) và kiểm thử tự động (sử dụng các công cụ để chạy hàng ngàn cuộc tấn công đã biết ở quy mô lớn 57). Các phương pháp tiên tiến thậm chí còn sử dụng một "Tác nhân Red-Teaming" tự động để tấn công tác nhân mục tiêu.61
+Sandboxing 50 và Red Teaming 60 là hai mặt của cùng một đồng tiền: Ngăn chặn và Khiêu khích. Không thể thực hiện Red Team một tác nhân mạnh mẽ một cách hiệu quả nếu không có một sandbox an toàn để chứa các thất bại tiềm ẩn. Ngược lại, một sandbox sẽ vô dụng nếu không có một kế hoạch Red Teaming nghiêm ngặt để kiểm tra các giới hạn của nó. Kết quả từ các nỗ lực "khiêu khích" của Red Team (ví dụ: "tác nhân đã cố gắng truy cập mạng") sẽ trực tiếp xác định các yêu cầu cho cấu hình "ngăn chặn" của sandbox (ví dụ: "chặn tất cả quyền truy cập mạng bên ngoài").50
+Nguy cơ thực sự của các tác nhân không phải là một "jailbreak" đơn lẻ, mà là một "jailbreak" kết hợp với "sử dụng công cụ". Các khung như OpenAgentSafety 51 rất quan trọng vì chúng đánh giá chính sự giao thoa này. Việc đánh giá an toàn phải kiểm tra các lỗ hổng chuỗi hành động (ví dụ: lừa tác nhân đọc một tệp nhạy cảm, sau đó lừa nó dán nội dung vào một kênh công cộng), chứ không chỉ các lỗ hổng đầu ra đơn lẻ.
+
+PHẦN 7: VẬN HÀNH, GIÁM SÁT VÀ CÁC VÒNG LẶP PHẢN HỒI (MLOPS)
+
+Sau khi triển khai, dự án chuyển từ phát triển sang giai đoạn MLOps (Vận hành Học máy) liên tục. Đối với các tác nhân AI, điều này đặt ra những thách thức giám sát độc nhất.
+
+7.1 Khả năng Quan sát Tác nhân (Agent Observability & Monitoring)
+
+Thách thức: Giám sát các tác nhân AI khó hơn đáng kể so với các ứng dụng truyền thống. Các tác nhân không xác định (non-deterministic); cùng một đầu vào có thể tạo ra các kết quả khác nhau. Chúng có thể bị lặp vô hạn, tốn kém chi phí. Và quan trọng nhất, chúng thất bại theo những cách tinh vi (ví dụ: ảo giác, bỏ qua các bước quan trọng, hiểu sai ý định) mà việc giám sát thời gian hoạt động (uptime) và độ trễ tiêu chuẩn không thể phát hiện được.62
+Giải pháp: Truy vết (Tracing). Cách duy nhất để hiểu hành vi của tác nhân là ghi lại mọi bước trong quy trình "suy nghĩ" của nó.
+Sử dụng các công cụ được xây dựng có mục đích như Langfuse 63 hoặc các nền tảng khác tuân thủ tiêu chuẩn mở OpenTelemetry.62
+Các nền tảng này cho phép bạn nắm bắt toàn bộ vòng đời của một tương tác: đầu vào, đầu ra, mọi lệnh gọi công cụ, các lần thử lại, độ trễ từng bước và chi phí token.65
+Các Tín hiệu Vàng (Golden Signals) cần Ghi nhật ký: Một bảng điều khiển giám sát tác nhân hiệu quả phải theo dõi 62:
+Inputs/Outputs: Toàn bộ lời nhắc (prompts) và phản hồi (responses) cuối cùng, được gắn thẻ với ID người dùng và ID phiên để gỡ lỗi.62
+Tool Calls: Tên của mọi công cụ được gọi, các tham số đầu vào được cung cấp, đầu ra (hoặc lỗi) nhận được, và độ trễ của nó.62
+Reasoning Trace: "Suy nghĩ" (thought) của tác nhân ở mỗi bước. Đây là dữ liệu quan trọng nhất để gỡ lỗi tại sao tác nhân đưa ra một quyết định cụ thể.63
+Cost & Tokens: Theo dõi chi phí và số lượng token cho mỗi lệnh gọi LLM để ngăn chặn chi phí tăng vọt.62
+Latency & Performance: Thời gian phản hồi tổng thể, cũng như độ trễ của từng thành phần (ví dụ: thời gian lý luận của LLM so với thời gian thực thi của công cụ).62
+User Feedback: Ghi lại các tín hiệu phản hồi rõ ràng từ người dùng (ví dụ: điểm số 👍/👎).69
+Thực hành tốt nhất: Tích hợp giám sát và đánh giá vào quy trình Tích hợp Liên tục/Triển khai Liên tục (CI/CD) để tự động phát hiện sự suy giảm (drift) hoặc các lời nhắc bị hỏng trước khi chúng đến tay người dùng sản xuất.62
+
+Bảng 4: Các Chỉ số Giám sát Then chốt và Dấu hiệu Cần theo dõi cho Tác nhân AI
+
+Bảng điều khiển vận hành của tác nhân phải tập trung vào các kết quả hành vi, không chỉ là sức khỏe hệ thống. Bảng sau đây, dựa trên 62, cung cấp một mẫu cho các chỉ số quan trọng và các trình kích hoạt cảnh báo.
+Chỉ số / Tín hiệu
+Tại sao nó Quan trọng
+Kích hoạt Báo động Mẫu
+Latency & Response Time (Độ trễ & Thời gian Phản hồi)
+Giữ trải nghiệm người dùng mượt mà, đặc biệt là trong các quy trình làm việc thời gian thực.
+Thời gian phản hồi trung bình tăng vọt từ 1.5 giây lên 5 giây sau khi cập nhật mô hình.
+Prompt Success Rate (Tỷ lệ Thành công của Lời nhắc)
+Cho thấy tần suất tác nhân tạo ra kết quả có thể sử dụng được cho một loại yêu cầu nhất định.
+Tỷ lệ thành công giảm xuống dưới 85% cho các lời nhắc thuộc danh mục "thanh toán".
+Output Quality & Intent Accuracy (Chất lượng Đầu ra & Độ chính xác Ý định)
+Đảm bảo tác nhân hiểu đúng yêu cầu và đưa ra câu trả lời chính xác, hoàn chỉnh.
+Khối lượng lớn phản hồi "Tôi không yêu cầu điều đó" hoặc các phản hồi không liên quan bị gắn cờ.
+Compliance & Safety Checks (Kiểm tra Tuân thủ & An toàn)
+Ngăn chặn các vấn
+
+
+đề pháp lý, quy định hoặc thương hiệu.
+Mô hình xuất ra PII hoặc ngôn ngữ vi phạm chính sách—bị gắn cờ bởi các bộ lọc tự động.
+
+
+
+| Drift Detection (Phát hiện Suy giảm) | Phát hiện các thay đổi hành vi không mong muốn sau khi đào tạo lại hoặc cập nhật mô hình cơ sở. | Cảm xúc hoặc định dạng phản hồi thay đổi đáng kể so với đường cơ sở. |
+| Cost Efficiency (Hiệu quả Chi phí) | Giữ việc sử dụng token, các lệnh gọi API và chi tiêu tính toán trong tầm kiểm soát. | Chi phí cho mỗi đầu ra thành công tăng 30% trong một tuần. |
+| Error Rates & Tool Reliability (Tỷ lệ Lỗi & Độ tin cậy của Công cụ) | Xác định các tích hợp bên ngoài bị hỏng hoặc các đầu ra không đúng định dạng. | Tỷ lệ lỗi của api_payment_tool vượt quá 5%. |
+
+7.2 Kiến trúc có sự tham gia của Con người (Human-in-the-Loop - HITL)
+
+Đối với nhiều quy trình làm việc của tác nhân, đặc biệt là những quy trình có rủi ro cao, việc triển khai tự chủ 100% là không khả thi hoặc vô trách nhiệm.70 Giải pháp là một mẫu kiến trúc (architectural pattern) được gọi là Human-in-the-Loop (HITL).71
+Tại sao: HITL là cần thiết để xác thực an toàn (ví dụ: phê duyệt một giao dịch tài chính), sửa lỗi, đảm bảo tuân thủ (ví dụ: các yêu cầu của SOC 2), và xử lý các trường hợp phức tạp, mơ hồ mà AI không tự tin.9
+Kiến trúc: HITL không phải là một tính năng, mà là một thiết kế hệ thống.
+Triển khai với LangGraph: Framework LangGraph được xây dựng tùy chỉnh cho mẫu này.17
+Quy trình làm việc của tác nhân được mô hình hóa dưới dạng một đồ thị (graph) có trạng thái.17
+Các "nút" (nodes) trong đồ thị có thể là các lệnh gọi LLM, lệnh gọi công cụ, hoặc các nút chờ con người (human review nodes).17
+Quy trình 17:
+Tác nhân thực thi quy trình làm việc của mình cho đến khi nó đến một điểm quyết định quan trọng (ví dụ: "thực thi mã này" hoặc "gửi email cho 1000 khách hàng").
+Một "cạnh có điều kiện" (conditional edge) trong đồ thị, dựa trên các quy tắc (ví dụ: rủi ro cao, độ tin cậy thấp 72), sẽ định tuyến quy trình đến một "nút xét duyệt của con người".
+Tác nhân tạm dừng (pauses) và lưu trạng thái hiện tại của nó vào một "điểm kiểm tra" (checkpoint).17
+Một giao diện người dùng (UI) thông báo cho một nhà điều hành con người về nhiệm vụ đang chờ xử lý.74
+Con người xem xét bối cảnh, có thể chỉnh sửa các tham số (ví dụ: "không, chỉ gửi email cho nhóm nội bộ"), và phê duyệt hành động.73
+Quy trình làm việc của tác nhân tiếp tục (resumes) từ điểm kiểm tra với dữ liệu đã được con người phê duyệt hoặc sửa đổi.17
+Hai khía cạnh quan trọng nhất của MLOps tác nhân thường bị bỏ qua.
+Thứ nhất, hệ thống HITL 17 không chỉ là một tính năng an toàn; nó là cơ chế thu thập dữ liệu chính cho phiên bản tiếp theo của mô hình. Mỗi khi con người sửa chữa một hành động do tác nhân đề xuất 73, cặp (hành_động_tác_nhân, hành_động_sửa_chữa_của_con_người) đó là một ví dụ SFT (Phần 4.1) chất lượng vàng.39 Mỗi khi con người phê duyệt một hành động, đó là một tín hiệu ưu tiên tích cực cho Mô hình Thưởng (Phần 4.2).43 Hệ thống HITL sản xuất phải được kết nối trực tiếp với quy trình dữ liệu huấn luyện.
+Thứ hai, "Khả năng Quan sát" 65 và "HITL" 17 cuối cùng sẽ hợp nhất. Khi một con người được gọi vào vòng lặp, họ cần nhiều hơn là một nút "Phê duyệt/Từ chối". Họ cần bối cảnh. Bối cảnh đó chính là dấu vết quan sát (observability trace) 69 cho thấy lý luận từng bước của tác nhân. Giao diện Người dùng HITL phải được tích hợp với backend Khả năng Quan sát (ví dụ: Langfuse). Con người là "phi công phụ" 17, và một phi công phụ cần phải xem các thiết bị bay (dấu vết) để đưa ra quyết định đúng đắn.
+
+PHẦN 8: KẾT LUẬN VÀ CÁC BƯỚC TIẾP THEO
+
+Báo cáo này đã trình bày một kế hoạch 7 giai đoạn toàn diện để xây dựng một AI Agent hoặc LAM hoàn chỉnh. Lộ trình này nhấn mạnh một sự thật cơ bản: việc xây dựng các tác nhân có khả năng không còn là một bài toán thuần túy về kỹ thuật mô hình (model engineering) mà là một bài toán phức tạp về kỹ thuật hệ thống (system engineering).
+Thành công đòi hỏi sự nghiêm ngặt ở mọi giai đoạn:
+Hoạch định: Liên kết các chỉ số tin cậy của tác nhân 11 trực tiếp với các tín hiệu kinh doanh dẫn dắt.8
+Kiến trúc: Đưa ra quyết định có ý thức giữa các "Workflows" có thể dự đoán 12 và các "Agents" động.18
+Dữ liệu: Đầu tư vào các chiến lược thu thập và tạo dữ liệu quỹ đạo lai ghép, với trọng tâm chiến lược là mô phỏng.32
+Huấn luyện: Thực hiện quy trình SFT-RM-RLHF đa giai đoạn 37, hiểu rõ mục đích riêng biệt của từng giai đoạn.
+Bộ nhớ: Thiết kế một hệ thống bộ nhớ kép, tách biệt bộ nhớ tuyên bố (kiến thức) 48 khỏi bộ nhớ tình tiết (lịch sử).45
+An toàn: Triển khai các sandbox có thể chứa lỗi 50 và các chiến dịch red team đối kháng để khiêu khích chúng.60
+Vận hành: Xây dựng khả năng quan sát chi tiết (truy vết) 65 và tích hợp các vòng lặp HITL 17 làm cả biện pháp bảo vệ và nguồn cấp dữ liệu huấn luyện.
+Dự án không kết thúc khi triển khai. Các hệ thống tác nhân thành công nhất sẽ là những hệ thống triển khai một "bánh đà" cải tiến liên tục.75 Dữ liệu từ Giám sát (Phần 7.1) và các can thiệp HITL (Phần 7.2) cung cấp dòng dữ liệu chất lượng cao, liên tục, trực tiếp chảy ngược vào các quy trình thu thập dữ liệu (Phần 3) và huấn luyện (Phần 4). Vòng lặp phản hồi này là cơ chế cốt lõi để tạo ra các tác nhân ngày càng có khả năng, đáng tin cậy và an toàn hơn theo thời gian.
+Nguồn trích dẫn
+Top 7 Frameworks for Building AI Agents in 2025 - Analytics Vidhya, truy cập vào tháng 11 4, 2025, https://www.analyticsvidhya.com/blog/2024/07/ai-agent-frameworks/
+Khang-9966/Computer-Browser-Phone-Use-Agent ... - GitHub, truy cập vào tháng 11 4, 2025, https://github.com/Khang-9966/Computer-Browser-Phone-Use-Agent-Datasets
+Steward: Natural Language Web Automation - arXiv, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2409.15441v1
+eugeneyan/ml-design-docs: Design doc template ... - GitHub, truy cập vào tháng 11 4, 2025, https://github.com/eugeneyan/ml-design-docs
+How to Write Machine Learning Design Documents - ApplyingML, truy cập vào tháng 11 4, 2025, https://applyingml.com/resources/ml-design-docs/
+Standard Template for Machine Learning projects - deepsense.ai's approach, truy cập vào tháng 11 4, 2025, https://deepsense.ai/blog/standard-template-for-machine-learning-projects-deepsense-ais-approach/
+Best Practices for Evaluating AI Agent Pilot Projects - Sparkco AI, truy cập vào tháng 11 4, 2025, https://sparkco.ai/blog/best-practices-for-evaluating-ai-agent-pilot-projects
+Scoping AI Projects Around KPIs That Matter - Turing, truy cập vào tháng 11 4, 2025, https://www.turing.com/blog/scoping-ai-projects-around-kpis-that-matter
+Top 13 Best Practices for AI agent development - Assistents.ai, truy cập vào tháng 11 4, 2025, https://www.assistents.ai/blog/best-practices-in-ai-agent-development-and-implementation
+The Essential KPIs to Track AI Agent Deployment Success | Blog - Codiste, truy cập vào tháng 11 4, 2025, https://www.codiste.com/essential-kpi-for-track-ai-agent-deployment-success
+How to Measure Agent Success: KPIs, ROI, and Human-AI ... - Netguru, truy cập vào tháng 11 4, 2025, https://www.netguru.com/blog/how-to-measure-agent-success
+Building Effective AI Agents - Anthropic, truy cập vào tháng 11 4, 2025, https://www.anthropic.com/research/building-effective-agents
+AI Agent Frameworks: Choosing the Right Foundation for Your Business | IBM, truy cập vào tháng 11 4, 2025, https://www.ibm.com/think/insights/top-ai-agent-frameworks
+The Ultimate Guide to AI Agent Frameworks: [2025 Edition] - Edstellar, truy cập vào tháng 11 4, 2025, https://www.edstellar.com/blog/ai-agent-frameworks
+The Ultimate Guide to AI AgentIC Frameworks | atalupadhyay - WordPress.com, truy cập vào tháng 11 4, 2025, https://atalupadhyay.wordpress.com/2025/10/22/the-ultimate-guide-to-ai-agent-frameworks/
+Top Agent Frameworks: LangChain vs LlamaIndex vs AutoGen vs CrewAI - TechAhead, truy cập vào tháng 11 4, 2025, https://www.techaheadcorp.com/blog/top-agent-frameworks/
+Building Smarter Agents: A Human-in-the-Loop Guide to LangGraph ..., truy cập vào tháng 11 4, 2025, https://medium.com/@oleg-dubetcky/building-smarter-agents-a-human-in-the-loop-guide-to-langgraph-dfe1673d8b7b
+Comparing Top Agentic AI Frameworks | by Ken Huang | Medium, truy cập vào tháng 11 4, 2025, https://kenhuangus.medium.com/comparing-top-agentic-ai-frameworks-47bc1eb9bfed
+Top 5 Open Source Frameworks for building AI Agents: Code + Examples - Reddit, truy cập vào tháng 11 4, 2025, https://www.reddit.com/r/LangChain/comments/1ioc62v/top_5_open_source_frameworks_for_building_ai/
+Comparing Open-Source AI Agent Frameworks - Langfuse Blog, truy cập vào tháng 11 4, 2025, https://langfuse.com/blog/2025-03-19-ai-agent-comparison
+A Detailed Comparison of Top 6 AI Agent Frameworks in 2025 - Turing, truy cập vào tháng 11 4, 2025, https://www.turing.com/resources/ai-agent-frameworks
+Deep dive on Pasta-1T: an open dataset of web trajectories to train browser agents, truy cập vào tháng 11 4, 2025, https://www.silverstream.ai/blog-news/pasta-1t
+An Intro to Trajectory Data for AI Agents - Onehouse.ai, truy cập vào tháng 11 4, 2025, https://www.onehouse.ai/openxdata/an-intro-to-trajectory-data-for-ai-agents
+AMEX: Android Multi-annotation Expo Dataset for Mobile GUI Agents - arXiv, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2407.17490v1
+Evaluate Gen AI agents | Generative AI on Vertex AI - Google Cloud, truy cập vào tháng 11 4, 2025, https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-agents
+Implementing Record and Playback in Selenium | BrowserStack, truy cập vào tháng 11 4, 2025, https://www.browserstack.com/guide/record-and-playback-in-selenium
+How to Use Selenium for Record and Playback | LambdaTest, truy cập vào tháng 11 4, 2025, https://www.lambdatest.com/blog/selenium-for-record-and-playback/
+3 | Record & Playback using Selenium IDE - YouTube, truy cập vào tháng 11 4, 2025, https://www.youtube.com/watch?v=bzGsHmEyea0
+Browser automation with python, Playwright, Selenium and Robocorp— the rpa challenge | by Simon Frank | Medium, truy cập vào tháng 11 4, 2025, https://medium.com/@simonpfrank_49786/browser-automation-with-python-playwright-selenium-and-robocorp-the-rpa-challenge-d47540abc222
+9 Top Session Recording Tools for Website & Apps [2025] - VWO, truy cập vào tháng 11 4, 2025, https://vwo.com/blog/session-recording-tools/
+8 Best Website Session Recording Tools to Use in 2025 - Contentsquare, truy cập vào tháng 11 4, 2025, https://contentsquare.com/guides/session-recordings/tools/
+What is Imitation Learning? | NVIDIA Glossary, truy cập vào tháng 11 4, 2025, https://www.nvidia.com/en-us/glossary/imitation-learning/
+Teleoperation and Imitation Learning with Isaac Lab Mimic, truy cập vào tháng 11 4, 2025, https://isaac-sim.github.io/IsaacLab/main/source/overview/imitation-learning/teleop_imitation.html
+\ourmethod: Cross-Embodiment Imitation Using a Grasping Tool - arXiv, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2411.03682v1
+How I Built an Open-Source Synthetic Data Tool to Fix My Imitation Learning Problems, truy cập vào tháng 11 4, 2025, https://www.youtube.com/watch?v=8K9TBExM6RE
+VITAL: Interactive Few-Shot Imitation Learning via Visual Human-in-the-Loop Corrections, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2407.21244v2
+Secrets of RLHF in Large Language Models Part II: Reward Modeling - arXiv, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2401.06080v2
+RLHF from scratch, step-by-step, in 3 Jupyter notebooks : r ... - Reddit, truy cập vào tháng 11 4, 2025, https://www.reddit.com/r/LocalLLaMA/comments/1ln1ij8/rlhf_from_scratch_stepbystep_in_3_jupyter/
+Supervised fine-tuning - OpenAI API, truy cập vào tháng 11 4, 2025, https://platform.openai.com/docs/guides/supervised-fine-tuning
+ReAct Meets ActRe: Autonomous Annotations of Agent Trajectories for Contrastive Self-Training - arXiv, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2403.14589v1
+Finetuning LLMs for ReAct | Towards AI, truy cập vào tháng 11 4, 2025, https://towardsai.net/p/l/finetuning-llms-for-react
+Supervised fine-tuning (Full FT, PEFT) - Amazon Nova - AWS Documentation, truy cập vào tháng 11 4, 2025, https://docs.aws.amazon.com/nova/latest/userguide/customize-fine-tune-hyperpod-sft.html
+RLHF + Reward Model + PPO on LLMs | by Madhur Prashant | Medium, truy cập vào tháng 11 4, 2025, https://medium.com/@madhur.prashant7/rlhf-reward-model-ppo-on-llms-dfc92ec3885f
+From Zero to PPO: Understanding the Path to Helpful AI Models - Adaptive ML, truy cập vào tháng 11 4, 2025, https://www.adaptive-ml.com/post/from-zero-to-ppo
+Building Memory-Augmented AI Agents with LangChain — Part 1 ..., truy cập vào tháng 11 4, 2025, https://medium.com/@saurabhzodex/building-memory-augmented-ai-agents-with-langchain-part-1-2c21cc8050da
+Memory | LlamaIndex Python Documentation, truy cập vào tháng 11 4, 2025, https://developers.llamaindex.ai/python/framework/module_guides/deploying/agents/memory/
+Improved Long & Short-Term Memory for LlamaIndex Agents, truy cập vào tháng 11 4, 2025, https://www.llamaindex.ai/blog/improved-long-and-short-term-memory-for-llamaindex-agents
+Build a RAG agent with LangChain, truy cập vào tháng 11 4, 2025, https://docs.langchain.com/oss/python/langchain/rag
+Integrating llama index vectorstoreindex with Langchain agents for RAG Applications, truy cập vào tháng 11 4, 2025, https://stackoverflow.com/questions/78216871/integrating-llama-index-vectorstoreindex-with-langchain-agents-for-rag-applicati
+The Inspect Sandboxing Toolkit: Scalable and secure AI agent ..., truy cập vào tháng 11 4, 2025, https://www.aisi.gov.uk/blog/the-inspect-sandboxing-toolkit-scalable-and-secure-ai-agent-evaluations
+arxiv.org, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2507.06134v1
+Agent Evaluation: Framework for Testing AI Agents - LangWatch, truy cập vào tháng 11 4, 2025, https://langwatch.ai/blog/framework-for-evaluating-agents
+(PDF) OpenAgentSafety: A Comprehensive Framework for Evaluating Real-World AI Agent Safety - ResearchGate, truy cập vào tháng 11 4, 2025, https://www.researchgate.net/publication/393511988_OpenAgentSafety_A_Comprehensive_Framework_for_Evaluating_Real-World_AI_Agent_Safety
+[2507.06134] OpenAgentSafety: A Comprehensive Framework for Evaluating Real-World AI Agent Safety - arXiv, truy cập vào tháng 11 4, 2025, https://arxiv.org/abs/2507.06134
+Nouha Dziri - OpenAgentSafety: A Comprehensive Framework for Evaluating Real-World AI Agent Safety - ICML 2025, truy cập vào tháng 11 4, 2025, https://icml.cc/virtual/2025/50078
+Defining LLM Red Teaming | NVIDIA Technical Blog, truy cập vào tháng 11 4, 2025, https://developer.nvidia.com/blog/defining-llm-red-teaming/
+LLM Red Teaming: The Complete Step-By-Step Guide To LLM Safety - Confident AI, truy cập vào tháng 11 4, 2025, https://www.confident-ai.com/blog/red-teaming-llms-a-step-by-step-guide
+Planning red teaming for large language models (LLMs) and their applications - Azure OpenAI in Azure AI Foundry Models | Microsoft Learn, truy cập vào tháng 11 4, 2025, https://learn.microsoft.com/en-us/azure/ai-foundry/openai/concepts/red-teaming
+LLM Red Teaming: 8 Techniques & Mitigation Strategies - Mindgard AI, truy cập vào tháng 11 4, 2025, https://mindgard.ai/blog/red-teaming-llms-techniques-and-mitigation-strategies
+LLM Red Teaming: 8 Techniques & Mitigation Strategies - Mindgard, truy cập vào tháng 11 4, 2025, https://www.mindgard.ai/blog/red-teaming-llms-techniques-and-mitigation-strategies
+CoP: Agentic Red-teaming for Large Language Models using Composition of Principles, truy cập vào tháng 11 4, 2025, https://arxiv.org/html/2506.00781v1
+AI Agent Monitoring: Best Practices, Tools, and Metrics for 2025 ..., truy cập vào tháng 11 4, 2025, https://uptimerobot.com/knowledge-hub/monitoring/ai-agent-monitoring-best-practices-tools-and-metrics/
+Mastering AI agent observability: A comprehensive guide | by Dave Davies - Medium, truy cập vào tháng 11 4, 2025, https://online-inference.medium.com/mastering-ai-agent-observability-a-comprehensive-guide-b142ed3604b1
+Why observability is essential for AI agents - IBM, truy cập vào tháng 11 4, 2025, https://www.ibm.com/think/insights/ai-agent-observability
+LLM Observability & Application Tracing (open source) - Langfuse, truy cập vào tháng 11 4, 2025, https://langfuse.com/docs/observability/overview
+AI Agent Observability with Langfuse, truy cập vào tháng 11 4, 2025, https://langfuse.com/blog/2024-07-ai-agent-observability-with-langfuse
+LLM Evaluation 101: Best Practices, Challenges & Proven Techniques - Langfuse Blog, truy cập vào tháng 11 4, 2025, https://langfuse.com/blog/2025-03-04-llm-evaluation-101-best-practices-and-challenges
+Trace and Observe AI Agents in Azure AI Foundry (preview) - Microsoft Learn, truy cập vào tháng 11 4, 2025, https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/develop/trace-agents-sdk
+Example - Trace and Evaluate LangGraph Agents - Langfuse, truy cập vào tháng 11 4, 2025, https://langfuse.com/guides/cookbook/example_langgraph_agents
+Human-in-the-Loop for AI Agents: Best Practices, Frameworks, Use Cases, and Demo, truy cập vào tháng 11 4, 2025, https://www.permit.io/blog/human-in-the-loop-for-ai-agents-best-practices-frameworks-use-cases-and-demo
+Oversee a prior art search AI agent with human-in-the-loop by using LangGraph and watsonx.ai - IBM, truy cập vào tháng 11 4, 2025, https://www.ibm.com/think/tutorials/human-in-the-loop-ai-agent-langraph-watsonx-ai
+Human-in-the-Loop Agentic Systems Explained | by Tahir | Medium, truy cập vào tháng 11 4, 2025, https://medium.com/@tahirbalarabe2/human-in-the-loop-agentic-systems-explained-db9805dbaa86
+Implement human-in-the-loop confirmation with Amazon Bedrock Agents, truy cập vào tháng 11 4, 2025, https://aws.amazon.com/blogs/machine-learning/implement-human-in-the-loop-confirmation-with-amazon-bedrock-agents/
+Human-in-the-Loop in Agentic Workflows: From Definition to Walkthrough Demo and Use Cases - Orkes, truy cập vào tháng 11 4, 2025, https://orkes.io/blog/human-in-the-loop/
+Model optimization - OpenAI API, truy cập vào tháng 11 4, 2025, https://platform.openai.com/docs/guides/model-optimization

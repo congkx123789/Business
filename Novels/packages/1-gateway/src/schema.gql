@@ -1,0 +1,9 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  chapter(id: Int!): String!
+  stories(limit: Int, page: Int): String!
+  story(id: Int!): String!
+}

@@ -1,0 +1,4 @@
+name,team,email,session_date,completed,verifier
+Jane Doe,Backend,jane@example.com,2025-11-05,true,Security Team
+John Smith,Frontend,john@example.com,2025-11-05,true,Security Team
+

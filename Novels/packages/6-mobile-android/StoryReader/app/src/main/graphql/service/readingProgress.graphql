@@ -1,0 +1,32 @@
+query GetReadingProgress($userId: ID!, $storyId: ID!) {
+  readingProgress(userId: $userId, storyId: $storyId) {
+    id
+    userId
+    storyId
+    chapterId
+    position
+    progress
+    wordsPerMinute
+    readingTime
+    lastReadAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation UpdateReadingProgress($input: ReadingProgressInput!) {
+  updateReadingProgress(input: $input) {
+    id
+    userId
+    storyId
+    chapterId
+    position
+    progress
+    wordsPerMinute
+    readingTime
+    lastReadAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+

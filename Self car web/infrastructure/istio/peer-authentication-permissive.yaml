@@ -1,0 +1,15 @@
+# PeerAuthentication for permissive mTLS (Phase 1)
+# Apply: kubectl apply -f infrastructure/istio/peer-authentication-permissive.yaml
+
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: PERMISSIVE  # Allows both mTLS and plaintext
+  selector:
+    matchLabels:
+      app: "*"
+

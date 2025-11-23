@@ -1,0 +1,169 @@
+version: 1
+name: Frontend Improvement Roadmap
+duration: 6 months
+owners:
+  - team: frontend
+  - partners:
+      - backend
+      - sre
+      - product
+      - design
+metrics:
+  performance:
+    - name: LCP
+      target: "<= 2.5s on P75 for key routes"
+    - name: INP
+      target: "<= 200ms on P75"
+  quality:
+    - name: a11y
+      target: "WCAG 2.1 AA on critical paths"
+    - name: visual
+      target: "Chromatic baseline, 0 unexpected diffs"
+  reliability:
+    - name: client_error_rate
+      target: "< 0.5% of sessions"
+    - name: flaky_tests
+      target: "< 1% of CI runs"
+
+milestones:
+  - month: 1
+    title: Foundations & API contract hardening
+    deliverables:
+      - id: openapi_typed_client
+        desc: Generate typed client from OpenAPI with version pinning
+        acceptance:
+          - CI fails on breaking schema changes
+          - Client regenerated and committed
+      - id: query_key_registry
+        desc: Central query key factories and cache rules
+        acceptance:
+          - Docs in Data Fetching Playbook
+          - Used by cars/bookings/users/vouchers
+      - id: route_error_boundaries
+        desc: Route-level error boundaries and status-to-UX mapping
+        acceptance:
+          - Consistent retry/escalate/report patterns per status family
+      - id: ci_quality_gates
+        desc: Add Lighthouse CI and Chromatic with budgets/red-lines
+        acceptance:
+          - PRs blocked on budget violations
+      - id: csp_payments
+        desc: CSP + SRI for payment routes with allowlist doc
+        acceptance:
+          - Report-Only trial, then Enforce
+
+  - month: 2
+    title: Design system hardening & accessibility
+    deliverables:
+      - id: design_tokens
+        desc: Color/spacing/typography tokens with theming
+        acceptance:
+          - Tokens consumed by primitives; stories in Chromatic
+      - id: a11y_pass
+        desc: Axe CI and keyboard-only validation for booking flows
+        acceptance:
+          - No serious violations on PRs
+      - id: theme_foundations
+        desc: CSS variables theming compatible with CSP restrictions
+        acceptance:
+          - No inline styles on payment routes
+
+  - month: 3
+    title: Performance & data efficiency
+    deliverables:
+      - id: code_split
+        desc: Route-based code splitting and prefetch on hover/idle
+        acceptance:
+          - Largest pages meet budgets; TTI/INP improved ≥20%
+      - id: images_assets
+        desc: Responsive images, CDN strategy, preconnect hints
+        acceptance:
+          - PSI improvements recorded; CLS stable
+      - id: query_efficiency
+        desc: Remove waterfalls; tune cache TTLs
+        acceptance:
+          - ≤1 redundant fetch per route
+
+  - month: 4
+    title: Observability & runtime resilience
+    deliverables:
+      - id: rum_baseline
+        desc: RUM for CWV, SPA navigations, client errors with source maps
+        acceptance:
+          - Dashboards in place, alerts for regressions
+      - id: network_resilience
+        desc: Retry/backoff, circuit breaker, offline toasts
+        acceptance:
+          - Error rate reduced; UX degrades gracefully
+      - id: feature_flags
+        desc: Flag system for risky UI with typed config
+        acceptance:
+          - Flagged rollouts logged and reversible
+
+  - month: 5
+    title: Payments UX, security, and forms
+    deliverables:
+      - id: payments_hardening
+        desc: 3DS flows, retries, receipt states, CSP review
+        acceptance:
+          - No CSP violations; happy/sad paths covered
+      - id: forms_infra
+        desc: Schema-first forms with reusable field components
+        acceptance:
+          - Async validation unified; error mapping consistent
+      - id: i18n_ready
+        desc: ICU messages; date/number formatting
+        acceptance:
+          - Locale switch validated on core pages
+
+  - month: 6
+    title: Reliability, migrations, and developer experience
+    deliverables:
+      - id: strict_ts
+        desc: Enable stricter TS and ESLint rules
+        acceptance:
+          - noImplicitAny true; CI gate passing
+      - id: e2e_coverage
+        desc: Playwright coverage for bookings, vouchers, payments
+        acceptance:
+          - CI smoke passing; flaky < 1%
+      - id: dx_polish
+        desc: One-command dev, story scaffolds, test fixtures
+        acceptance:
+          - New contributors onboard < 1 hour
+
+workflows:
+  ci:
+    - name: Type Check
+      on: pull_request
+      gate: error
+    - name: ESLint
+      on: pull_request
+      gate: warning
+    - name: Lighthouse CI
+      on: pull_request
+      gate: budget_block
+    - name: Chromatic
+      on: pull_request
+      gate: visual_diff_block
+    - name: Axe CI
+      on: pull_request
+      gate: violation_block
+    - name: Playwright Smoke
+      on: pull_request
+      gate: failure_block
+
+dependencies:
+  backend:
+    - openapi_versioned
+    - error_taxonomy
+    - voucher/payment endpoints
+  sre:
+    - rum_collection
+    - csp_enforcement
+    - perf_budgets
+  product:
+    - token_spec
+    - page_budgets
+
+

@@ -1,0 +1,21 @@
+{
+  "log_level": "INFO",
+  "security": {
+    "allowed_actions": [
+      "sample_task",
+      "open_url",
+      "upload_file",
+      "app_launch",
+      "app_focus",
+      "app_send_keys",
+      "app_click",
+      "cursor_get_pos",
+      "cursor_move",
+      "cursor_drag",
+      "cursor_scroll",
+      "agent_cursor_context",
+      "agent_cursor_screenshot"
+    ]
+  }
+}
+

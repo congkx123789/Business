@@ -1,0 +1,18 @@
+{
+  "title": "Complete Your Booking",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "pickupLocation": "Pickup Location",
+  "pickupPlaceholder": "Enter pickup address",
+  "dropoffLocation": "Dropoff Location",
+  "dropoffPlaceholder": "Enter dropoff address",
+  "paymentInfo": "Payment Information",
+  "paymentDemo": "This is a demo. In production, integrate with a payment gateway like Stripe or PayPal.",
+  "confirmBooking": "Confirm Booking",
+  "bookingSummary": "Booking Summary",
+  "pricePerDay": "Price per day:",
+  "numberOfDays": "Number of days:",
+  "total": "Total:",
+  "perDay": "/day"
+}
+

@@ -1,0 +1,235 @@
+
+Báo Cáo Kỹ Thuật Chuyên Sâu Về Dữ Liệu Công Khai Huấn Luyện Các Mô Hình Ngôn Ngữ Hành Động Lớn (LAMs) và Tác Nhân AI (AI Agents)
+
+
+I. Tóm Tắt Điều Hành (Executive Summary)
+
+Sự phát triển của các Tác nhân AI (AI Agents) đánh dấu một bước chuyển dịch căn bản trong lĩnh vực Trí tuệ Nhân tạo, vượt ra ngoài khả năng suy luận và sinh ngôn ngữ đơn thuần của các Mô hình Ngôn ngữ Lớn (LLMs). Tác nhân AI là các hệ thống hoàn chỉnh có khả năng tự động thực hiện các quy trình làm việc phức tạp, yêu cầu các chức năng cốt lõi như lập kế hoạch, sử dụng công cụ, nhận thức và bộ nhớ.1 Sự chuyển đổi mô hình này kéo theo một nhu cầu cấp thiết về dữ liệu chuyên biệt. Thay vì chỉ dựa vào các kho văn bản lớn (như Common Crawl), việc huấn luyện Tác nhân đòi hỏi các bộ dữ liệu có cấu trúc cao, chủ yếu là các cặp trạng thái-hành động (state-action pairs) và quỹ đạo chuyên gia (expert trajectories).2
+Hệ sinh thái dữ liệu công khai hiện nay đang bị chi phối bởi các điểm chuẩn tương tác giao diện người dùng (UI Interaction) hàng đầu, được thiết kế để kiểm tra khả năng thực thi hành động của Tác nhân. Các điểm chuẩn nổi bật nhất bao gồm Mind2Web, WebArena, và MiniWoB++, mỗi bộ đại diện cho một phương pháp luận khác nhau trong việc cân bằng giữa tính hiện thực và khả năng tái tạo của môi trường web.4
+Về mặt chiến lược, phân tích chỉ ra rằng Học Bắt chước (Imitation Learning - IL) dựa trên dữ liệu minh họa của chuyên gia là phương pháp cốt lõi để khởi tạo Tác nhân. Tuy nhiên, để vượt qua các giới hạn về chất lượng và độ phủ dữ liệu, cần phải tăng cường các tập huấn luyện này bằng các dấu vết suy luận tổng hợp (Synthetic Reasoning Traces). Phương pháp này đã được chứng minh là giúp cải thiện đáng kể độ chính xác hành vi của Tác nhân.3 Báo cáo này sẽ cung cấp một phân tích kỹ thuật chi tiết về cấu trúc, quy mô và vai trò của các bộ dữ liệu công khai này trong việc thúc đẩy khả năng tổng quát của Tác nhân AI.
+
+II. Cơ Sở Khái Niệm: Định Nghĩa Tác Nhân AI và Nhu Cầu Dữ Liệu Đặc Biệt
+
+
+2.1. Phân biệt LLM, LAM và AI Agent
+
+Trong bối cảnh công nghệ hiện đại, việc định nghĩa rõ ràng các thuật ngữ là rất quan trọng. LLM (Large Language Model) là công cụ nền tảng, chủ yếu xử lý và sinh ngôn ngữ. LAM (Large Action Model) là một thuật ngữ thường được sử dụng để mô tả một LLM được tinh chỉnh để tập trung vào việc lập kế hoạch và chuyển hóa ý định cấp cao thành một chuỗi các hành động.1 Tuy nhiên, Tác nhân AI (AI Agent) là một khái niệm rộng hơn, bao gồm cả mô hình cơ bản (LLM/LAM) và toàn bộ vòng lặp thực thi của nó. Tác nhân AI là một hệ thống tự động hoặc bán tự động có khả năng tương tác với môi trường, khác biệt với các hệ thống LLM hoặc dựa trên quy tắc đơn thuần.1
+
+2.2. Các Tính năng Cốt lõi của Tác nhân và Yêu cầu Dữ liệu Tương ứng
+
+Tác nhân AI tiên tiến được định nghĩa bởi bốn khả năng chính, mỗi khả năng đòi hỏi một loại dữ liệu huấn luyện đặc thù:
+Lập kế hoạch (Planning): Khả năng phân tích mục tiêu cấp cao và tuần tự hóa các hành động thành một quy trình làm việc để đạt được mục tiêu đó.1 Khả năng này được cách mạng hóa nhờ việc tích hợp LLM. Dữ liệu cần thiết phải là các quỹ đạo dài hạn (long-horizon trajectories) và các ví dụ về lập kế hoạch đa bước, như được tìm thấy trong các tác vụ phức tạp của WebArena.7
+Sử dụng Công cụ (Tool Usage): Khả năng gọi các chức năng, thực thi mã, hoặc tương tác với các giao diện (ví dụ: tìm kiếm, tính toán, API).1 Để học cách sử dụng công cụ hiệu quả, Tác nhân cần dữ liệu hành động cấp thấp, nguyên tử (low-level, atomic actions) và các ví dụ về lệnh có cấu trúc, như các hành động được định nghĩa trong MiniWoB++.8
+Nhận thức (Perception): Khả năng xử lý thông tin từ môi trường (hình ảnh, âm thanh, dữ liệu cảm biến) để duy trì bối cảnh và tương tác.1 Việc tương tác web đòi hỏi xử lý dữ liệu đa phương thức, kết hợp giữa ảnh chụp màn hình và cấu trúc DOM.9
+Bộ nhớ (Memory): Khả năng lưu trữ và phản tư (self-reflection) về các tương tác và hành vi trong quá khứ, cho phép cải thiện hiệu suất theo thời gian.1 Bộ nhớ ở đây khác với bộ nhớ máy tính truyền thống và yêu cầu dữ liệu chuỗi phiên (session sequences) chứa các tương tác công cụ và nhận thức trước đó.2
+Sự khác biệt rõ ràng này giữa các yêu cầu dữ liệu là then chốt. Tác nhân AI đòi hỏi một kiến trúc dữ liệu phân tầng. Lớp 1 là các tập dữ liệu nền tảng quy mô lớn (ví dụ: The Pile) cung cấp kiến thức nền tảng và ngữ pháp suy luận cơ bản.10 Tuy nhiên, khả năng Lập kế hoạch 1 và Sử dụng Công cụ 1 chỉ có thể được học một cách hiệu quả từ Lớp 2 và Lớp 3, bao gồm các bộ dữ liệu hướng dẫn và các cặp trạng thái-hành động (S-A pairs) chuyên biệt.3 Do đó, trong khi dữ liệu LLM quy mô lớn vẫn cung cấp năng lực suy luận cốt lõi (Chain-of-Thought), dữ liệu S-A tương tác cấp thấp là bắt buộc để Tác nhân có thể thực thi các kế hoạch đó một cách đáng tin cậy.
+
+2.3. Khung Học Tập: Học Bắt chước (Imitation Learning - IL)
+
+Học Bắt chước là phương pháp huấn luyện cốt lõi được sử dụng để xây dựng Tác nhân AI. IL cho phép Tác nhân học cách thực hiện nhiệm vụ bằng cách sao chép hành vi của chuyên gia, thường thông qua Klon Hành vi (Behavioral Cloning - BC), nơi mô hình được huấn luyện dưới dạng học có giám sát trên các cặp S-A chuyên gia.3
+IL được ưu tiên hơn so với Học Tăng cường (RL) truyền thống vì nó giúp Tác nhân học nhanh hơn, tránh được sự thăm dò thiếu hiệu quả hoặc nguy hiểm (unsafe exploration), và đạt được hiệu suất gần chuyên gia với lượng dữ liệu ít hơn.3 Dữ liệu chuyên gia này có thể được thu thập từ nhiều nguồn, bao gồm minh họa của con người, teleoperation trên robot, hoặc các chính sách chuyên gia (oracles).11
+Tuy nhiên, hiệu suất của IL bị giới hạn nghiêm trọng bởi chất lượng và phạm vi bao phủ của dữ liệu chuyên gia. Nếu Tác nhân đi vào các trạng thái không được đại diện trong tập huấn luyện (thường được gọi là phân phối dịch chuyển - distribution shift), nó có thể mắc phải lỗi tích lũy (compounding errors), dẫn đến sự thất bại của quỹ đạo.3 Nhận thức này cho thấy rằng, để xây dựng Tác nhân Tổng quát (Generalist Agent) 12, các nhà nghiên cứu phải ưu tiên sự đa dạng và độ phủ của các cặp S-A trong không gian trạng thái. Điều này giải thích lý do tại sao các tập dữ liệu thu thập từ cộng đồng (crowdsourcing), mặc dù có thể chứa một mức độ nhiễu nhất định, lại được chấp nhận để đảm bảo Tác nhân tiếp xúc với các tình huống thực tế phức tạp (như trong Mind2Web).12
+
+III. Hệ Sinh Thái Dữ Liệu Huấn Luyện (SFT, RL và Agent-Specific)
+
+Hệ sinh thái dữ liệu cho Tác nhân AI bao gồm nhiều lớp, từ các tập dữ liệu văn bản quy mô lớn phục vụ khả năng suy luận cơ bản, đến các tập dữ liệu hướng dẫn chuyên biệt hóa để điều chỉnh hành vi.
+
+3.1. Các Tập dữ liệu Nền tảng LLM (Foundation Datasets)
+
+Các tập dữ liệu quy mô Terabyte, chẳng hạn như Common Crawl (hàng tỷ trang web được scrape hàng tháng), The Pile (800GB văn bản đa dạng từ ArXiv, GitHub, Wikipedia), OpenWebText và RedPajama, đóng vai trò là xương sống cho kiến thức chung.10
+Đối với Tác nhân AI, các tập dữ liệu này có hai vai trò chính:
+Cung cấp Tri thức: Đảm bảo mô hình có thể truy xuất thông tin và trả lời các truy vấn đòi hỏi kiến thức nền rộng.10
+Huấn luyện Suy luận: Cung cấp ngữ pháp và cấu trúc cần thiết để Tác nhân tạo ra các dấu vết suy luận (reasoning traces) logic, cho phép nó hiểu và chuyển đổi các ý định ngôn ngữ tự nhiên cấp cao thành các bước hành động cụ thể.7
+
+3.2. Tập dữ liệu Hướng dẫn Tác nhân (Agent-Specific Instruction Datasets)
+
+Các tập dữ liệu này được sử dụng để tinh chỉnh có giám sát (Supervised Fine-Tuning - SFT) các LLM nền tảng, tập trung vào khả năng lập kế hoạch, gọi công cụ, và tuân thủ các hướng dẫn đa bước. Các bộ dữ liệu mới nhất thể hiện xu hướng tăng quy mô và tính đa dạng của các hướng dẫn để hỗ trợ khả năng tổng quát của Tác nhân.14
+Các bộ dữ liệu công khai gần đây nhất được phát hành trong năm 2024 đã vượt mốc một triệu mẫu, minh họa cho sự gia tăng nhanh chóng về quy mô dữ liệu dành cho tinh chỉnh Tác nhân: The-Tome (1.75M mẫu, Jul 2024), open-perfectblend (1.42M, Oct 2024), smoltalk (1.1M, Nov 2024), và orca-agentinstruct-1M-v1 (1.05M, Nov 2024).14 Bộ orca-agentinstruct-1M-v1 đặc biệt đáng chú ý vì nó liên quan đến nghiên cứu của Microsoft, nhấn mạnh sự quan tâm của các tập đoàn lớn vào dữ liệu tinh chỉnh hành động.
+Ngoài các tập hợp hướng dẫn tổng quát, các tập dữ liệu chuyên biệt cũng quan trọng:
+Dữ liệu Code và Terminal: Tập code-act (78.4k mẫu) cung cấp dữ liệu huấn luyện cho các hành động liên quan đến code 15, đáp ứng nhu cầu ngày càng tăng về các tác nhân có khả năng lập trình và tương tác với terminal.16
+Đánh giá Suy luận (Reasoning Evaluation): CriticBench cung cấp dữ liệu đánh giá chi tiết về khả năng suy luận toán học và logic.17 Khả năng này là cực kỳ quan trọng đối với Tác nhân, vì việc lập kế hoạch đa bước và tự kiểm tra (self-correction) đòi hỏi sự đúng đắn về logic của các bước trung gian.13
+Bảng sau tóm tắt một số tập dữ liệu hướng dẫn Tác nhân công khai quan trọng về mặt quy mô:
+Table I: So sánh Các Bộ Dữ liệu Agent-Specific Chọn Lọc (SFT/Instruction)
+
+Bộ Dữ liệu
+Quy mô Mẫu
+Thời điểm Phát hành (Ước tính)
+Trọng tâm Chính
+Nhận xét
+The-Tome
+1.75M
+Jul 2024
+Tác vụ/Hướng dẫn tổng quát
+Arcee AI là tác giả.14
+open-perfectblend
+1.42M
+Oct 2024
+Tác vụ/Hướng dẫn tổng quát
+Xu et al. là tác giả.14
+smoltalk
+1.1M
+Nov 2024
+Agent/Instruction
+.14
+orca-agentinstruct-1M-v1
+1.05M
+Nov 2024
+Hướng dẫn Tác nhân
+Xuất phát từ Microsoft.14
+tulu3-sft-mixture
+939k
+Nov 2024
+Hỗn hợp SFT/Instruction
+.14
+
+
+IV. Phân Tích Chuyên Sâu: Các Bộ Dữ Liệu Tương Tác Web và Giao Diện Người Dùng
+
+Để Tác nhân có thể hoạt động trong thế giới kỹ thuật số, chúng phải học cách điều hướng và tương tác với các giao diện phức tạp (web, desktop, robotics).1 Ba điểm chuẩn hàng đầu sau đây đại diện cho các phương pháp luận khác nhau để thu thập và đánh giá dữ liệu tương tác web.
+
+4.1. Mind2Web: Hướng tới Tác nhân Tổng quát trên Website Thực
+
+Mind2Web là một cột mốc quan trọng vì nó là bộ dữ liệu đầu tiên được tạo ra để huấn luyện và đánh giá các tác nhân tổng quát có khả năng thực hiện các nhiệm vụ phức tạp trên các website thực tế (live websites).18 Bộ dữ liệu này cung cấp ba yếu tố cần thiết cho Tác nhân tổng quát: sự đa dạng về tên miền, sử dụng website thực tế, và một phổ rộng các mẫu tương tác người dùng.12
+Quy mô và Độ đa dạng: Mind2Web chứa hơn 2,000 phiên bản tác vụ mở (open-ended tasks) được thu thập từ 137 websites, trải dài 31 domains khác nhau.12 Sự đa dạng này là rất lớn, bao gồm các tên miền như thương mại điện tử, giáo dục, và giao diện lập trình.12
+Cấu trúc Dữ liệu: Dữ liệu được tổ chức dưới dạng các chuỗi hành động (action sequences) được thu thập từ cộng đồng. Mỗi phiên bản tác vụ (được xác định bằng annotation_id) bao gồm mô tả nhiệm vụ (confirmed_task) và một danh sách các bước (actions) cần thiết để hoàn thành nó. Mỗi bước hành động chứa raw_html và cleaned_html của trang trước khi hành động được thực hiện, cùng với chi tiết về operation.12
+Vấn đề Ô nhiễm Dữ liệu: Mind2Web thực hiện các biện pháp nghiêm ngặt để duy trì tính toàn vẹn của đánh giá. Bộ dữ liệu huấn luyện được lưu trữ công khai trên Hugging Face, nhưng bộ dữ liệu kiểm tra (test set) được cung cấp dưới dạng tệp zip có mật khẩu, và nhà phát hành đã đưa vào các GUID canary trong dữ liệu để ngăn chặn việc LLMs crawl và sử dụng bộ test set để huấn luyện.12
+
+4.2. WebArena: Môi trường Tái tạo cho Tác vụ Dài hạn
+
+WebArena giải quyết một thách thức cố hữu của Mind2Web: tính không ổn định và không thể tái tạo của các website trực tiếp. WebArena cung cấp một môi trường web độc lập, tự lưu trữ (self-hostable, reproducible environment), được triển khai thông qua các container Docker.7
+Môi trường Giả lập Lõi và Quy mô: WebArena mô phỏng bốn ứng dụng web chính đại diện cho các lĩnh vực internet quan trọng: nền tảng Thương mại điện tử (OneStopShop), Diễn đàn xã hội (Reddit), Phát triển hợp tác (GitLab), và Hệ thống quản lý nội dung.7 Nó phát hành một bộ dữ liệu benchmark gồm 812 tác vụ web dài hạn (long-horizon tasks).7
+Loại Tác vụ và Đánh giá: Các tác vụ được phân loại thành ba nhóm chính 7:
+Tìm kiếm Thông tin (Information Seeking): Đòi hỏi Tác nhân điều hướng qua nhiều trang để tìm câu trả lời bằng văn bản (textual response).
+Điều hướng Trang web (Site Navigation).
+Vận hành Nội dung và Cấu hình (Content and configuration operation): Bao gồm việc tạo, sửa đổi hoặc cấu hình nội dung và cài đặt (ví dụ: thực hiện mua hàng, cập nhật hồ sơ).7
+Đánh giá trong WebArena tập trung vào tính đúng đắn về chức năng (functional correctness), sử dụng các chương trình được chú thích để xác nhận kết quả cuối cùng thay vì chỉ so sánh quỹ đạo.7
+Mâu thuẫn giữa Tính Hiện thực và Tính Tái tạo: Sự khác biệt giữa Mind2Web (tối ưu hóa tính hiện thực bằng cách sử dụng các trang web trực tiếp) và WebArena (tối ưu hóa khả năng tái tạo bằng các môi trường ảo hóa) thể hiện một sự đánh đổi cơ bản trong nghiên cứu Tác nhân AI. WebArena đảm bảo sự ổn định và kiểm soát môi trường 100%, rất quan trọng cho việc đánh giá khoa học lặp đi lặp lại.7 Ngược lại, Mind2Web cung cấp độ đa dạng và tính hiện thực tối đa của các tương tác người dùng trong thế giới thực.12
+
+4.3. MiniWoB++: Dữ liệu Tác vụ Nguyên tử Cấp thấp
+
+MiniWoB++ là một benchmark sử dụng web tổng hợp (Synthetic Web), chủ yếu tập trung vào các hành động nguyên tử và thấp cấp.19 Nó bao gồm hơn 100 môi trường tương tác web, thường là các tác vụ trang đơn.8
+Tính chất: Điểm mạnh của MiniWoB++ là việc sử dụng bố cục ngẫu nhiên (Stochastic layouts) và ngôn ngữ tự nhiên mềm dẻo (soft NL) trong các hướng dẫn, thách thức khả năng thích ứng của Tác nhân với các biến thể giao diện nhỏ.19
+Vai trò trong Huấn luyện: MiniWoB++ đóng vai trò là tập dữ liệu huấn luyện SFT cơ bản để Tác nhân học các hành vi UI cơ bản như nhấp chuột, kéo, và gõ văn bản.5 Nó cung cấp một không gian hành động đa dạng và chi tiết, rất hữu ích cho việc Klon Hành vi (Behavioral Cloning) trước khi Tác nhân được triển khai trong các môi trường phức tạp hơn như Mind2Web hoặc WebArena.8
+Sự nổi lên của các bộ dữ liệu này, với sự đa dạng về miền (31 domains trong Mind2Web) 12 và sự đa dạng về loại tác vụ (Tìm kiếm, Vận hành trong WebArena) 7, khẳng định mục tiêu của cộng đồng nghiên cứu là đào tạo các Tác nhân Tổng quát có khả năng chuyển đổi giữa các ngữ cảnh và loại tác vụ khác nhau.12
+Table II: So sánh Các Bộ Dữ liệu Benchmark Tác nhân Web Hàng đầu
+
+Đặc điểm
+Mind2Web
+WebArena
+MiniWoB++
+Tính chất Môi trường
+Website thực tế (Live websites) 12
+Môi trường tự lưu trữ, tái tạo (4 ứng dụng lõi) 7
+Web tổng hợp (Synthetic Web), Trang đơn [8, 19]
+Quy mô Tác vụ
+>2,000 phiên bản tác vụ, 137 websites 12
+812 tác vụ dài hạn (long-horizon) 7
+>100 môi trường, hàng ngàn tập 8
+Độ phức tạp
+Cao (Long-horizon, Real-world dynamics) 12
+Cao (Long-horizon, Functional operations) 7
+Thấp/Trung bình (Atomic, Low-level interactions) 19
+Mục tiêu Chính
+Phát triển Tác nhân Tổng quát (Generalist Agent) [18]
+Đánh giá Tái tạo, Tính Đúng đắn Chức năng 16
+Học hành vi cấp thấp cơ bản 8
+
+
+V. Phân Tích Kỹ Thuật Sâu: Định Dạng Dữ Liệu Trạng Thái và Hành Động
+
+Huấn luyện Tác nhân thông qua Học Bắt chước (IL) đòi hỏi các chuỗi dữ liệu được cấu trúc tỉ mỉ, mô tả trạng thái môi trường hiện tại và hành động được thực hiện bởi chuyên gia.
+
+5.1. Biểu diễn Trạng thái (UI State Representation)
+
+Việc Tác nhân "nhận thức" giao diện người dùng (UI) là một thách thức kỹ thuật quan trọng, dẫn đến việc sử dụng các phương pháp biểu diễn lai (hybrid representation).
+Ảnh chụp DOM (DOM Snapshots): DOM (Document Object Model) cung cấp một biểu diễn cấu trúc dựa trên mã (HTML), cho phép Tác nhân tận dụng khả năng diễn giải code của LLM.9 DOM snapshots cung cấp khả năng nhắm mục tiêu lập trình chính xác (exact programmatic targeting), ví dụ thông qua CSS selectors. Hơn nữa, DOM có sẵn sớm hơn (tại sự kiện DOMContentLoaded) so với khi giao diện hoàn thành kết xuất (sự kiện load).9 Tuy nhiên, vấn đề lớn nhất là raw DOM có thể gây ra hiện tượng cạn kiệt ngữ cảnh mô hình (context exhaustion), tiêu tốn hàng trăm nghìn tokens.9 Để giải quyết, các kỹ thuật trích xuất phần tử (element extraction) được áp dụng để rút gọn và làm phẳng cây DOM, mặc dù điều này có thể bỏ qua cấu trúc phân cấp (hierarchy) quan trọng.9 Mind2Web cung cấp raw_html và cleaned_html để hỗ trợ biểu diễn này.12
+Ảnh chụp Màn hình (Screenshots/Visual Data): Ảnh chụp màn hình cung cấp khả năng nhận thức trực quan. Dữ liệu này là bắt buộc đối với các Tác nhân đa phương thức, cho phép chúng hiểu bố cục trực quan, nhận biết các yếu tố không có sẵn trong cấu trúc DOM (ví dụ: màu sắc, kiểu dáng, vị trí tương đối), và hoạt động giống như cách con người nhìn nhận giao diện.1
+Tiếp cận Lai (Hybrid Approach): Các điểm chuẩn hàng đầu tích hợp cả hai. MiniWoB++ cung cấp cả ảnh chụp màn hình (screenshot dưới dạng mảng RGB) và các phần tử DOM chi tiết (dom_elements), bao gồm tọa độ, thẻ HTML, và ref ID duy nhất cho mỗi phần tử.8
+Sự cần thiết của tương tác kép này là hiển nhiên. Tác nhân tiên tiến phải được huấn luyện để sử dụng tư duy hình ảnh (dựa trên ảnh chụp màn hình) để định vị và hiểu bố cục, mô phỏng nhận thức giống con người, đồng thời sử dụng tư duy symbolic/DOM (dựa trên ref ID và tọa độ) để thực thi hành động với độ chính xác lập trình tuyệt đối.8 Việc chỉ dựa vào một trong hai sẽ làm giảm độ tin cậy hoặc tăng gánh nặng xử lý.
+
+5.2. Cấu trúc Cặp Trạng thái-Hành động (<Context, Action>)
+
+Dữ liệu huấn luyện Tác nhân được tổ chức thành các chuỗi phiên (session sequences), mỗi phiên bao gồm một loạt các cặp <context, action> được căn chỉnh theo dấu thời gian.2
+Phạm vi Hành động có Cấu trúc (Structured Action Space): Hành động được Tác nhân thực thi không phải là sinh văn bản thuần túy, mà là việc sinh ra các lệnh có cấu trúc (structured commands). MiniWoB++, ví dụ, hỗ trợ một loạt các loại hành động được chỉ định bằng kiểu int (action_type), cùng với các trường tham số cụ thể như tọa độ (coords) hoặc ID tham chiếu phần tử (ref).8 Các hành động bao gồm CLICK_COORDS, TYPE_TEXT, PRESS_KEY, và các hành động dựa trên phần tử như CLICK_ELEMENT sử dụng ID tham chiếu DOM.8
+Điều này chuyển đổi việc huấn luyện Tác nhân thành một nhiệm vụ sinh ra chuỗi hành động có cấu trúc logic (structured sequence generation). Tác nhân phải "code" hành động của mình, đòi hỏi khả năng hiểu cú pháp và ngữ nghĩa của Tool-use API. Đây là lý do tại sao các tập dữ liệu liên quan đến mã và hành động có cấu trúc (code-act) 15 và các hành động dựa trên Python/primitives 5 đóng vai trò quan trọng trong việc tinh chỉnh.
+Mô phỏng Hành vi Con người: Các nghiên cứu sử dụng dữ liệu hành động thực tế của con người, chẳng hạn như 230,965 hành động người dùng trong 31,865 phiên mua sắm trực tuyến, để tạo ra một tiêu chuẩn định lượng nghiêm ngặt cho việc mô phỏng hành vi.6 Mặc dù việc fine-tuning trên dữ liệu này đã đạt được những cải tiến đáng kể so với các baseline chỉ dựa trên prompt, nhưng độ chính xác hành động ban đầu của các LLM tiên tiến chỉ đạt khoảng 11.86%, làm nổi bật khoảng cách lớn trong việc tái tạo hành vi con người từng bước.6
+Table III: Định dạng Dữ liệu Trạng thái và Hành động trong các Benchmark Tương tác
+
+Yếu tố Dữ liệu
+Trường Dữ liệu Tiêu biểu
+Mô hình Biểu diễn
+Mô tả Ý nghĩa Kỹ thuật
+Quan sát Trạng thái (Structured)
+dom_elements (MiniWoB++) 8
+Cấu trúc Dữ liệu
+Tuple các từ điển chứa các thuộc tính DOM (tọa độ, thẻ, ref ID, parent). Cung cấp độ chính xác lập trình.
+Quan sát Trạng thái (Code)
+raw_html, cleaned_html (Mind2Web) 12
+Mã (Code)
+HTML của trang trước khi hành động được thực hiện. Liên kết với khả năng giải thích code của LLM.9
+Quan sát Trạng thái (Visual)
+screenshot (MiniWoB++) 8
+Hình ảnh (RGB)
+Ảnh chụp màn hình cho Nhận thức và Định vị trực quan.1
+Hành động (Execution)
+action_type, coords, ref (MiniWoB++) 8
+Tham số có cấu trúc
+Loại hành động cụ thể (click, type) cùng với tham số mục tiêu (tọa độ hoặc ID phần tử).8
+
+
+VI. Tăng Cường Dữ Liệu Chuyên Gia và Triển Vọng Tương Lai Của Học Bắt Chước
+
+Chất lượng và quy mô của dữ liệu minh họa là yếu tố quyết định hiệu suất của Tác nhân.3 Do chi phí cao và sự khan hiếm của dữ liệu chuyên gia chất lượng, các kỹ thuật tăng cường dữ liệu và đánh giá quy trình đã trở nên không thể thiếu.
+
+6.1. Thách thức về Chất lượng và Khả năng Mở rộng trong IL
+
+Học Bắt chước gặp rào cản lớn do chi phí thu thập các quỹ đạo chuyên gia (states và action pairs).11 Dữ liệu bị nhiễu (noisy demos) có thể làm giảm hiệu suất một cách đáng kể.3 Hơn nữa, Học Bắt chước thuần túy bị giới hạn bởi phạm vi dữ liệu đã thấy (offline data patterns) và không thể tự khám phá ra các chiến lược hoặc trạng thái tốt hơn, làm tổn hại đến khả năng tổng quát hóa.3
+
+6.2. Chiến lược Tăng cường Dữ liệu với LLM (Synthetic Augmentation)
+
+Để vượt qua những hạn chế về quy mô và độ phủ, các nhà nghiên cứu đang tận dụng khả năng suy luận của LLM để tăng cường dữ liệu:
+Sử dụng Dấu vết Suy luận Tổng hợp (Synthetic Reasoning Traces): Các nghiên cứu đã chỉ ra rằng việc fine-tuning LLMs trên dữ liệu click-through thực tế của con người được bổ sung bởi chuỗi suy luận tổng hợp (simulated Chain-of-Thought) có thể cải thiện đáng kể độ chính xác hành động. Ví dụ, một mô hình được fine-tuning đã đạt được mức tăng 5.4% về độ chính xác hành động so với baseline chỉ dựa trên prompt.6 Sự cải tiến này là do việc huấn luyện Tác nhân không chỉ sao chép hành động (what) mà còn bắt chước quá trình nhận thức và lập luận (why) dẫn đến hành động đó.21
+Biến đổi Quỹ đạo (Trajectory Warping): LLMs có thể được sử dụng để chú thích các minh họa của con người bằng cách xác định các điểm mốc quan trọng (keyframes) và các đối tượng liên quan.22 Sau đó, các quỹ đạo này có thể được biến đổi theo chương trình (warped trajectory) để tạo ra các minh họa mới, hợp lệ cho các môi trường được khởi tạo khác nhau (ví dụ: thay đổi vị trí đối tượng trong robot học). Kỹ thuật này giúp mở rộng quy mô dữ liệu chất lượng cao một cách hiệu quả về mặt tính toán.22
+
+6.3. Đánh giá Quỹ đạo (Trajectory Evaluation - Beyond Answer Matching)
+
+Khi Tác nhân phải giải quyết các tác vụ dài hạn và phức tạp (ví dụ: các tác vụ trong WebArena hoặc Mind2Web), việc chỉ đánh giá câu trả lời cuối cùng là không đủ.13 Khả năng đánh giá toàn bộ quỹ đạo giải quyết vấn đề của Tác nhân, bao gồm các khía cạnh như hiệu quả (efficiency), ảo giác (hallucination), và khả năng thích ứng (adaptivity) là rất quan trọng.23
+Các framework đánh giá đa chiều (multi-dimensional evaluation) như TRACE đã được phát triển để giải quyết vấn đề này. TRACE sử dụng một ngân hàng bằng chứng (evidence bank) để tích lũy kiến thức từ các bước suy luận trước đó, cho phép phân tích chi tiết quy trình suy luận của Tác nhân ngay cả khi không có quỹ đạo ground-truth hoàn chỉnh. Việc này đòi hỏi các bộ dữ liệu siêu đánh giá (meta-evaluation datasets) được tăng cường bằng các quỹ đạo có sai sót (flawed trajectories) để huấn luyện các trọng tài LLM (LLM judges) có thể đánh giá chất lượng quy trình một cách chính xác.23
+
+6.4. Vấn đề Pháp lý về Dữ liệu Mở (Licensing)
+
+Việc phát hành và sử dụng các tập dữ liệu quy mô lớn đòi hỏi một khuôn khổ pháp lý rõ ràng. Các giấy phép như Open Data Commons (ODC), bao gồm ODbL, Attribution License, và PDDL, là rất quan trọng. Các giấy phép này cung cấp một khuôn khổ pháp lý để chia sẻ dữ liệu trong khi đảm bảo rằng dữ liệu vẫn mở và dễ tiếp cận, điều này cực kỳ cần thiết cho các tập dữ liệu Tác nhân quy mô lớn.25
+
+VII. Kết Luận và Triển Vọng Tương Lai
+
+Hệ sinh thái dữ liệu công khai cho Tác nhân AI đang chuyển mình từ việc chỉ tập trung vào văn bản sang việc ưu tiên các cặp trạng thái-hành động có cấu trúc. Phân tích chỉ ra ba kết luận quan trọng:
+Thứ nhất, lĩnh vực này được định hình bởi sự đánh đổi giữa tính hiện thực (Mind2Web, sử dụng website trực tiếp) và tính tái tạo (WebArena, sử dụng môi trường tự lưu trữ), buộc các nhà nghiên cứu phải lựa chọn chiến lược đánh giá phù hợp với mục tiêu của họ—hoặc là tính tổng quát hóa trong môi trường đa dạng, hoặc là độ ổn định trong thử nghiệm lặp lại.
+Thứ hai, để đạt được độ chính xác hành vi cần thiết cho các ứng dụng thực tế (ví dụ: vượt qua mức 11.86% độ chính xác hành động hiện tại), việc huấn luyện phải trở thành một hệ thống lai. Tác nhân phải kết hợp khả năng nhận thức trực quan (từ ảnh chụp màn hình) với khả năng thực thi lập trình (từ ID phần tử DOM).8 Hơn nữa, hành động phải được coi là suy luận có cấu trúc, yêu cầu dữ liệu huấn luyện phải dạy cho Tác nhân cách sinh ra các lệnh API có cấu trúc, thay vì chỉ là văn bản tự do.
+Thứ ba, tương lai của Học Bắt chước (IL) nằm ở việc tăng cường dữ liệu bằng các phương pháp tổng hợp. Việc sử dụng dấu vết suy luận tổng hợp để huấn luyện ngữ cảnh lý do (metacognition) 6 và sử dụng LLM để biến đổi quỹ đạo nhằm mở rộng quy mô dữ liệu 22 là những chiến lược then chốt. Cuối cùng, để đạt được sự ổn định và khả năng tổng quát hóa tối đa, các nhà nghiên cứu cần kết hợp giai đoạn khởi động bằng IL với các kỹ thuật Học Tăng cường (RL) tiên tiến hơn, cho phép Tác nhân khám phá và thích ứng với các trạng thái ngoài phân phối huấn luyện ban đầu.3
+Sự phát triển của các bộ dữ liệu và framework đánh giá đa chiều (như TRACE) sẽ là yếu tố quyết định để chuyển đổi Tác nhân AI từ các công cụ thử nghiệm thành các giải pháp doanh nghiệp đáng tin cậy.
+Nguồn trích dẫn
+AI Agents and Solutions - Azure Cosmos DB | Microsoft Learn, truy cập vào tháng 11 3, 2025, https://learn.microsoft.com/en-us/azure/cosmos-db/ai-agents
+Prompting is Not All You Need! Evaluating LLM Agent Simulation Methodologies with Real-World Online Customer Behavior Data - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2503.20749v5
+Day 86/100: Imitation Learning – Teaching Agents by Mimicking Experts - Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@sebuzdugan/day-86-100-imitation-learning-teaching-agents-by-mimicking-experts-353ea29dea76
+Train AI agents on Web UI with WaveUI-25K dataset - Codingscape, truy cập vào tháng 11 3, 2025, https://codingscape.com/blog/train-ai-agents-on-web-ui-with-waveui-25k-dataset
+(a) WorkArena - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2403.07718v1
+[2503.20749] Can LLM Agents Simulate Multi-Turn Human Behavior? Evidence from Real Online Customer Behavior Data - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2503.20749
+A Realistic Web Environment for Building Autonomous ... - WebArena, truy cập vào tháng 11 3, 2025, https://webarena.dev/static/paper.pdf
+MiniWoB++ Documentation, truy cập vào tháng 11 3, 2025, https://miniwob.farama.org/
+DOM Downsampling for LLM-Based Web Agents - Webfuse, truy cập vào tháng 11 3, 2025, https://www.webfuse.com/blog/dom-downsampling-for-llm-based-web-agents
+20 Open-Source Datasets for Generative and Agentic AI - Analytics Vidhya, truy cập vào tháng 11 3, 2025, https://www.analyticsvidhya.com/blog/2025/02/open-source-datasets-for-generative-and-agentic-ai/
+What is Imitation Learning? | NVIDIA Glossary, truy cập vào tháng 11 3, 2025, https://www.nvidia.com/en-us/glossary/imitation-learning/
+Mind2Web: Towards a Generalist Agent for the Web - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/OSU-NLP-Group/Mind2Web
+Evaluating Step-by-step Reasoning Traces: A Survey - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2502.12289v1
+mlabonne/llm-datasets: Curated list of datasets and tools for post-training. - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/mlabonne/llm-datasets
+Datasets - Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/datasets?other=llm
+web-arena-x/webarena: Code repo for "WebArena: A Realistic Web Environment for Building Autonomous Agents" - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/web-arena-x/webarena
+llm-agents/CriticBench · Datasets at Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/datasets/llm-agents/CriticBench
+Mind2Web - GitHub Pages, truy cập vào tháng 11 3, 2025, https://osu-nlp-group.github.io/Mind2Web/
+WorkArena and MiniWob++ Benchmarks - Emergent Mind, truy cập vào tháng 11 3, 2025, https://www.emergentmind.com/topics/workarena-and-miniwob
+Beyond Pixels: Exploring DOM Downsampling for LLM-Based Web Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2508.04412v1
+Post-Training Data and Algorithms for LLM Agents - Xiusi Chen, truy cập vào tháng 11 3, 2025, https://xiusic.github.io/papers/ByteDance_Talk.pdf
+LLM Trainer: Automated Robotic Data Generating via Demonstration Augmentation using LLMs - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2509.20070v1
+[2510.02837] Beyond the Final Answer: Evaluating the Reasoning Trajectories of Tool-Augmented Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2510.02837
+Creating LLM judges to Measure Domain-Specific Agent Quality - YouTube, truy cập vào tháng 11 3, 2025, https://www.youtube.com/watch?v=PZBUaVxdY0U
+Understanding AI Licenses: Key Types and Considerations - Viso Suite, truy cập vào tháng 11 3, 2025, https://viso.ai/deep-learning/ai-licenses/

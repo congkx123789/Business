@@ -1,0 +1,95 @@
+groups:
+  - name: slo-burn-alerts
+    interval: 30s
+    rules:
+      # Payments fast burn
+      - alert: SLOFastBurn_Payments
+        expr: (
+          avg_over_time(burn:payments[5m]) > 10
+        ) and (
+          avg_over_time(burn:payments[1h]) > 10
+        )
+        for: 5m
+        labels:
+          severity: critical
+          service: payments
+        annotations:
+          summary: "Payments SLO burning fast"
+          description: "Burn rate >10 on 5m & 1h — risk of budget exhaustion. Freeze changes, page on‑call."
+
+      # Payments slow burn
+      - alert: SLOSlowBurn_Payments
+        expr: (
+          avg_over_time(burn:payments[30m]) > 2
+        ) and (
+          avg_over_time(burn:payments[6h]) > 2
+        )
+        for: 30m
+        labels:
+          severity: warning
+          service: payments
+        annotations:
+          summary: "Payments SLO burning slowly"
+          description: "Burn rate >2 on 30m & 6h — investigate before budget is consumed."
+
+      # API availability fast burn
+      - alert: SLOFastBurn_API
+        expr: (
+          avg_over_time(burn:api[5m]) > 10
+        ) and (
+          avg_over_time(burn:api[1h]) > 10
+        )
+        for: 5m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "API availability SLO burning fast"
+          description: "Burn rate >10 on 5m & 1h — risk of budget exhaustion. Freeze changes, page on‑call."
+
+      # API availability slow burn
+      - alert: SLOSlowBurn_API
+        expr: (
+          avg_over_time(burn:api[30m]) > 2
+        ) and (
+          avg_over_time(burn:api[6h]) > 2
+        )
+        for: 30m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "API availability SLO burning slowly"
+          description: "Burn rate >2 on 30m & 6h — investigate before budget is consumed."
+
+      # Inventory consistency fast burn
+      - alert: SLOFastBurn_Inventory
+        expr: (
+          avg_over_time(burn:inventory[5m]) > 10
+        ) and (
+          avg_over_time(burn:inventory[1h]) > 10
+        )
+        for: 5m
+        labels:
+          severity: critical
+          service: inventory
+        annotations:
+          summary: "Inventory consistency SLO burning fast"
+          description: "Burn rate >10 on 5m & 1h — risk of budget exhaustion. Freeze changes, page on‑call."
+
+      # Inventory consistency slow burn
+      - alert: SLOSlowBurn_Inventory
+        expr: (
+          avg_over_time(burn:inventory[30m]) > 2
+        ) and (
+          avg_over_time(burn:inventory[6h]) > 2
+        )
+        for: 30m
+        labels:
+          severity: warning
+          service: inventory
+        annotations:
+          summary: "Inventory consistency SLO burning slowly"
+          description: "Burn rate >2 on 30m & 6h — investigate before budget is consumed."
+
+

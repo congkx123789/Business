@@ -1,0 +1,30 @@
+query GetLibrary($userId: ID!) {
+  library(userId: $userId) {
+    id
+    userId
+    storyId
+    addedAt
+    lastReadAt
+    isFavorite
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation AddToLibrary($userId: ID!, $storyId: ID!) {
+  addToLibrary(userId: $userId, storyId: $storyId) {
+    id
+    userId
+    storyId
+    addedAt
+    lastReadAt
+    isFavorite
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation RemoveFromLibrary($userId: ID!, $storyId: ID!) {
+  removeFromLibrary(userId: $userId, storyId: $storyId)
+}
+

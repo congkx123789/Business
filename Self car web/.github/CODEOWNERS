@@ -1,0 +1,14 @@
+# Global owners
+* @your-org/owners
+
+# Backend Java
+/backend/** @your-org/backend @your-handle
+
+# Frontend React
+/frontend/** @your-org/frontend @your-handle
+
+# Security/Infra
+/.github/** @your-org/devops @your-org/secops
+/nginx/** @your-org/devops
+/docs/** @your-org/secops @your-org/qa
+

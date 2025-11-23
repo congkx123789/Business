@@ -1,0 +1,313 @@
+
+Phân tích Kỹ thuật về Tác nhân AI: Nhận thức qua Ảnh chụp Màn hình và Điều khiển Chuột Lập trình
+
+
+Phần 1: Giải phẫu của một Tác nhân Sử dụng Máy tính (CUA)
+
+Để hiểu cách một tác nhân AI điều khiển máy tính, trước tiên cần phải hiểu kiến trúc cơ bản của nó và sự thay đổi mô hình đã dẫn đến sự phát triển của nó. Phân tích này bắt đầu bằng cách xác định mô hình cốt lõi của một tác nhân tương tác Giao diện Người dùng Đồ họa (GUI), tạo nền tảng cho các phân tích kỹ thuật sâu hơn về nhận thức và hành động.
+
+1.1 Sự thay đổi Mô hình: Từ Tác nhân Lập trình sang Tác nhân Hình ảnh
+
+Trong lĩnh vực tự động hóa, có hai loại tác nhân AI cơ bản: "Tác nhân Lập trình" (Programmatic Bots) và "Tác nhân Hình ảnh" (Visual Bots).1
+Tác nhân Lập trình tương tác với các ứng dụng thông qua các giao diện có cấu trúc, có thể đọc được bằng máy. Ví dụ bao gồm các thư viện như Selenium, tương tác trực tiếp với Mô hình Đối tượng Tài liệu (DOM) của một trang web 2, hoặc các tác nhân tương tác với các giao diện lập trình ứng dụng (API) backend.1 Phương pháp này nhanh chóng và có độ tin cậy cao, nhưng nó bị giới hạn nghiêm ngặt bởi các "móc" (hook) mà nhà phát triển cung cấp.
+Tác nhân Hình ảnh, thường được gọi là Tác nhân Sử dụng Máy tính (Computer-Using Agents - CUAs), hoạt động giống như con người. Chúng tương tác với Giao diện Người dùng Đồ họa (GUI) bằng cách "nhìn" vào luồng pixel thô trên màn hình (thông qua ảnh chụp màn hình) 3 và "hành động" bằng cách mô phỏng các sự kiện bàn phím và chuột.1
+Sự chuyển dịch sang các tác nhân hình ảnh không phải là một lựa chọn thiết kế tùy ý, mà là một điều cần thiết. Các tác nhân lập trình thất bại khi chúng gặp phải các quy trình công việc không có API, điều này xảy ra trong phần lớn các ứng dụng doanh nghiệp và máy tính để bàn.1 Để một tác nhân AI có thể tổng quát hóa cho mọi tác vụ, nó phải có khả năng hoạt động trên giao diện phổ quát duy nhất có sẵn trên tất cả các ứng dụng: chính GUI. Đây là giải pháp cho "cái đuôi dài" (long tail) của các trường hợp sử dụng kỹ thuật số mà hầu hết các mô hình AI khác không thể tiếp cận được.3
+
+1.2 Khung cơ bản: Vòng lặp Nhận thức-Lý luận-Hành động
+
+Kiến trúc trung tâm của tất cả các tác nhân hình ảnh hiện đại là một vòng lặp phản hồi liên tục, bắt chước cách con người xử lý thông tin.5
+Nhận thức (Perception): Tác nhân thu thập thông tin thô về trạng thái hiện tại của môi trường. Trong bối cảnh này, hành động "nhận thức" là lấy một ảnh chụp màn hình.3
+Lý luận (Reasoning): "Bộ não" của tác nhân—thường là một Mô hình Ngôn ngữ Lớn (LLM) đa phương thức—phân tích đầu vào nhận thức (ảnh chụp màn hình), mục tiêu của người dùng (ví dụ: "đăng nhập vào tài khoản của tôi"), và bộ nhớ về các hành động trong quá khứ. Nó quyết định hành động nào cần thực hiện tiếp theo. Các mô hình tiên tiến sử dụng "chuỗi suy nghĩ" (chain-of-thought) để lập luận về các bước của nó.3
+Hành động (Action): Tác nhân thực thi hành động đã quyết định trong môi trường kỹ thuật số, chẳng hạn như ra lệnh di chuyển chuột đến tọa độ $X, Y$ và nhấp chuột, hoặc gõ một chuỗi văn bản.5
+Hành động này làm thay đổi trạng thái của máy tính, tạo ra một hình ảnh màn hình mới. Vòng lặp sau đó lặp lại ngay lập tức: một ảnh chụp màn hình mới được chụp (Nhận thức), mô hình đánh giá kết quả của hành động (Lý luận), và quyết định bước tiếp theo (Hành động).3
+
+1.3 Các Mô hình Tiên phong: CUA, Gemini và Claude
+
+Các mô hình tiên tiến nhất hiện nay, chẳng hạn như CUA (Computer-Using Agent) của OpenAI 3, mô hình Sử dụng Máy tính Gemini 2.5 của Google 7, và khả năng điều khiển máy tính của Anthropic Claude 8, đều là hiện thân của kiến trúc này. Chúng kết hợp các mô hình đa phương thức mạnh mẽ (như GPT-4o) với các kỹ thuật học tập tiên tiến (như học tăng cường).3
+Những tác nhân này được thiết kế để xử lý các tác vụ phức tạp, đa bước và quan trọng là có khả năng tự sửa lỗi. Nếu một hành động không mang lại kết quả mong đợi, tác nhân có thể nhận ra sự khác biệt trong ảnh chụp màn hình tiếp theo và thử một chiến lược khác.3 Khả năng thích ứng này đã cho phép chúng thiết lập các kết quả benchmark tiên tiến trên các bộ dữ liệu tự động hóa phức tạp như OSWorld và WebArena.3
+
+Phần 2: Đường ống Nhận thức: Cách AI "Quét" và "Nhìn" Màn hình
+
+Câu hỏi làm thế nào một tác nhân AI "quét" (scan) màn hình là cốt lõi của bước "Nhận thức". Mục tiêu không phải là "nhìn thấy" các pixel; mục tiêu là trích xuất một hiểu biết có cấu trúc và có thể hành động từ một ảnh chụp màn hình thô.3 Tác nhân cần trả lời các câu hỏi: Có những yếu tố nào (nút, hộp văn bản)? Chúng nói gì (văn bản)? Chúng ở đâu (tọa độ)? Và chức năng của chúng là gì?
+
+2.1 Đường ống "Cổ điển" (Lai): Kết hợp CV và OCR
+
+Phương pháp này, thường được sử dụng trong Tự động hóa Quy trình Robot (RPA), là một đường ống gồm nhiều bước để xây dựng một bản đồ có cấu trúc của màn hình.10 Phân tích kỹ thuật của quy trình này, như được mô tả bởi các hệ thống như của UiPath, bao gồm ba bước chính 10:
+Bước 1: Phát hiện Đối tượng (Computer Vision): Một mô hình thị giác máy tính (CV), chẳng hạn như biến thể YOLOv8, được đào tạo trước trên các bộ dữ liệu chuyên dụng về các yếu tố UI.11 Các bộ dữ liệu này (ví dụ: VNIS 11, Roboflow 12, UI-Elements-Detection 13) chứa hàng nghìn ảnh chụp màn hình với các hộp giới hạn được gán nhãn thủ công cho các loại phần tử UI phổ biến (ví dụ: TextButton, CheckBox, Input Field).11 Khi được cung cấp một ảnh chụp màn hình mới, mô hình này sẽ xuất ra một danh sách các tọa độ hộp giới hạn cho tất cả các yếu tố đồ họa mà nó nhận ra.14
+Bước 2: Nhận dạng Ký tự Quang học (OCR): Đồng thời, một công cụ OCR mạnh mẽ (như Google Cloud Vision API 16, Azure AI Vision 17, hoặc Dolphin 18) sẽ quét toàn bộ hình ảnh để trích xuất mọi đoạn văn bản có thể đọc được và tọa độ của chúng.19 Điều này rất quan trọng để đọc nhãn, menu và thông báo lỗi.20
+Bước 3: Tổng hợp và Tạo Neo: Đây là bước quan trọng nhất.10 Hệ thống kết hợp hai luồng dữ liệu này. Nó sử dụng các thuật toán heuristic về không gian để "neo" văn bản từ OCR vào các yếu tố được phát hiện từ CV. Ví dụ, nó liên kết chuỗi văn bản "Đăng nhập" với đối tượng "nút" [từ CV] mà nó tìm thấy bên trong hoặc ngay bên cạnh. Kết quả cuối cùng là một "mô tả đa neo" (multi-anchor descriptor) 10—về cơ bản là một biểu đồ cảnh có cấu trúc, ví dụ: Element_1: {Type: 'Button', Bbox: , Text: 'Login'}.
+
+2.2 Đường ống "Hiện đại": Mô hình Ngôn ngữ-Thị giác (VLM) End-to-End
+
+Các phương pháp mới hơn đang thay thế đường ống nhiều bước phức tạp này bằng một mô hình đơn lẻ, mạnh mẽ.21 Các Mô hình Ngôn ngữ-Thị giác (VLM) như GPT-4V 22, Google ScreenAI 24, và các mô hình đa phương thức khác 25 được đào tạo để hiểu GUI một cách toàn diện.
+Phương pháp đào tạo quan trọng đằng sau điều này là một nhiệm vụ được gọi là "Screen Annotation" (Chú thích Màn hình).24 Trong nhiệm vụ này, thay vì chỉ dự đoán các hộp giới hạn, mô hình được đào tạo để tạo ra các mô tả phong phú cho các yếu
+tố UI. Theo nghiên cứu của Google về ScreenAI, điều này bao gồm việc xác định loại (ví dụ: 'nút'), vị trí (tọa độ), và một mô tả (văn bản được trích xuất từ OCR cộng với ý nghĩa chức năng, ví dụ: "một biểu tượng bánh răng cho cài đặt").24
+Lợi ích của cách tiếp cận này là VLM không chỉ phát hiện các yếu tố; nó hiểu được bối cảnh, bố cục, và mục đích của chúng.24 Nó có thể suy luận rằng một biểu tượng mũi tên, khi được đặt bên cạnh các trường tên người dùng và mật khẩu, có chức năng là "gửi" hoặc "đăng nhập", ngay cả khi nó chưa từng thấy chính xác biểu tượng đó trong bối cảnh đó trước đây.
+
+2.3 Phân tích So sánh: Dữ liệu Pixel so với Dữ liệu Cấu trúc
+
+Điều quan trọng cần lưu ý là hầu hết các tác nhân web (ví dụ: trên WebArena) không chỉ dựa vào một trong hai. Chúng thường sử dụng một phương pháp lai.
+Dữ liệu Pixel (Ảnh chụp màn hình): Được phân tích bởi các đường ống đã thảo luận ở trên.
+Ưu điểm: Hoàn toàn phổ quát. Nó hoạt động trên mọi ứng dụng, mọi hệ điều hành, ngay cả qua một máy tính từ xa hoặc máy ảo.3
+Nhược điểm: Không chính xác về pixel 2, dễ bị "ảo giác thị giác" (visual hallucinations), và tốn kém về mặt tính toán.
+Dữ liệu Cấu trúc (HTML/DOM/Accessibility Trees):
+Ưu điểm: Cung cấp "siêu dữ liệu phong phú".30 Nó chính xác 100% về mặt ngữ nghĩa. Tác nhân biết một yếu tố là <a> với href='/login'.
+Nhược điểm: Yêu cầu phân tích cú pháp cẩn thận 30 và chỉ hoạt động trên các môi trường cung cấp dữ liệu này (chủ yếu là web). Nó không thể hoạt động trên các ứng dụng máy tính để bàn, hình ảnh, hoặc máy ảo.31
+Các tác nhân tiên tiến nhất đã phát hiện ra rằng nhận thức thị giác không phải là trở ngại duy nhất. Một nghiên cứu đáng chú ý đã phát hiện ra rằng hiệu suất của tác nhân GUI được cải thiện đáng kể (ví dụ: tăng 5,6% trên WebArena) khi VLM được đào tạo về các nhiệm vụ lý luận phi thị giác, chẳng hạn như lý luận toán học chỉ bằng văn bản.32 Điều này cho thấy rằng nút thắt cổ chai hiện tại không phải là nhìn thấy màn hình một cách chính xác (điều này gần như đã được giải quyết). Nút thắt cổ chai thực sự là lý luận về những gì cần làm với thông tin đó. Việc đào tạo về logic trừu tượng giúp củng cố khả năng lập kế hoạch và ra quyết định của mô hình, sau đó nó có thể áp dụng cho miền GUI.
+
+Phần 3: Các Mô hình Quyết định: "Bộ não" Đằng sau Con trỏ Chuột
+
+Sau khi bước "Nhận thức" (Phần 2) đã trích xuất một hiểu biết có cấu trúc từ ảnh chụp màn hình, bước "Lý luận" bắt đầu. "Bộ não" của tác nhân phải quyết định hành động cụ thể nào cần thực hiện tiếp theo (ví dụ: click(100, 150)). Quyết định này được đưa ra bằng một trong ba phương pháp chính hoặc, phổ biến hơn, là sự kết hợp của chúng.
+
+3.1 Phương pháp 1: Học Bắt chước (Imitation Learning - IL)
+
+Đây là hình thức ra quyết định đơn giản nhất, còn được gọi là "Sao chép Hành vi" (Behavior Cloning).33
+Khái niệm: Tác nhân được đào tạo một cách có giám sát để sao chép trực tiếp các hành động của một chuyên gia con người.34
+Cấu trúc Dữ liệu Đào tạo: Cốt lõi của IL là một bộ dữ liệu lớn gồm các cặp (quan sát, hành động).36
+Quan sát (Observation): Một ảnh chụp màn hình tại thời điểm $t$.33
+Hành động (Action): Hành động chính xác mà con người đã thực hiện để phản hồi lại ảnh chụp màn hình đó. Đây là một cấu trúc dữ liệu được định nghĩa rõ ràng, chẳng hạn như click(x, y), drag(x1, y1, x2, y2), scroll(delta), hoặc press_key('enter').39
+Thu thập Dữ liệu: Dữ liệu này được thu thập bằng cách "ghi lại" các tương tác của người dùng khi họ thực hiện các tác vụ.2 Các bộ dữ liệu tiên tiến sử dụng các hệ thống teleoperation (điều khiển từ xa) phức tạp, như bộ điều khiển VR hoặc spacemouse, để thu thập các trình diễn đa dạng và chất lượng cao.42
+Các Bộ dữ liệu Chính: Các bộ dữ liệu quy mô lớn là rất quan trọng.
+AITW (Android in the Wild): Một bộ dữ liệu quan trọng với 715.000+ tập trình diễn của con người trên các thiết bị Android.43 Điều quan trọng là nó liên kết hướng dẫn bằng ngôn ngữ tự nhiên (ví dụ: "đặt báo thức lúc 7 giờ sáng") với các chuỗi (ảnh chụp màn hình, hành động) đầy đủ cần thiết để hoàn thành tác vụ đó.44
+Bộ dữ liệu Quỹ đạo Chuột (Mouse Trajectory): Các bộ dữ liệu như SapiMouse 45 tập trung vào một vấn đề cụ thể hơn: cách con người di chuyển chuột. Chúng ghi lại các quỹ đạo dưới dạng một chuỗi các (tọa độ, dấu thời gian).45 Dữ liệu này rất quan trọng để đào tạo các tác nhân di chuyển một cách "giống người", điều này có thể giúp tránh bị phát hiện là bot.47
+
+3.2 Phương pháp 2: Học Tăng cường (Reinforcement Learning - RL)
+
+Học Bắt chước có một lỗ hổng lớn: nó không thể thích ứng với các tình huống mới hoặc phục hồi sau lỗi. Nếu tác nhân mắc một sai lầm nhỏ và đi chệch khỏi quỹ đạo đã học, nó không biết phải làm gì. Học Tăng cường (RL) giải quyết vấn đề này bằng cách cho phép tác nhân học thông qua thử và sai (khám phá) để tối đa hóa một "phần thưởng".48
+Trong bối cảnh điều khiển GUI, các thành phần RL được định nghĩa như sau:
+Trạng thái (State - S): Là quan sát của tác nhân. Đây là ảnh chụp màn hình hiện tại 50, và phổ biến hơn là lịch sử của các ảnh chụp màn hình và hành động trong quá khứ để cung cấp bối cảnh về những gì đã xảy ra.51 Đây là một "không gian trạng thái lớn" và khó điều hướng.52
+Không gian Hành động (Action Space - A): Tập hợp tất cả các hành động có thể có.53 Đây là một thách thức lớn đối với việc điều khiển chuột, vì không gian tọa độ 2D là liên tục.54 Một giải pháp phổ biến là rời rạc hóa (discretize) không gian này thành một tập hợp hữu hạn các hành động cấp cao (ví dụ: click(x, y), swipe(start, end), type(text)) 53 hoặc một tập hợp đơn giản hơn như move_up, move_down, click.55
+Hàm Phần thưởng (Reward Function - R): Đây là thành phần quan trọng và khó khăn nhất.56 Làm thế nào để tác nhân biết nó đã làm tốt?
+Phần thưởng Thưa thớt (Sparse Reward): Một phương pháp là chỉ đưa ra phần thưởng +1 nếu tác nhân hoàn thành toàn bộ nhiệm vụ (ví dụ: đăng nhập thành công). Điều này rất không hiệu quả về mặt dữ liệu vì nó không thưởng cho các bước trung gian có giá trị và trừng phạt tất cả các hành động trong một quỹ đạo thất bại.57
+Phần thưởng Dày đặc/Lai (Dense/Hybrid Reward): Các phương pháp tiên tiến (SOTA) thiết kế các hàm phần thưởng chi tiết (fine-grained). Các tác nhân như CRAFT-GUI 58 và ProgRM 57 sử dụng "cơ chế phần thưởng lai". Chúng kết hợp các tín hiệu dựa trên quy tắc đơn giản (ví dụ: "bạn đã nhấp vào đúng nút") với đánh giá do mô hình phán đoán (ví dụ: một VLM riêng biệt "chấm điểm" ảnh chụp màn hình mới và ước tính xem nó có "gần hơn" với mục tiêu không).58
+Các tác nhân sau đó được đào tạo bằng các thuật toán như Q-learning 48 hoặc SARSA (State-Action-Reward-State-Action) 61, và các biến thể tiên tiến như Group Relative Policy Optimization (GRPO).63
+
+3.3 Phương pháp 3: Lý luận dựa trên VLM (Tác nhân Hiện đại)
+
+Cách tiếp cận này 65 sử dụng một VLM đa phương thức mạnh mẽ (như GPT-4o 3, Claude 3.5 8, hoặc Gemini 2.5 7) làm bộ não lý luận trung tâm. Đây là cốt lõi của vòng lặp "Nhận thức-Lý luận-Hành động" đã được thảo luận trong Phần 1.
+Quá trình hoạt động như sau 3:
+Đầu vào: Tác nhân nhận được một hướng dẫn của người dùng (ví dụ: "đăng nhập vào email của tôi") và ảnh chụp màn hình đầu tiên.
+Lý luận: VLM sử dụng lý luận "chuỗi suy nghĩ" (chain-of-thought).3 Nó tự nói với chính mình: "Mục tiêu là đăng nhập. Tôi thấy một trường 'tên người dùng' và một trường 'mật khẩu'. Bước tiếp theo của tôi là nhấp vào trường 'tên người dùng' ở tọa độ $X, Y$."
+Hành động: Mô hình xuất ra một lệnh hành động có cấu trúc, ví dụ: click(120, 340) hoặc type('my_username').7
+Phản hồi & Tự sửa lỗi: Sau khi hành động được thực thi (bởi một mô-đun riêng biệt, xem Phần 4), một ảnh chụp màn hình mới được chụp và đưa trở lại VLM.3 Nếu hành động thành công, VLM sẽ thấy trường tên người dùng hiện đã được điền và lên kế hoạch cho bước tiếp theo. Nếu hành động thất bại (ví dụ: nó nhấp nhầm chỗ), VLM sẽ thấy rằng ảnh chụp màn hình không thay đổi như mong đợi. Nó có thể lý luận về lỗi của mình và tự sửa lỗi (ví dụ: "Hành động đó không hiệu quả. Tôi sẽ thử nhấp vào hộp văn bản bên dưới nó.").3
+Ba phương pháp này không loại trừ lẫn nhau. Trên thực tế, kiến trúc SOTA là một hệ thống lai kết hợp cả ba:
+Đầu tiên, một VLM được đào tạo trước bằng cách sử dụng Học Bắt chước (IL) (thông qua Tinh chỉnh có Giám sát) trên một bộ dữ liệu lớn.33 Điều này dạy cho mô hình "ngữ pháp" cơ bản về cách con người tương tác với máy tính và cung cấp một "khuôn mẫu hành vi phong phú".66
+Sau đó, mô hình được tinh chỉnh bằng cách sử dụng Học Tăng cường (RL).3 Điều này dạy nó cách thích ứng với các tình huống không lường trước, phục hồi sau lỗi, và khám phá các giải pháp hiệu quả hơn.67
+Cuối cùng, tác nhân đã được tinh chỉnh này được triển khai trong một vòng lặp Lý luận VLM.3 VLM cốt lõi (ví dụ: GPT-4o) hoạt động như một người lập kế hoạch cấp cao, phân rã các tác vụ phức tạp thành các bước nhỏ hơn và gọi tác nhân đã được tinh chỉnh để thực thi chúng.
+
+Phần 4: Cơ chế Hành động: Cách AI "Điều khiển" Chuột (Một cách Lập trình)
+
+Phần này đi sâu vào cấp độ mã nguồn, giải quyết bước "Hành động" cuối cùng trong vòng lặp. Sau khi "bộ não" VLM (Phần 3) quyết định một hành động, làm thế nào để nó thực sự di chuyển con trỏ?
+
+4.1 Lớp Trừu tượng: Từ Ý định đến Thực thi
+
+"Bộ não" (VLM) không trực tiếp di chuyển chuột. Nó xuất ra một lệnh có cấu trúc, giống như JSON, ví dụ: { "action": "click", "coordinates": }.7 Một mô-đun "thực thi" hoặc "bộ điều khiển" riêng biệt sẽ nhận lệnh này và chịu trách nhiệm dịch nó thành các lệnh gọi API cấp hệ điều hành.
+
+4.2 Thư viện Điều khiển Cấp cao
+
+Cách dễ nhất để thực hiện việc này là thông qua các thư viện tự động hóa cấp cao, đa nền tảng.
+Python: Thư viện pyautogui là một ví dụ kinh điển.68 Nó cung cấp các hàm đơn giản để điều khiển chuột và bàn phím toàn cục:
+Click: pyautogui.click(x=100, y=150).71
+Drag: pyautogui.dragTo(x_end, y_end, duration=0.5).72 Bên trong, hàm này mô phỏng mouseDown(), một loạt các lệnh moveTo(), và cuối cùng là mouseUp().71
+Scroll: pyautogui.scroll(10) để cuộn lên và pyautogui.scroll(-10) để cuộn xuống.73
+C# /.NET: Các nhà phát triển C# thường mắc một sai lầm phổ biến là cố gắng sử dụng các phương thức Windows Forms như OnMouseMove hoặc PerformClick.69 Các phương thức này chỉ mô phỏng các sự kiện bên trong ứng dụng của chính chúng và không thể điều khiển con trỏ chuột toàn cầu của HĐH.74 Để làm điều đó, cần phải sử dụng các lệnh gọi cấp thấp hơn.
+
+4.3 Điều khiển Cấp thấp (API Gốc của HĐH)
+
+Các thư viện cấp cao như pyautogui thực chất là các trình bao bọc (wrapper) xung quanh các API gốc của hệ điều hành.
+Trên Windows: Phương pháp chính là sử dụng P/Invoke để gọi các hàm từ user32.dll.75
+Di chuyển: SetCursorPos(int x, int y) được sử dụng để đặt vị trí con trỏ ngay lập tức.74
+Nhấp/Kéo: Hàm mouse_event được sử dụng để mô phỏng các hành động nhấp chuột.76 Bằng cách gửi các cờ (flag) hằng số, một chương trình có thể mô phỏng bất kỳ hành động nào:
+MOUSEEVENTF_LEFTDOWN (0x02): Nhấn giữ nút trái.76
+MOUSEEVENTF_LEFTUP (0x04): Thả nút trái.76
+Để mô phỏng thao tác kéo (drag) trong C#, quy trình sẽ là:
+SetCursorPos(startX, startY);
+mouse_event(MOUSEEVENTF_LEFTDOWN,...);
+SetCursorPos(endX, endY); (thường là trong một vòng lặp để di chuyển mượt mà)
+mouse_event(MOUSEEVENTF_LEFTUP,...);.77
+Trên macOS: Việc điều khiển được thực hiện bằng cách kết nối vào luồng sự kiện cấp thấp. Hàm CGEventTapCreate cho phép một chương trình "chèn các sự kiện HID" (Thiết bị Giao diện Người) vào hệ thống.79
+Đa nền tảng (Modern C#): Thư viện SharpHook cung cấp một trình bao bọc.NET hiện đại, đa nền tảng cho thư viện libuiohook cấp thấp.80 Nó cung cấp một giao diện IEventSimulator 81:
+Click: simulator.SimulateMousePress(MouseButton.Button1); theo sau là simulator.SimulateMouseRelease(MouseButton.Button1);.84
+Scroll: simulator.SimulateMouseWheel(rotation: -120,...) (trong đó -120 đại diện cho một "click" cuộn xuống).81
+
+4.4 Bảng Phân tích Cú pháp Điều khiển Chuột Lập trình
+
+Bảng sau đây tóm tắt các lệnh lập trình tương đương để thực hiện các hành động chuột cốt lõi, minh họa sự trừu tượng từ ý định của VLM đến việc thực thi mã.
+Hành động
+PyAutoGUI (Python) [71, 72, 73]
+C# (Win32 P/Invoke) [74, 76, 77]
+C# (SharpHook) [81, 84]
+Di chuyển Con trỏ
+pyautogui.moveTo(x, y)
+SetCursorPos(x, y)
+simulator.SimulateMouseMovement(x, y)
+Nhấp chuột Trái
+pyautogui.click(x, y)
+SetCursorPos(x, y);
+
+mouse_event(MOUSEEVENTF_LEFTDOWN,...);
+
+mouse_event(MOUSEEVENTF_LEFTUP,...);
+simulator.SimulateMouseMovement(x, y);
+
+simulator.SimulateMousePress(Button1);
+
+simulator.SimulateMouseRelease(Button1);
+Kéo (Drag)
+pyautogui.dragTo(x, y, duration=0.5)
+SetCursorPos(x_start, y_start);
+
+mouse_event(MOUSEEVENTF_LEFTDOWN,...);
+
+SetCursorPos(x_end, y_end);
+
+mouse_event(MOUSEEVENTF_LEFTUP,...);
+simulator.SimulateMouseMovement(x_start, y_start);
+
+simulator.SimulateMousePress(Button1);
+
+simulator.SimulateMouseMovement(x_end, y_end);
+
+simulator.SimulateMouseRelease(Button1);
+Cuộn Xuống
+pyautogui.scroll(-10)
+mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -120, 0);
+simulator.SimulateMouseWheel(rotation: -120,...)
+
+Phân tích này tiết lộ một hệ quả quan trọng về bảo mật. Các tác nhân lập trình (ví dụ: Selenium) 1 được giới hạn trong một "sandbox" (hộp cát). Selenium không thể nhấp vào nút "Start" của Windows hoặc xóa một tệp trên máy tính để bàn của bạn.
+Ngược lại, các tác nhân hình ảnh 3 sử dụng các API gốc của HĐH như mouse_event 77 và CGEventTapCreate 79 để điều khiển con trỏ toàn cầu của HĐH. Điều này có nghĩa là tác nhân AI có chính xác các quyền hạn giống như người dùng con người.1 Nếu người dùng có thể truy cập vào một ứng dụng ngân hàng, thì tác nhân AI cũng vậy.3 Việc theo đuổi khả năng tổng quát hóa (Phần 1) đã vô tình tạo ra một bề mặt tấn công bảo mật khổng lồ.2 Đây là lý do tại sao các hệ thống SOTA đang được phát triển với các biện pháp bảo vệ nghiêm ngặt, chẳng hạn như "chế độ xem" (watch mode) của OpenAI CUA trên các trang web nhạy cảm 3, hoặc các framework mới như Computer được thiết kế đặc biệt để chạy các tác nhân AI trong các máy ảo bị cô lập để bảo vệ hệ thống máy chủ.85
+
+Phần 5: Tổng hợp và Các Thách thức Tương lai
+
+Bằng cách kết nối các thành phần Nhận thức, Lý luận và Hành động, chúng ta có thể hình dung được vòng lặp hoàn chỉnh và hiểu được các thách thức còn lại.
+
+5.1 Tổng hợp: Vòng lặp Hoàn chỉnh trong Thực tế
+
+Hãy xem xét một ví dụ end-to-end về một tác nhân 7 nhận được mục tiêu của người dùng: "Tìm cho tôi một nhà hàng Ý gần đây."
+Mục tiêu Người dùng: "Tìm cho tôi một nhà hàng Ý gần đây."
+Nhận thức (Phần 2): Tác nhân chụp ảnh màn hình desktop.3 VLM của nó 24 quét hình ảnh và xác định: Element_1: {Type: 'Icon', Bbox: , Text: 'Browser'}.
+Lý luận (Phần 3): Bộ não VLM 3 suy nghĩ: "Để tìm nhà hàng, tôi cần web. Tôi phải nhấp đúp vào biểu tượng 'Browser'."
+Hành động (Phần 4): Lý luận xuất ra: { "action": "double_click", "coordinates": }. Mô-đun thực thi gọi pyautogui.doubleClick(50, 150).71
+Vòng lặp: Trình duyệt mở ra. Một ảnh chụp màn hình mới được chụp.7
+Nhận thức (Phần 2): Tác nhân quét ảnh chụp màn hình mới. Nó thấy một thanh tìm kiếm.
+Lý luận (Phần 3): "Trình duyệt đã mở. Bây giờ tôi phải tìm kiếm. Tôi sẽ nhấp vào thanh tìm kiếm ở tọa độ $X, Y$."
+Hành động (Phần 4): Xuất ra: { "action": "click", "coordinates": }. Thực thi.
+Vòng lặp: Con trỏ đang nhấp nháy trong thanh tìm kiếm. Ảnh chụp màn hình mới.
+Lý luận (Phần 3): "Tôi cần gõ. Tôi sẽ gõ 'Nhà hàng Ý gần tôi' và nhấn Enter."
+Hành động (Phần 4): Xuất ra: { "action": "type", "text": "Nhà hàng Ý gần tôi" } và { "action": "press_key", "key": "enter" }. Mô-đun thực thi gọi pyautogui.typewrite(...) và pyautogui.press('enter').
+...và tiếp tục... Vòng lặp Nhận thức-Lý luận-Hành động này 6 tiếp tục, điều hướng qua các trang kết quả, cho đến khi tác vụ hoàn thành.
+
+5.2 Vai trò của các Framework Tác tử (Agentic Frameworks)
+
+Các framework như LangChain 86, AutoGen 86, và Computer 85 không phải là bộ não (đó là VLM) cũng không phải là cơ bắp (đó là pyautogui). Chúng là hệ thống thần kinh trung ương—chất keo kết nối mọi thứ. Chúng quản lý vòng lặp Nhận thức-Lý luận-Hành động, duy trì bộ nhớ và trạng thái qua các bước, và cung cấp môi trường thực thi an toàn (thường là trong sandbox).85
+
+5.3 Các Thách thức Chính và Hướng đi Tương lai
+
+Mặc dù có những tiến bộ nhanh chóng, lĩnh vực này vẫn phải đối mặt với những thách thức đáng kể:
+Độ tin cậy và "Ảo giác": Thách thức lớn nhất là độ tin cậy. Các mô hình vẫn thất bại trên các giao diện người dùng mới lạ hoặc không chuẩn.2 Chúng có thể "ảo giác" các yếu tố không tồn tại hoặc dự đoán sai tọa độ.2 Đây là lý do tại sao các công cụ như Autotab của Google 7 được sử dụng để phục hồi các bài kiểm tra UI bị lỗi—chúng chưa đủ tin cậy 100% để chạy chúng một cách tự chủ hoàn toàn.
+Sự khan hiếm Dữ liệu: Mặc dù AITW 43 rất lớn, nó chỉ bao gồm Android. Cần có các bộ dữ liệu đa dạng hơn, bao gồm các ứng dụng desktop Windows và macOS, để đạt được khả năng tổng quát hóa thực sự.32
+Bảo mật và An toàn: Như đã phân tích trong 4.5, đây là rào cản lớn nhất đối với việc áp dụng rộng rãi. Các biện pháp bảo vệ mạnh mẽ, giám sát của con người ("chế độ xem" 3), và các sandbox bị cô lập 85 là bắt buộc.
+Tương lai: Học tập Trực tuyến (Online Learning): Tương lai không chỉ là đào tạo trên một bộ dữ liệu tĩnh. Nó là "học hỏi trong khi làm" (learning on the fly).67 Đây là nơi Học Tăng cường (Phần 3.2) trở nên quan trọng nhất—cho phép tác nhân học hỏi từ những sai lầm của chính nó trong thời gian thực và thích nghi với các giao diện người dùng mới mà không cần sự can thiệp của con người.
+
+5.4 Kết luận: Lý thuyết Thống nhất về Điều khiển Robot
+
+Phân tích này bắt đầu bằng cách xem xét hai câu hỏi dường như riêng biệt: làm thế nào AI "quét" màn hình và làm thế nào nó "điều khiển" chuột. Phân tích kỹ thuật cho thấy rằng đây không phải là hai hệ thống riêng biệt. Chúng là hai nửa không thể tách rời của một hệ thống phản hồi vòng kín (closed-loop feedback system) duy nhất.3
+"Bộ quét" (Nhận thức, Phần 2) không chỉ là một đầu vào; nó là cảm biến phản hồi cho bộ điều khiển.
+"Bộ điều khiển" (Hành động, Phần 4) không chỉ là một đầu ra; nó là bộ truyền động thay đổi trạng thái cho bộ quét.
+"Bộ não" (Lý luận, Phần 3) nằm ở giữa, tạo ra một vòng lặp điều khiển (control loop) cổ điển.
+Do đó, vấn đề tự động hóa GUI về mặt kiến trúc là giống hệt với một vấn đề điều khiển robot.67 "Con chuột" là bộ truyền động cuối (end-effector). "Ảnh chụp màn hình" là phản hồi thị giác (visual feedback). Và AI agent là một "robot kỹ thuật số" 93 đang học cách điều hướng trong một môi trường 2D. Việc tái cấu trúc vấn đề này thành một vấn đề điều khiển robot giải thích tại sao các kỹ thuật được sử dụng—bao gồm cả việc vay mượn từ các phương pháp thu thập dữ liệu robot (teleoperation) 42 và lý thuyết điều khiển tối ưu 92—là rất quan trọng. Thách thức không phải là "phát hiện các nút" hay "nhấp vào tọa độ". Thách thức là điều khiển thích ứng, vòng kín, mạnh mẽ trong một môi trường có số chiều cao, động, và có thể quan sát được một phần.
+Nguồn trích dẫn
+Visual & Programmatic Bots: Anthropic's Computer-Use Agent, Tested | by Eric Vogelpohl, truy cập vào tháng 11 5, 2025, https://medium.com/@EricVogelpohl/visual-programmatic-bots-a-fundamental-divide-anthropics-computer-use-tested-1c3fe8e1ae01
+Agents that can control mouse and monitor and perform learned tasks : r/ArtificialInteligence, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/ArtificialInteligence/comments/1faltj2/agents_that_can_control_mouse_and_monitor_and/
+Computer-Using Agent | OpenAI, truy cập vào tháng 11 5, 2025, https://openai.com/index/computer-using-agent/
+How to build an AI Agent that can see my screen and click on things? - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/AI_Agents/comments/1njrunv/how_to_build_an_ai_agent_that_can_see_my_screen/
+What are AI agents? Definition, examples, and types | Google Cloud, truy cập vào tháng 11 5, 2025, https://cloud.google.com/discover/what-are-ai-agents
+What are AI Agents? | UiPath, truy cập vào tháng 11 5, 2025, https://www.uipath.com/ai/ai-agents
+Introducing the Gemini 2.5 Computer Use model - Google Blog, truy cập vào tháng 11 5, 2025, https://blog.google/technology/google-deepmind/gemini-computer-use-model/
+trycua/acu: A curated list of resources about AI agents for Computer Use, including research papers, projects, frameworks, and tools. - GitHub, truy cập vào tháng 11 5, 2025, https://github.com/trycua/acu
+Structured vs. Unstructured Data: What Your ML Workflow Needs, truy cập vào tháng 11 5, 2025, https://labelyourdata.com/articles/structured-vs-unstructured-data
+AI Computer Vision - Introduction, truy cập vào tháng 11 5, 2025, https://docs.uipath.com/ai-computer-vision/automation-cloud-public-sector/latest/user-guide/introduction
+How I Trained YOLOv8 to Detect Mobile UI Elements Using the VNIS Dataset - Medium, truy cập vào tháng 11 5, 2025, https://medium.com/@eslamelmishtawy/how-i-trained-yolov8-to-detect-mobile-ui-elements-using-the-vnis-dataset-f7f4b582fc09
+BUTTONS Object Detection Model by DETECTUI - Roboflow Universe, truy cập vào tháng 11 5, 2025, https://universe.roboflow.com/detectui/buttons-atshf
+YashJain/UI-Elements-Detection-Dataset - Hugging Face, truy cập vào tháng 11 5, 2025, https://huggingface.co/datasets/YashJain/UI-Elements-Detection-Dataset
+How Do You Use Deep Learning to Identify UI Components? - Alibaba Cloud Community, truy cập vào tháng 11 5, 2025, https://www.alibabacloud.com/blog/how-do-you-use-deep-learning-to-identify-ui-components_597859
+I'm working on a task of that consists of detecting UI components like buttons, forms input fields etc from web site screenshots. I'm trying to train a yolo model to do so. TBH, I don't believe that this problem could be solved using a single object detection model. Do you have some - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/deeplearning/comments/1gnzv0y/im_working_on_a_task_of_that_consists_of/
+OCR With Google AI, truy cập vào tháng 11 5, 2025, https://cloud.google.com/use-cases/ocr
+OCR - Optical Character Recognition - Azure AI services | Microsoft Learn, truy cập vào tháng 11 5, 2025, https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview-ocr
+Building an AI Agent for Parsing with Dolphin OCR: Automating Document Understanding with Python | by Jay Kim | Medium, truy cập vào tháng 11 5, 2025, https://medium.com/@bravekjh/building-an-ai-agent-for-parsing-with-dolphin-ocr-automating-document-understanding-with-python-7e1b70a69a45
+MulongXie/UIED: An accurate GUI element detection approach based on old-fashioned CV algorithms [Upgraded on 5/July/2021] - GitHub, truy cập vào tháng 11 5, 2025, https://github.com/MulongXie/UIED
+Implement AI Agent scanning of attachments, including OCR of images - Zendesk help, truy cập vào tháng 11 5, 2025, https://support.zendesk.com/hc/en-us/community/posts/9782301397402-Implement-AI-Agent-scanning-of-attachments-including-OCR-of-images
+Best AI for Identifying UI Elements in Mobile App Screenshots? : r/MLQuestions - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/MLQuestions/comments/1ggd150/best_ai_for_identifying_ui_elements_in_mobile_app/
+truy cập vào tháng 11 5, 2025, https://www.leewayhertz.com/gpt-4-vision/#:~:text=GPT%2D4V%20seamlessly%20combines%20visual,to%20textual%20and%20visual%20inputs.
+OpenAI GPT-4V (preview) - Azure Machine Learning, truy cập vào tháng 11 5, 2025, https://learn.microsoft.com/en-us/azure/machine-learning/prompt-flow/tools-reference/openai-gpt-4v-tool?view=azureml-api-2
+ScreenAI: A visual language model for UI and visually-situated ..., truy cập vào tháng 11 5, 2025, https://research.google/blog/screenai-a-visual-language-model-for-ui-and-visually-situated-language-understanding/
+Multimodal Large Language Models for Text-rich Image Understanding: A Comprehensive Review - ACL Anthology, truy cập vào tháng 11 5, 2025, https://aclanthology.org/2025.findings-acl.1023/
+[2502.16586] Multimodal Large Language Models for Text-rich Image Understanding: A Comprehensive Review - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/abs/2502.16586
+New AI Model Uses Document Screenshots to Revolutionize Search Across Text and Images - DEV Community, truy cập vào tháng 11 5, 2025, https://dev.to/aimodels-fyi/new-ai-model-uses-document-screenshots-to-revolutionize-search-across-text-and-images-40lb
+Unifying Multimodal Retrieval via Document Screenshot Embedding - ACL Anthology, truy cập vào tháng 11 5, 2025, https://aclanthology.org/2024.emnlp-main.373.pdf
+Breaking the Data Barrier -- Building GUI Agents Through Task Generalization, truy cập vào tháng 11 5, 2025, https://powerdrill.ai/discover/summary-breaking-the-data-barrier----building-gui-agents-cm9izmcotdb1s07rahsyecngd
+GUI Agents: A Survey - ACL Anthology, truy cập vào tháng 11 5, 2025, https://aclanthology.org/2025.findings-acl.1158.pdf
+GUI Agents: A Survey, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2412.13501v1
+Breaking the Data Barrier – Building GUI Agents Through Task Generalization - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2504.10127v2
+Using generative AI to imitate human behavior - Microsoft Research, truy cập vào tháng 11 5, 2025, https://www.microsoft.com/en-us/research/blog/using-generative-ai-to-imitate-human-behavior/
+Interactive Imitation Learning in Robotics: A Survey - Now Publishers, truy cập vào tháng 11 5, 2025, https://www.nowpublishers.com/article/DownloadSummary/ROB-072
+A brief overview of Imitation Learning | by SmartLab AI | Medium, truy cập vào tháng 11 5, 2025, https://smartlabai.medium.com/a-brief-overview-of-imitation-learning-8a8a75c44a9c
+An Algorithmic Perspective on Imitation Learning - Takayuki Osa, truy cập vào tháng 11 5, 2025, https://takaosa.github.io/paper/algorithmic-perspective-imitation.pdf
+Multi-Modal Imitation Learning from Unstructured Demonstrations using Generative Adversarial Nets - NIPS papers, truy cập vào tháng 11 5, 2025, http://papers.neurips.cc/paper/6723-multi-modal-imitation-learning-from-unstructured-demonstrations-using-generative-adversarial-nets.pdf
+Imitation Learning from a Single Demonstration Leveraging Vector Quantization for Robotic Harvesting - MDPI, truy cập vào tháng 11 5, 2025, https://www.mdpi.com/2218-6581/13/7/98
+Efficient Agent Training for Computer Use - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2505.13909v1
+Imitation Learning on Real-World Robots - Hugging Face, truy cập vào tháng 11 5, 2025, https://huggingface.co/docs/lerobot/en/il_robots
+How to record the mouse drag event and simulate it ? - Microsoft Q&A, truy cập vào tháng 11 5, 2025, https://learn.microsoft.com/en-us/answers/questions/1792671/how-to-record-the-mouse-drag-event-and-simulate-it
+How to Train Your Robots? The Impact of Demonstration Modality on Imitation Learning, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2503.07017v1
+Android in the Wild: A Large-Scale Dataset for Android Device Control, truy cập vào tháng 11 5, 2025, https://crawles.com/aitw/
+[2307.10088] Android in the Wild: A Large-Scale Dataset for Android Device Control - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/abs/2307.10088
+DMTG: A Human-Like Mouse Trajectory Generation Bot Based on Entropy-Controlled Diffusion Networks - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2410.18233v1
+The Attentive Cursor Dataset - PMC - NIH, truy cập vào tháng 11 5, 2025, https://pmc.ncbi.nlm.nih.gov/articles/PMC7701271/
+Training a model to perform mouse movement like a human - AI Stack Exchange, truy cập vào tháng 11 5, 2025, https://ai.stackexchange.com/questions/46806/training-a-model-to-perform-mouse-movement-like-a-human
+A Beginner's Guide to Deep Reinforcement Learning - GeeksforGeeks, truy cập vào tháng 11 5, 2025, https://www.geeksforgeeks.org/artificial-intelligence/a-beginners-guide-to-deep-reinforcement-learning/
+Reinforcement learning - Wikipedia, truy cập vào tháng 11 5, 2025, https://en.wikipedia.org/wiki/Reinforcement_learning
+UI-R1: Enhancing Action Prediction of GUI Agents by Reinforcement Learning - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2503.21620v1
+GUI Exploration Lab: Enhancing Screen Navigation in Agents via Multi-Turn Reinforcement Learning - OpenReview, truy cập vào tháng 11 5, 2025, https://openreview.net/pdf/ce35fb684e3b11b9c0f1fcc38598cfb3504c728e.pdf
+Strategic Exploration: 5 Key Methods for DRL Agents to Navigate Large State Spaces | by Zhong Hong | Medium, truy cập vào tháng 11 5, 2025, https://medium.com/@zhonghong9998/strategic-exploration-5-key-methods-for-drl-agents-to-navigate-large-state-spaces-f11040f8c5ca
+MobileGUI-RL: Advancing Mobile GUI Agent through Reinforcement Learning in Online Environment - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2507.05720v1
+How can I apply reinforcement learning to continuous action spaces? - Stack Overflow, truy cập vào tháng 11 5, 2025, https://stackoverflow.com/questions/7098625/how-can-i-apply-reinforcement-learning-to-continuous-action-spaces
+How should I design the action space of an agent that needs to choose a 2d point and then shoot a cannonball? - Artificial Intelligence Stack Exchange, truy cập vào tháng 11 5, 2025, https://ai.stackexchange.com/questions/18530/how-should-i-design-the-action-space-of-an-agent-that-needs-to-choose-a-2d-point
+Reward Machines: Exploiting Reward Function Structure in Reinforcement Learning - Journal of Artificial Intelligence Research, truy cập vào tháng 11 5, 2025, https://jair.org/index.php/jair/article/download/12440/26759/29354
+ProgRM: Build Better GUI Agents with Progress Rewards - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2505.18121v1
+CRAFT-GUI: Curriculum-Reinforced Agent For GUI Tasks - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/html/2508.11360v1
+[2508.11360] CRAFT-GUI: Curriculum-Reinforced Agent For GUI Tasks - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/abs/2508.11360
+Paper page - ZeroGUI: Automating Online GUI Learning at Zero Human Cost - Hugging Face, truy cập vào tháng 11 5, 2025, https://huggingface.co/papers/2505.23762
+SARSA (State-Action-Reward-State-Action) in Reinforcement Learning - GeeksforGeeks, truy cập vào tháng 11 5, 2025, https://www.geeksforgeeks.org/machine-learning/sarsa-reinforcement-learning/
+State–action–reward–state–action - Wikipedia, truy cập vào tháng 11 5, 2025, https://en.wikipedia.org/wiki/State%E2%80%93action%E2%80%93reward%E2%80%93state%E2%80%93action
+[2510.27210] GUI-Rise: Structured Reasoning and History Summarization for GUI Navigation - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/abs/2510.27210
+[2507.05720] MobileGUI-RL: Advancing Mobile GUI Agent through Reinforcement Learning in Online Environment - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/abs/2507.05720
+Anthropic AI Model Automates Developer Mouse Movements - DevOps.com, truy cập vào tháng 11 5, 2025, https://devops.com/anthropic-ai-model-automates-developer-mouse-movements/
+Creating Multimodal Interactive Agents with Imitation and Self-Supervised Learning - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/pdf/2112.03763
+An Open-Source AI Agent for Doing Tasks on the Web | Stanford HAI, truy cập vào tháng 11 5, 2025, https://hai.stanford.edu/news/an-open-source-ai-agent-for-doing-tasks-on-the-web
+Python Script to Move Mouse: A Guide to Automating Mouse ..., truy cập vào tháng 11 5, 2025, https://medium.com/@aleksej.gudkov/python-script-to-move-mouse-a-guide-to-automating-mouse-movements-c78830a10746
+How can you simulate keyboard/mouse in a C# library like Python's pyautogui module?, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/learnprogramming/comments/jwphez/how_can_you_simulate_keyboardmouse_in_a_c_library/
+Which is the easiest way to simulate keyboard and mouse on Python? - Stack Overflow, truy cập vào tháng 11 5, 2025, https://stackoverflow.com/questions/2791839/which-is-the-easiest-way-to-simulate-keyboard-and-mouse-on-python
+Cheat Sheet - PyAutoGUI documentation - Read the Docs, truy cập vào tháng 11 5, 2025, https://pyautogui.readthedocs.io/en/latest/quickstart.html
+Welcome to PyAutoGUI's documentation! — PyAutoGUI documentation, truy cập vào tháng 11 5, 2025, https://pyautogui.readthedocs.io/
+Mouse Control Functions - PyAutoGUI documentation - Read the Docs, truy cập vào tháng 11 5, 2025, https://pyautogui.readthedocs.io/en/latest/mouse.html
+How to simulate mouse events - Windows Forms | Microsoft Learn, truy cập vào tháng 11 5, 2025, https://learn.microsoft.com/en-us/dotnet/desktop/winforms/input-mouse/how-to-simulate-events
+Mouse Input - Win32 apps - Microsoft Learn, truy cập vào tháng 11 5, 2025, https://learn.microsoft.com/en-us/windows/win32/inputdev/mouse-input
+c# Mouse click simulation to hwnd at x/y position - Stack Overflow, truy cập vào tháng 11 5, 2025, https://stackoverflow.com/questions/26074258/c-sharp-mouse-click-simulation-to-hwnd-at-x-y-position
+Attempting to Simulate Mouse Click / Drag - Stack Overflow, truy cập vào tháng 11 5, 2025, https://stackoverflow.com/questions/8561755/attempting-to-simulate-mouse-click-drag
+Mouse drag window programmatically - Stack Overflow, truy cập vào tháng 11 5, 2025, https://stackoverflow.com/questions/40789132/mouse-drag-window-programmatically
+What's the MacOS API to "capture" the mouse and keyboard, the way a VM or remote desktop program would do? - Stack Overflow, truy cập vào tháng 11 5, 2025, https://stackoverflow.com/questions/65470963/whats-the-macos-api-to-capture-the-mouse-and-keyboard-the-way-a-vm-or-remote
+Open source C# library for handling keyboard/mouse events in Windows UI apps - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/csharp/comments/1bi9xld/open_source_c_library_for_handling_keyboardmouse/
+SharpHook provides a cross-platform global keyboard and mouse hook, event simulation, and text entry simulation for .NET - GitHub, truy cập vào tháng 11 5, 2025, https://github.com/TolikPylypchuk/SharpHook
+SharpHook: Introduction, truy cập vào tháng 11 5, 2025, https://sharphook.tolik.io/
+Event and Text Entry Simulation | SharpHook, truy cập vào tháng 11 5, 2025, https://sharphook.tolik.io/articles/simulation.html
+SharpHook 4.0.0 - NuGet, truy cập vào tháng 11 5, 2025, https://www.nuget.org/packages/SharpHook/4.0.0
+[P] I built an open source framework that lets AI Agents interact with Sandboxes - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/MachineLearning/comments/1jdb2bk/p_i_built_an_open_source_framework_that_lets_ai/
+AI Agent Frameworks: A Practical Guide (2025) - Salesforce, truy cập vào tháng 11 5, 2025, https://www.salesforce.com/agentforce/ai-agents/ai-agent-frameworks/
+7 Agent-to-Agent Interaction Frameworks That Transform AI Development | Galileo, truy cập vào tháng 11 5, 2025, https://galileo.ai/blog/agent-to-agent-interaction-frameworks
+AI Agent Frameworks: Choosing the Right Foundation for Your Business | IBM, truy cập vào tháng 11 5, 2025, https://www.ibm.com/think/insights/top-ai-agent-frameworks
+Building Effective AI Agents - Anthropic, truy cập vào tháng 11 5, 2025, https://www.anthropic.com/research/building-effective-agents
+End-to-End GUI Agent for Automated Computer Interaction: Superior Performance Without Expert Prompts or Commercial Models - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/artificial/comments/1i8yl4t/endtoend_gui_agent_for_automated_computer/
+[1810.12778] Reinforcement Learning and Deep Learning based Lateral Control for Autonomous Driving - arXiv, truy cập vào tháng 11 5, 2025, https://arxiv.org/abs/1810.12778
+How much Controls is in Reinforcement Learning? : r/ControlTheory - Reddit, truy cập vào tháng 11 5, 2025, https://www.reddit.com/r/ControlTheory/comments/v6xj34/how_much_controls_is_in_reinforcement_learning/
+showlab/Awesome-GUI-Agent: A curated list of papers and resources for multi-modal Graphical User Interface (GUI) agents. - GitHub, truy cập vào tháng 11 5, 2025, https://github.com/showlab/Awesome-GUI-Agent
+Imitation Learning - ROBOTIS, truy cập vào tháng 11 5, 2025, https://ai.robotis.com/omy/imitation_learning_omy

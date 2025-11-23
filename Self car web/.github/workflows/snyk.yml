@@ -1,0 +1,57 @@
+name: Snyk SCA & Code Scan
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: read
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node (for npm projects)
+        if: ${{ hashFiles('package.json') != '' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install npm deps
+        if: ${{ hashFiles('package.json') != '' }}
+        run: |
+          npm ci || npm install
+
+      - name: Set up Python (for pip projects)
+        if: ${{ hashFiles('requirements.txt') != '' }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install pip deps
+        if: ${{ hashFiles('requirements.txt') != '' }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+
+      - name: Run Snyk Open Source (SCA)
+        uses: snyk/actions/node@master
+        if: ${{ hashFiles('package.json') != '' || hashFiles('requirements.txt') != '' }}
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high --all-projects --sarif-file-output=snyk.sarif
+
+      - name: Upload SARIF (Snyk)
+        if: ${{ always() }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: snyk.sarif
+

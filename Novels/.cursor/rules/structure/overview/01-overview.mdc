@@ -1,0 +1,997 @@
+---
+alwaysApply: true
+---
+
+# 📋 Architecture Overview & Quick Reference Guide
+
+## 🏗️ System Architecture Overview
+
+### High-Level Architecture Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CLIENT APPLICATIONS                                  │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐ │
+│  │   3-web      │  │  4-desktop   │  │ 5-mobile-ios │  │6-mobile-android│ │
+│  │  (Next.js)   │  │  (Electron)  │  │  (SwiftUI)   │  │ (Jetpack Compose)│ │
+│  │   PWA        │  │              │  │              │  │                │ │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  └──────┬─────────┘ │
+└─────────┼──────────────────┼──────────────────┼──────────────────┼──────────┘
+          │                  │                  │                  │
+          │  REST API         │  REST API        │  GraphQL        │  GraphQL
+          │  GraphQL          │                  │  WebSocket      │  WebSocket
+          │  WebSocket        │                  │                 │
+          └──────────────────┴──────────────────┴──────────────────┘
+                              │
+                    ┌─────────▼─────────┐
+                    │   1-gateway (BFF)   │
+                    │  API Gateway Layer  │
+                    │  - AuthN (JWT)      │
+                    │  - Routing          │
+                    │  - Rate Limiting    │
+                    │  - Caching          │
+                    └─────────┬───────────┘
+                              │
+                    ┌─────────▼──────────┐
+                    │   gRPC (Sync)       │
+                    │  Synchronous Calls  │
+                    └─────────┬───────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+   ┌────▼────┐          ┌─────▼─────┐        ┌─────▼─────┐
+   │  users- │          │  stories- │        │  comments- │
+   │ service │          │  service  │        │  service   │
+   │ (3001)  │          │  (3002)   │        │  (3003)    │
+   └────┬────┘          └─────┬─────┘        └─────┬─────┘
+        │                     │                     │
+   ┌────▼────┐          ┌─────▼─────┐        ┌─────▼─────┐
+   │  search │          │   ai-     │        │notification│
+   │ service │          │ service   │        │  service   │
+   │ (3004)  │          │ (3005)    │        │  (3006)    │
+   └────┬────┘          └─────┬─────┘        └─────┬─────┘
+        │                     │                     │
+   ┌────▼────┐          ┌─────▼─────┐        ┌─────▼─────┐
+   │websocket│          │  social-  │        │ community │
+   │ service │          │  service  │        │  service  │
+   │ (3007)  │          │  (3008)   │        │  (3009)   │
+   └────┬────┘          └─────┬─────┘        └─────┬─────┘
+        │                     │                     │
+        └─────────────────────┼─────────────────────┘
+                              │
+                    ┌─────────▼──────────┐
+                    │  Event Bus (BullMQ) │
+                    │  Async Communication│
+                    │  - Decoupled        │
+                    │  - Scalable         │
+                    └─────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+   ┌────▼────┐          ┌─────▼─────┐        ┌─────▼─────┐
+   │PostgreSQL│         │  Redis    │        │MeiliSearch│
+   │(Per Service)│      │(Cache/Queue)│      │  (Search) │
+   └──────────┘         └───────────┘        └───────────┘
+```
+
+### Architecture Layers
+
+1. **Client Layer**: 4 client applications (Web, Desktop, iOS, Android)
+2. **Gateway Layer**: Single entry point (BFF - Backend for Frontend)
+3. **Service Layer**: 10 microservices, mỗi service độc lập với database riêng
+4. **Infrastructure Layer**: Databases, Cache, Search Engine, Event Bus
+
+## 📦 Package Quick Reference Table
+
+### Backend Services
+
+| Package | Purpose | Port | Database | Key Technologies | Communication |
+|---------|---------|------|----------|------------------|---------------|
+| **1-gateway** | API Gateway (BFF) | 3000 | None | NestJS, gRPC Client, GraphQL, JWT, Throttler | REST/GraphQL/WebSocket (in), gRPC (out) |
+| **users-service** | User management, Library, Reading Preferences, Gamification (F2P) | 3001 | PostgreSQL | NestJS, Prisma, gRPC Server, JWT | gRPC (in), Event Bus (out) |
+| **stories-service** | Content management, Discovery | 3002 | PostgreSQL | NestJS, Prisma, S3, CloudFront, gRPC Server | gRPC (in), Event Bus (out) |
+| **comments-service** | Comments & Ratings, Hierarchical System | 3003 | PostgreSQL | NestJS, Prisma, gRPC Server | gRPC (in), Event Bus (out) |
+| **search-service** | Full-text search | 3004 | MeiliSearch | NestJS, MeiliSearch Client, gRPC Server | gRPC (in), Event Bus (out) |
+| **ai-service** | AI features (Emotional TTS, Translation, Dictionary, Recommendations) | 3005 | None | NestJS, Google AI, TTS APIs, Gemini, gRPC Server | gRPC (in), Event Bus (out) |
+| **notification-service** | Notifications (Email, Push, SMS) | 3006 | None | NestJS, Nodemailer, Firebase Admin, Twilio, BullMQ | Event Bus (in) |
+| **websocket-service** | Real-time communication | 3007 | None | NestJS, Socket.IO, gRPC Server | WebSocket (in), gRPC (out) |
+| **social-service** | Social features (Posts, Groups, Follows) | 3008 | PostgreSQL | NestJS, Prisma, gRPC Server | gRPC (in), Event Bus (out) |
+| **community-service** | Community Interactions & Fan Economy, Paragraph Comments (Duanping) | 3009 | PostgreSQL | NestJS, Prisma, gRPC Server | gRPC (in), Event Bus (out) |
+| **monetization-service** | PPC, Virtual Currency, Privilege, Subscriptions | 3010 | PostgreSQL | NestJS, Prisma, Payment Gateways, gRPC Server | gRPC (in), Event Bus (out) |
+
+### Client Applications
+
+| Package | Purpose | Port | Database | Key Technologies | Communication |
+|---------|---------|------|----------|------------------|---------------|
+| **3-web** | Desktop Web App (PWA) - Power-User Optimized | 3000 (dev) | None | Next.js, React Query, Zustand, TailwindCSS, Workbox | REST API, GraphQL, WebSocket |
+| **4-desktop** | Electron Desktop App (wraps 3-web) | N/A | None | Electron, React | REST API |
+| **5-mobile-ios** | iOS native app | N/A | Core Data | SwiftUI, Apollo, MVVM | GraphQL, WebSocket |
+| **6-mobile-android** | Android native app | N/A | Room | Jetpack Compose, Apollo, MVVM | GraphQL, WebSocket |
+
+### Shared Library
+
+| Package | Purpose | Port | Database | Key Technologies | Communication |
+|---------|---------|------|----------|------------------|---------------|
+| **7-shared** | Shared contracts, types, DTOs, proto files | N/A | None | TypeScript, Protocol Buffers, Zod, class-validator | N/A (imported by all) |
+
+## 🏗️ Code Structure Patterns
+
+### Backend Services (NestJS) - Standard Structure
+
+Tất cả backend services tuân theo cấu trúc NestJS module-based pattern:
+
+```
+packages/2-services/{service-name}/
+├── src/
+│   ├── main.ts                      # Service entry point (gRPC server)
+│   ├── app.module.ts                # Root module (imports all feature modules)
+│   │
+│   ├── 📁 modules/                  # Feature modules (domain-driven)
+│   │   ├── 📁 {feature-name}/       # Each feature = one module
+│   │   │   ├── {feature}.module.ts  # Module definition
+│   │   │   ├── {feature}.service.ts # Business logic
+│   │   │   ├── {feature}.controller.ts # gRPC controller (if needed)
+│   │   │   ├── dto/                 # Data Transfer Objects
+│   │   │   │   └── *.dto.ts         # DTOs for this feature
+│   │   │   └── entities/            # Prisma entities (if feature-specific)
+│   │   │
+│   │   └── ...                      # Other feature modules
+│   │
+│   ├── 📁 controllers/              # gRPC Controllers (implements proto files)
+│   │   └── {service}.controller.ts  # Main gRPC controller
+│   │
+│   ├── 📁 prisma/                   # Database layer
+│   │   ├── schema.prisma            # Prisma schema (all entities)
+│   │   └── migrations/              # Database migrations
+│   │
+│   ├── 📁 common/                    # Shared utilities
+│   │   ├── decorators/              # Custom decorators
+│   │   ├── filters/                 # Exception filters
+│   │   ├── guards/                  # Auth guards
+│   │   ├── interceptors/            # Interceptors
+│   │   └── pipes/                   # Validation pipes
+│   │
+│   └── 📁 config/                    # Configuration
+│       ├── database.config.ts       # Database config
+│       └── grpc.config.ts          # gRPC config
+│
+├── proto/                            # Protocol Buffer definitions
+│   └── {service}.proto              # gRPC service definition
+│
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+**Key Patterns:**
+- **Module-based**: Mỗi feature = một module độc lập
+- **Service Layer**: Business logic trong `*.service.ts`
+- **DTO Pattern**: Tất cả DTOs import từ `7-shared`, không hard-code
+- **Prisma**: Database access qua Prisma ORM
+- **gRPC Controllers**: Implement proto files từ `7-shared`
+
+### Gateway Service (NestJS) - BFF Pattern
+
+```
+packages/1-gateway/
+├── src/
+│   ├── main.ts                      # Express/Fastify server entry
+│   ├── app.module.ts                # Root module
+│   │
+│   ├── 📁 modules/
+│   │   ├── 📁 auth/                 # Authentication module
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth.guard.ts        # JWT validation guard
+│   │   │   └── auth.service.ts      # Auth logic
+│   │   │
+│   │   ├── 📁 {resource}/           # Resource modules (users, stories, etc.)
+│   │   │   ├── {resource}.module.ts
+│   │   │   ├── {resource}.controller.ts  # REST/GraphQL controller
+│   │   │   ├── {resource}.service.ts     # Aggregates data from services
+│   │   │   └── dto/                 # Request/Response DTOs
+│   │   │
+│   │   └── 📁 graphql/              # GraphQL module
+│   │       ├── graphql.module.ts
+│   │       ├── resolvers/           # GraphQL resolvers
+│   │       └── schemas/            # GraphQL schemas
+│   │
+│   ├── 📁 grpc/                     # gRPC clients
+│   │   ├── clients/                # gRPC client stubs
+│   │   └── interfaces/             # Service interfaces
+│   │
+│   └── 📁 common/                   # Shared utilities
+│       ├── filters/                # Exception filters
+│       ├── interceptors/           # Response interceptors
+│       └── decorators/             # Custom decorators
+│
+└── package.json
+```
+
+**Key Patterns:**
+- **BFF (Backend for Frontend)**: Aggregates data from multiple services
+- **No Business Logic**: Gateway chỉ routing, auth, rate limiting
+- **gRPC Clients**: Calls backend services via gRPC
+- **REST + GraphQL**: Exposes both REST API and GraphQL
+
+### Web Frontend (Next.js) - App Router Pattern
+
+```
+packages/3-web/
+├── src/
+│   ├── app/                         # Next.js App Router
+│   │   ├── layout.tsx               # Root layout
+│   │   ├── page.tsx                 # Home page
+│   │   ├── providers.tsx            # Context providers
+│   │   │
+│   │   └── 📁 (routes)/             # Route groups
+│   │       ├── 📁 library/          # Library pages
+│   │       ├── 📁 reader/           # Reader pages
+│   │       └── 📁 browse/           # Browse pages
+│   │
+│   ├── components/                  # React components (Atomic Design)
+│   │   ├── ui/                      # Atoms (shadcn/ui primitives)
+│   │   │   ├── button.tsx
+│   │   │   ├── input.tsx
+│   │   │   └── ...
+│   │   │
+│   │   ├── shared/                  # Molecules/Organisms (reusable)
+│   │   │   ├── Header.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── ...
+│   │   │
+│   │   └── features/                 # Templates (feature-specific)
+│   │       ├── Reader/
+│   │       │   ├── ReaderContainer.tsx
+│   │       │   ├── ReaderContent.tsx
+│   │       │   └── ReaderControls.tsx
+│   │       └── Library/
+│   │           └── ...
+│   │
+│   ├── lib/                         # Utilities & configurations
+│   │   ├── api.ts                   # API client (axios)
+│   │   ├── hooks/                   # Custom React hooks
+│   │   │   ├── useStories.ts        # React Query hooks
+│   │   │   └── useReader.ts
+│   │   │
+│   │   └── utils/                   # Helper functions
+│   │
+│   ├── store/                       # State management
+│   │   ├── server-state.ts          # React Query configuration
+│   │   ├── client-state.ts          # Zustand stores (UI state only)
+│   │   └── reading-preferences-store.ts
+│   │
+│   └── types/                       # TypeScript types (import from 7-shared)
+│       └── index.ts                 # Re-exports from @shared/types
+│
+├── public/                          # Static assets
+├── package.json
+└── next.config.js
+```
+
+**Key Patterns:**
+- **App Router**: Next.js 13+ App Router pattern
+- **Atomic Design**: UI components organized by complexity
+- **React Query**: Server state management (Rule #5)
+- **Zustand**: Client/UI state only (Rule #5)
+- **Type Imports**: All types from `7-shared`, no local types
+
+### Mobile Apps - MVVM + Repository Pattern
+
+#### iOS (SwiftUI)
+```
+packages/5-mobile-ios/
+├── {AppName}/
+│   ├── 📁 Views/                    # SwiftUI Views (Presentation Layer)
+│   │   ├── LibraryView.swift
+│   │   ├── ReaderView.swift
+│   │   └── ...
+│   │
+│   ├── 📁 ViewModels/               # ViewModels (Business Logic)
+│   │   ├── LibraryViewModel.swift
+│   │   ├── ReaderViewModel.swift
+│   │   └── ...
+│   │
+│   ├── 📁 Repositories/             # Repository Layer (Data Access)
+│   │   ├── LibraryRepository.swift  # Decides: Network or Core Data?
+│   │   ├── StoryRepository.swift
+│   │   └── ...
+│   │
+│   ├── 📁 Models/                   # Data Models
+│   │   └── ...                      # Core Data entities
+│   │
+│   ├── 📁 Services/                 # Network & External Services
+│   │   ├── APIService.swift         # GraphQL client (Apollo)
+│   │   ├── WebSocketService.swift
+│   │   └── ...
+│   │
+│   └── 📁 CoreData/                 # Database Layer
+│       ├── CoreDataStack.swift
+│       └── *.xcdatamodeld          # Core Data schema
+│
+└── Package.swift
+```
+
+#### Android (Jetpack Compose)
+```
+packages/6-mobile-android/
+├── app/
+│   ├── src/main/java/.../
+│   │   ├── 📁 ui/                   # Compose UI (Presentation Layer)
+│   │   │   ├── library/
+│   │   │   │   └── LibraryScreen.kt
+│   │   │   └── reader/
+│   │   │       └── ReaderScreen.kt
+│   │   │
+│   │   ├── 📁 viewmodel/            # ViewModels (Business Logic)
+│   │   │   ├── LibraryViewModel.kt
+│   │   │   └── ReaderViewModel.kt
+│   │   │
+│   │   ├── 📁 repository/           # Repository Layer (Data Access)
+│   │   │   ├── LibraryRepository.kt # Decides: Network or Room?
+│   │   │   └── StoryRepository.kt
+│   │   │
+│   │   ├── 📁 database/             # Room Database
+│   │   │   ├── AppDatabase.kt
+│   │   │   ├── entities/            # Room entities
+│   │   │   └── daos/                # Data Access Objects
+│   │   │
+│   │   └── 📁 network/              # Network Layer
+│   │       ├── ApiService.kt        # GraphQL client (Apollo)
+│   │       └── WebSocketService.kt
+│   │
+│   └── build.gradle.kts
+│
+└── build.gradle.kts
+```
+
+**Key Patterns:**
+- **MVVM**: View → ViewModel → Repository → Data Source
+- **Repository Pattern**: Single source of truth, decides network vs local
+- **Offline-First**: Load from local DB first, sync in background
+- **GraphQL**: Apollo client for flexible queries
+
+### Shared Library Structure
+
+```
+packages/7-shared/
+├── src/
+│   ├── types/                       # TypeScript Interfaces & Types
+│   │   ├── index.ts                # Re-exports all types
+│   │   ├── user/
+│   │   │   ├── user.types.ts
+│   │   │   └── reading-preferences.types.ts
+│   │   ├── story/
+│   │   │   └── story.types.ts
+│   │   └── ...
+│   │
+│   ├── validation/                  # Validation DTOs & Schemas
+│   │   ├── index.ts
+│   │   ├── user/
+│   │   │   ├── create-user.dto.ts  # class-validator decorators
+│   │   │   └── update-user.dto.ts
+│   │   └── ...
+│   │
+│   ├── proto/                       # Protocol Buffer definitions
+│   │   ├── users.proto
+│   │   ├── stories.proto
+│   │   └── ...
+│   │
+│   └── constants/                   # Shared constants
+│       └── index.ts
+│
+└── package.json
+```
+
+**Key Patterns:**
+- **Single Source of Truth**: All contracts defined here first (Rule #3)
+- **Type Safety**: TypeScript types for frontend, DTOs for backend
+- **Proto Files**: gRPC service definitions
+- **No Business Logic**: Only data structures and contracts
+
+## 🔑 Key Communication Patterns
+
+### 1. Client → Gateway
+
+**Protocols:**
+- **REST API (JSON)**: Web frontend (3-web) sử dụng cho standard data retrieval
+- **GraphQL**: Mobile apps (5-mobile-ios, 6-mobile-android) sử dụng cho flexible queries
+- **WebSocket**: Tất cả clients sử dụng cho real-time communication (live comments, notifications)
+
+**Authentication:**
+- JWT tokens được gửi trong headers (REST/GraphQL) hoặc query params (WebSocket)
+- Gateway validate JWT và extract user info
+
+**Example:**
+```
+Web Client → REST API → Gateway (port 3000)
+Mobile Client → GraphQL → Gateway (port 3000)
+All Clients → WebSocket → Gateway (port 3000)
+```
+
+### 2. Gateway → Services
+
+**Protocol:** gRPC (synchronous, binary protocol)
+
+**Purpose:** 
+- Immediate data needs (user needs story data NOW)
+- High-speed, low-latency communication
+- Type-safe contracts (proto files)
+
+**Flow:**
+```
+Gateway receives request → Validates JWT → Calls service via gRPC → Returns response
+```
+
+**Example:**
+```
+Gateway → gRPC → users-service (port 3001)
+Gateway → gRPC → stories-service (port 3002)
+Gateway → gRPC → ai-service (port 3005)
+```
+
+### 3. Service → Service
+
+**Protocol:** Event Bus (BullMQ/Redis) - asynchronous
+
+**Purpose:**
+- Decoupled communication
+- Event-driven architecture
+- Services announce events, other services listen
+
+**Common Events:**
+- `user.created` → notification-service sends welcome email
+- `story.created` → search-service indexes new story
+- `comment.created` → notification-service notifies author
+- `purchase.completed` → notification-service sends receipt
+
+**Example:**
+```
+stories-service emits "story.created" event
+  ↓
+Event Bus (BullMQ)
+  ↓
+search-service listens → indexes story
+notification-service listens → notifies followers
+```
+
+### 4. Service → External Services
+
+**Examples:**
+- **S3 + CloudFront**: stories-service stores and serves content
+- **MeiliSearch**: search-service indexes and searches
+- **Google AI APIs**: ai-service uses TTS, translation
+- **Firebase**: notification-service sends push notifications
+- **Payment Gateways**: monetization-service processes payments
+
+## 🗄️ Database Architecture
+
+### Per-Service Database Pattern
+
+**Rule #1**: Mỗi service có database PostgreSQL riêng, KHÔNG BAO GIỜ truy cập database của service khác.
+
+| Service | Database | Schema Focus |
+|---------|----------|--------------|
+| users-service | PostgreSQL | Users, Profiles, Library, Reading Preferences, Bookmarks, Annotations, **⭐ Gamification (Daily Missions, Power Stones, Fast Passes) - F2P Retention Engine** |
+| stories-service | PostgreSQL | Stories, Chapters, Genres, Rankings, Editor's Picks, **Voting (Power Stones, Monthly Votes), Author Dashboard, Author Analytics** |
+| comments-service | PostgreSQL | Comments, Ratings, Reviews, Polls, Quizzes |
+| search-service | MeiliSearch | Story index, Post index (read-only replica) |
+| social-service | PostgreSQL | Posts, Groups (Book Clubs), Follows, Feeds, **Reading Challenges, Activity Tracking** |
+| community-service | PostgreSQL | **⭐ Paragraph Comments (Micro - Duanping) - Engagement Engine, Chapter Comments (Meso), Reviews/Forums (Macro), Polls/Quizzes (Platform),** Fan Economy (Tipping, Rankings, Monthly Votes, Author-Fan) |
+| monetization-service | PostgreSQL | Virtual Currency, Transactions, **⭐ PPC Purchases (Core Revenue Engine), ⭐ Privilege (Advanced Chapters - Revenue Engine), Membership (Coin Packages), Subscriptions, VIP Levels** |
+
+### Cache Layer
+
+**Redis** được sử dụng cho:
+- Gateway caching (frequently accessed data)
+- Session storage
+- Rate limiting counters
+- Event Bus queue (BullMQ)
+
+### Search Layer
+
+**MeiliSearch** được sử dụng cho:
+- Full-text search (stories, posts)
+- Fast, typo-tolerant search
+- Read-only replica (data synced from PostgreSQL via events)
+
+## 🔐 Security & Authentication
+
+### Authentication Flow
+
+```
+1. User logs in → users-service validates credentials
+2. users-service generates JWT token
+3. Client stores JWT token
+4. Client sends JWT in subsequent requests
+5. Gateway validates JWT on every request
+6. Gateway extracts user info and forwards to services
+```
+
+### Authorization
+
+- **JWT contains**: User ID, Roles, Permissions
+- **Gateway**: Validates JWT, extracts user info
+- **Services**: Receive user info from Gateway, enforce business rules
+
+## 📊 Data Flow Examples
+
+### Example 1: User Reads a Story
+
+```
+1. Web Client → GET /api/stories/{id} → Gateway
+2. Gateway validates JWT → gRPC call → stories-service
+3. stories-service queries PostgreSQL → returns story data
+4. Gateway returns story to client
+5. Client displays story
+```
+
+### Example 2: User Purchases a Chapter
+
+```
+1. Mobile Client → GraphQL mutation purchaseChapter → Gateway
+2. Gateway validates JWT → gRPC call → monetization-service
+3. monetization-service:
+   - Checks user balance
+   - Processes payment
+   - Grants access
+   - Emits "purchase.completed" event
+4. Event Bus → notification-service → sends receipt email
+5. Gateway returns success to client
+```
+
+### Example 3: New Story Published
+
+```
+1. Author publishes story → stories-service creates story
+2. stories-service emits "story.created" event
+3. Event Bus distributes event:
+   - search-service → indexes story in MeiliSearch
+   - notification-service → notifies followers
+   - social-service → creates feed entry
+4. All services process asynchronously
+```
+
+### Example 4: User Casts Power Stone Vote
+
+```
+1. Web Client → POST /api/stories/{id}/vote → Gateway
+2. Gateway validates JWT → gRPC call → users-service
+3. users-service checks Power Stones balance
+4. users-service deducts Power Stone → gRPC call → stories-service
+5. stories-service updates vote count, emits "vote.cast" event
+6. Event Bus → stories-service → recalculates rankings
+7. Gateway returns success to client
+```
+
+### Example 5: User Completes Daily Mission
+
+```
+1. Mobile Client → POST /api/gamification/claim-mission → Gateway
+2. Gateway validates JWT → gRPC call → users-service
+3. users-service checks mission completion
+4. users-service awards reward (Fast Pass/Points) → emits "mission.completed" event
+5. Event Bus → notification-service → sends reward notification
+6. Gateway returns reward to client
+```
+
+## ⭐ Prominent Features (Strategic Impact)
+
+These five features have disproportionate impact on revenue, engagement, and technological advantage:
+
+### 1. Privilege Model (Monetization Service) - Revenue Engine
+
+**Strategic Impact:** Dual monetization - maximizes revenue from top 1-5% of fans (whales)
+
+**Core Mechanics:**
+- Book-specific fee (NOT platform-wide) that resets monthly (1st of month)
+- Does NOT unlock chapters - grants RIGHT to purchase advanced chapters
+- Double monetization: Privilege fee + Advanced chapter purchases
+- Targets impatient fans willing to pay premium for early access
+
+**Revenue Segmentation:** Perfectly isolates top fans without affecting regular users
+
+**Service:** `monetization-service` (Port 3010)
+**Database:** PostgreSQL (Privilege, AdvancedChapter, PrivilegePurchase models)
+
+### 2. Pay-Per-Chapter (PPC) Model (Monetization Service) - Core Revenue Engine
+
+**Strategic Impact:** Psychological pricing - reduces "pain of paying" through virtual currency
+
+**Core Mechanics:**
+- Virtual currency (Points/Coins) - 1 point = 1/100 CNY
+- Character-based pricing (3-5 points per 1000 characters)
+- Free chapters (80-130) → Paywall → Paid chapters
+- Micropayments feel smaller than real money
+
+**Psychological Factors:**
+- Free content creates investment (time invested)
+- Serial content creates addiction (need next chapter)
+- Low barrier = High conversion
+
+**Service:** `monetization-service` (Port 3010)
+**Database:** PostgreSQL (Wallet, Purchase, ChapterPrice, StoryPaywall models)
+
+### 3. Paragraph-Level Comments (Community Service) - Engagement Engine
+
+**Strategic Impact:** Transforms solitary reading into real-time social experience
+
+**Core Philosophy:** "Twitch Chat for books" - immediate reactions while reading
+
+**Features:**
+- Comments anchored to specific paragraphs (paragraph index)
+- Real-time bubble indicators showing comment count
+- Quick reactions (like, laugh, cry, angry, wow, love)
+- Author interaction (authors can like/reply directly)
+- Context preservation (paragraph text snapshot)
+- Real-time updates via WebSocket
+
+**Impact:**
+- Transforms solitary reading into community experience
+- Creates secondary content layer (comments become entertainment)
+- Immediate feedback loop for authors
+
+**Service:** `community-service` (Port 3009)
+**Database:** PostgreSQL (ParagraphComment, ParagraphCommentLike, ParagraphCommentReply models)
+**Integration:** WebSocket for real-time updates
+
+### 4. Gamified Missions (Users Service) - F2P Retention Engine
+
+**Strategic Impact:** Keeps 99% of free users engaged and provides indirect monetization
+
+**Core Philosophy:** Platform structured like mobile F2P games - users "grind" for rewards
+
+**Daily Missions:**
+- **Daily Check-in:** Small reward for opening app (streak bonuses)
+- **Daily Reading:** Read for time (e.g., 20 minutes) → Fast Pass/Points
+- **Watching Ads:** Watch ad → Fast Pass or Coins (ad revenue)
+- **Voting:** Use Power Stones → Points (can exchange for Fast Passes)
+
+**Rewards (Soft Currency):**
+- **Power Stones:** Daily free votes (reset daily)
+- **Fast Passes:** Unlock 1 chapter (expires in 7 days - creates urgency/FOMO)
+- **Points:** Soft currency exchangeable for Fast Passes
+
+**Retention Strategy:**
+- Free users provide value: Ad revenue, engagement, social proof
+- Gamification keeps free users engaged daily
+- Some convert to paying users over time
+
+**Service:** `users-service` (Port 3001)
+**Database:** PostgreSQL (DailyMission, MissionReward, PowerStone, FastPass, GamificationReward models)
+**Integration:** 
+- `stories-service` for Power Stones voting
+- `monetization-service` for Fast Pass chapter unlocking
+
+### 5. AI Narration (AI Service) - Technology Disruptor
+
+**Strategic Impact:** Breaks cost barriers - transforms entire library into audiobooks overnight
+
+**Core Innovation:**
+- High-quality AI voices with emotional intelligence
+- Emotion control: "emotional and dramatic", "calm and soothing"
+- Voice styles: Terrified, Sad, Shouting, Whispering, Cheerful, Angry
+- Contextual awareness: Understands punctuation, natural pauses, tone adjustment
+- Sync with text highlighting during playback
+
+**Market Disruption:**
+- Reduces audiobook production cost to near zero
+- Platform can claim entire library is "audiobooks" instantly
+- Competitive advantage that traditional audiobook platforms cannot match
+
+**Service:** `ai-service` (Port 3005)
+**Storage:** S3 for TTS audio, Redis for caching
+**APIs:** Google Cloud TTS, Azure, AWS Polly, ElevenLabs
+
+### Integration & Synergy Between Prominent Features
+
+**Revenue Flywheel:**
+1. **Gamified Missions** (users-service) → Keeps free users engaged → Provides Power Stones
+2. **Power Stones** → Used for voting in **Ranking Systems** (stories-service) → Creates social proof
+3. **Social Proof** → Drives discovery → Users discover stories via **Paragraph Comments** (community-service)
+4. **Paragraph Comments** → Increases engagement → Users invest time → More likely to purchase
+5. **PPC Model** (monetization-service) → Low barrier purchases → Users buy chapters
+6. **Privilege Model** (monetization-service) → Whales pay premium → Maximum revenue extraction
+7. **AI Narration** (ai-service) → Reduces content production cost → Enables free tier → Attracts more users
+
+**Engagement Loop:**
+- **Paragraph Comments** create real-time social experience → Users stay longer
+- **Gamified Missions** create daily habit → Users return daily
+- **AI Narration** enables multi-modal consumption → Users can "read" while doing other activities
+- **PPC Model** creates cliffhanger effect → Users purchase next chapter immediately
+
+**Technology Advantage:**
+- **AI Narration** transforms entire library into audiobooks overnight → Competitive moat
+- **Paragraph Comments** create network effects → More users = More valuable comments
+- **Gamification** creates switching costs → Users invested in missions/rewards
+
+## 🎮 Feature Ecosystem Overview
+
+### Traditional Social Features (Social Service)
+
+**Purpose:** Transform reading from solitary activity to social experience
+
+**Core Features:**
+- **Social Feeds:** View activity of friends (what they're reading, reviews, challenge progress)
+- **Book Clubs (Groups):** Virtual spaces for group book discussions with scheduled readings
+- **Reading Challenges:** Personal goals and community challenges with progress tracking
+- **Activity Tracking:** Reading goals, statistics, and activity timeline
+
+**Key Insight:** Friend progress visibility is critical - users love seeing friends' challenge progress (Goodreads lesson)
+
+**Service:** `social-service` (Port 3008)
+**Database:** PostgreSQL (Post, Group, Follow, ReadingChallenge, ActivityTracking models)
+
+### Ranking Systems (Stories Service)
+
+**Purpose:** Social proof tool for content discovery - rankings based on engagement, NOT star ratings
+
+**Core Philosophy:** Rankings measure real-time interaction and monetization, not literary quality
+
+**Ranking Types:**
+- **Monthly Votes Ranking:** Based on Power Stones + Monthly Votes (VIP guaranteed votes)
+- **Sales Ranking:** Based on purchase volume (spending)
+- **Recommendations Ranking:** Based on recommendation count
+- **Popularity Ranking:** Based on views, reads, engagement, discussion activity
+
+**Voting Mechanisms:**
+- **Power Stones:** Daily free votes (gamification reward from users-service)
+- **Monthly Votes:** VIP guaranteed votes based on spending level
+- **Discussion Activity:** Comments and engagement also factor in
+
+**Service:** `stories-service` (Port 3002)
+**Integration:** 
+- `users-service` for Power Stones allocation
+- `monetization-service` for VIP Monthly Votes
+- `community-service` for Monthly Votes system
+- `community-service` for discussion activity metrics
+
+### Paragraph-Level Comments (Community Service - Micro Level)
+
+**Purpose:** Revolutionary feature - transform reading into real-time social experience
+
+**Core Philosophy:** "Twitch Chat for books" - immediate reactions while reading
+
+**Features:**
+- Comments anchored to specific paragraphs (paragraph index)
+- Real-time bubble indicators showing comment count
+- Quick reactions (like, laugh, cry, angry, wow, love)
+- Author interaction (authors can like/reply directly)
+- Context preservation (paragraph text snapshot)
+- Real-time updates via WebSocket
+
+**Impact:**
+- Transforms solitary reading into community experience
+- Creates secondary content layer (comments become entertainment)
+- Immediate feedback loop for authors
+
+**Service:** `community-service` (Port 3009)
+**Database:** PostgreSQL (ParagraphComment, ParagraphCommentLike, ParagraphCommentReply models)
+**Integration:** WebSocket for real-time updates
+
+### Monetization Models (Monetization Service)
+
+**Purpose:** Multi-tier monetization system optimized for serial content
+
+**Core Models:**
+
+1. **Pay-Per-Chapter (PPC):**
+   - Virtual currency (Points/Coins) - 1 point = 1/100 CNY
+   - Character-based pricing (3-5 points per 1000 characters)
+   - Free chapters (80-130) → Paywall → Paid chapters
+   - Psychological: Micropayments feel smaller than real money
+
+2. **Membership (Coin Packages):**
+   - NOT all-you-can-eat - just discounted coin packages
+   - Monthly fee → Immediate coin grant + Daily login bonus
+   - User still must spend coins to unlock chapters (PPC remains)
+   - Recurring revenue + PPC spending (double monetization)
+
+3. **Privilege (Advanced Chapters):**
+   - Book-specific fee (NOT platform-wide)
+   - Resets monthly (1st of month)
+   - Does NOT unlock chapters - grants RIGHT to purchase advanced chapters
+   - Double monetization: Privilege fee + Advanced chapter purchases
+   - Targets impatient fans (whales)
+
+4. **All-You-Can-Read (Optional Alternative):**
+   - Netflix-style subscription
+   - Fixed monthly fee, unlimited reading
+   - Revenue cap per user
+
+5. **Loyalty Program (VIP Levels):**
+   - Spending-based VIP levels
+   - Discounts, guaranteed Monthly Votes, status
+   - No revenue cap
+
+**Service:** `monetization-service` (Port 3010)
+**Database:** PostgreSQL (Wallet, Purchase, Membership, Privilege, Subscription, VIPLevel models)
+
+### Gamification System (Users Service - F2P)
+
+**Purpose:** Keep free users engaged through gamified missions and rewards
+
+**Core Philosophy:** Platform structured like mobile F2P games - users "grind" for rewards
+
+**Daily Missions:**
+- **Daily Check-in:** Small reward for opening app (streak bonuses)
+- **Daily Reading:** Read for time (e.g., 20 minutes) → Fast Pass/Points
+- **Watching Ads:** Watch ad → Fast Pass or Coins (ad revenue)
+- **Voting:** Use Power Stones → Points (can exchange for Fast Passes)
+
+**Rewards (Soft Currency):**
+- **Power Stones:** Daily free votes (reset daily)
+- **Fast Passes:** Unlock 1 chapter (expires in 7 days - creates urgency/FOMO)
+- **Points:** Soft currency exchangeable for Fast Passes
+
+**Retention Strategy:**
+- Free users provide value: Ad revenue, engagement, social proof
+- Gamification keeps free users engaged daily
+- Some convert to paying users over time
+
+**Service:** `users-service` (Port 3001)
+**Database:** PostgreSQL (DailyMission, MissionReward, PowerStone, FastPass, GamificationReward models)
+**Integration:** 
+- `stories-service` for Power Stones voting
+- `monetization-service` for Fast Pass chapter unlocking
+
+### Author Ecosystem (Stories Service)
+
+**Purpose:** Two-sided marketplace - platform for authors to publish and monetize
+
+**Core Features:**
+- **Author Dashboard:** Story management, in-app editing, publishing controls
+- **Author Analytics:** Revenue tracking, reading analytics, engagement metrics, audience insights
+- **Author Tools:** Feedback loop (paragraph comments), reader behavior analysis, content optimization
+- **Monetization Tools:** Revenue sharing, pricing management
+
+**Revenue Sharing:**
+- PPC: Platform 50%, Tax 6%, Author 44%
+- Tips: Platform 50%, Tax 6%, Author 44%
+
+**Service:** `stories-service` (Port 3002)
+**Database:** PostgreSQL (AuthorDashboard, AuthorAnalytics models)
+**Integration:**
+- `monetization-service` for revenue data
+- `community-service` for engagement data
+- `users-service` for reading behavior data
+
+## 🚀 Technology Stack Summary
+
+### Backend
+- **Framework**: NestJS (Node.js)
+- **Database**: PostgreSQL (per service), MeiliSearch (search)
+- **ORM**: Prisma
+- **Communication**: gRPC (sync), BullMQ/Redis (async)
+- **Authentication**: JWT (Passport.js)
+- **Storage**: AWS S3 + CloudFront CDN
+
+### Frontend
+- **Web**: Next.js, React Query, Zustand, TailwindCSS
+- **Desktop**: Electron, React
+- **Mobile iOS**: SwiftUI, Apollo, Core Data, MVVM
+- **Mobile Android**: Jetpack Compose, Apollo, Room, MVVM
+
+### Infrastructure
+- **Cache**: Redis
+- **Queue**: BullMQ (Redis-based)
+- **Search**: MeiliSearch
+- **Storage**: AWS S3 + CloudFront
+- **Monitoring**: (To be configured)
+
+## 📝 Code Organization Standards
+
+### Naming Conventions
+
+**Files:**
+- **Services**: `{feature}.service.ts` (e.g., `library.service.ts`)
+- **Controllers**: `{feature}.controller.ts` (e.g., `users.controller.ts`)
+- **DTOs**: `{action}-{resource}.dto.ts` (e.g., `create-user.dto.ts`)
+- **Types**: `{resource}.types.ts` (e.g., `user.types.ts`)
+- **Components**: `{ComponentName}.tsx` (PascalCase, e.g., `ReaderContainer.tsx`)
+
+**Folders:**
+- **Modules**: `{feature}/` (lowercase, kebab-case)
+- **Components**: `{Feature}/` (PascalCase for feature folders)
+- **Utils**: `utils/`, `hooks/`, `lib/` (lowercase)
+
+**Classes & Functions:**
+- **Services**: `{Feature}Service` (PascalCase, e.g., `LibraryService`)
+- **Methods**: `camelCase` (e.g., `getUserLibrary()`)
+- **Constants**: `UPPER_SNAKE_CASE` (e.g., `MAX_RETRY_COUNT`)
+
+### File Organization Rules
+
+1. **One Feature = One Module**: Mỗi feature có module riêng với service, controller, DTOs
+2. **DTOs in Shared**: Tất cả DTOs định nghĩa trong `7-shared`, import vào services
+3. **Types in Shared**: Tất cả TypeScript types định nghĩa trong `7-shared`
+4. **No Business Logic in Gateway**: Gateway chỉ routing, auth, rate limiting
+5. **Repository Pattern (Mobile)**: Mobile apps sử dụng Repository pattern để quyết định network vs local
+
+### Import Patterns
+
+**Backend (NestJS):**
+```typescript
+// ✅ CORRECT: Import DTOs from 7-shared
+import { CreateUserDto, UpdateUserDto } from '@shared/validation/user';
+
+// ✅ CORRECT: Import types from 7-shared
+import { User, ReadingPreferences } from '@shared/types';
+
+// ❌ WRONG: Don't hard-code DTOs in services
+// interface CreateUserDto { ... } // ❌
+```
+
+**Frontend (Next.js):**
+```typescript
+// ✅ CORRECT: Import types from 7-shared
+import { Story, Chapter } from '@shared/types';
+
+// ✅ CORRECT: Use React Query for server data
+import { useQuery } from '@tanstack/react-query';
+import { useStories } from '@/lib/hooks/useStories';
+
+// ✅ CORRECT: Use Zustand for UI state only
+import { useUIStore } from '@/store/client-state';
+
+// ❌ WRONG: Don't use useState for server data
+// const [stories, setStories] = useState([]); // ❌
+```
+
+## ⚠️ Critical Rules
+
+1. **Rule #1**: Services NEVER touch each other's databases
+   - ❌ DON'T: users-service SELECT from stories table
+   - ✅ DO: users-service calls stories-service via gRPC
+
+2. **Rule #2**: Use the right communication channel
+   - **Sync (immediate)**: gRPC
+   - **Async (decoupled)**: Event Bus
+
+3. **Rule #3**: ALL contracts defined in 7-shared first
+   - ❌ DON'T: Hard-code DTOs in services
+   - ✅ DO: Define in 7-shared, import everywhere
+
+4. **Rule #4**: Gateway is a "Bouncer", NOT the "Brain"
+   - ✅ DO: AuthN, Routing, Rate Limiting
+   - ❌ DON'T: Business logic (push to services)
+
+5. **Rule #5**: State Management
+   - **Web**: React Query (server data), Zustand (UI state only)
+   - **Mobile**: MVVM + Repository Pattern
+
+## 📚 Tài liệu chi tiết
+
+### 🏗️ Infrastructure
+- [Root Structure](../root/02-root-structure.md) - Root configuration files, documentation, scripts
+- [Gateway Service](../gateway/03-1-gateway.md) - API Gateway (BFF Layer) chi tiết
+
+### 🔧 Microservices
+- [Services Overview](../services/04-2-services-overview.md) - Tổng quan về tất cả microservices
+- [Users Service](../services/05-users-service.md) - User management, Library, Reading Preferences
+- [Stories Service](../services/06-stories-service.md) - Content management, Discovery
+- [Comments Service](../services/07-comments-service.md) - Comments & Ratings, Hierarchical System
+- [Search Service](../services/08-search-service.md) - Full-text search với MeiliSearch
+- [AI Service](../services/09-ai-service.md) - TTS, Translation, Dictionary, Recommendations
+- [Notification Service](../services/10-notification-service.md) - Email, Push, SMS
+- [WebSocket Service](../services/11-websocket-service.md) - Real-time communication
+- [Social Service](../services/12-social-service.md) - Posts, Groups, Follows, Feeds
+- [Community Service](../services/13-community-service.md) - Community Interactions & Fan Economy
+- [Monetization Service](../services/14-monetization-service.md) - PPC, Virtual Currency, Subscriptions
+
+### 💻 Client Applications
+- [Web Frontend](../clients/13-3-web.md) - Next.js Web App (PWA)
+- [Desktop App](../clients/14-4-desktop.md) - Electron Desktop App
+- [iOS App](../clients/15-5-mobile-ios.md) - iOS Native App (SwiftUI)
+- [Android App](../clients/16-6-mobile-android.md) - Android Native App (Jetpack Compose)
+
+### 📦 Shared Library
+- [Shared Library](../shared/17-7-shared.md) - Types, DTOs, Proto files (CRITICALLY IMPORTANT)
+
+### 🗺️ Roadmap
+- [Implementation Roadmap](../roadmap/README.md) - Lộ trình triển khai 3 giai đoạn
+
+---
+
+**💡 Quick Tip**: Sử dụng bảng "Package Quick Reference" ở trên để tìm nhanh thông tin về port, database, và technologies của bất kỳ package nào. Xem phần "Code Structure Patterns" để hiểu cách code được tổ chức trong từng package.
+
+**📖 Xem thêm:** [Main README](../README.md) | [How to Use](./HOW_TO_USE.md) | [Overview README](./README.md)

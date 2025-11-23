@@ -1,0 +1,60 @@
+appId: com.storysphere.desktop
+productName: StorySphere
+files:
+  - dist/main/**/*
+  - dist/renderer/**/*
+  - resources/icons/**/*
+
+# Electron builder configuration
+# Note: electron must be in dependencies for production builds
+asar: true
+electronVersion: 28.2.0
+
+# File associations
+fileAssociations:
+  - ext: novel
+    name: Novel File
+    description: StorySphere Novel File
+    role: Editor
+  - ext: storysphere
+    name: StorySphere File
+    description: StorySphere Export File
+    role: Editor
+  - ext: json
+    name: JSON File
+    description: StorySphere Data File
+    role: Editor
+
+# Protocol handlers
+protocols:
+  - name: StorySphere Protocol
+    schemes:
+      - novel
+
+mac:
+  target:
+    - dmg
+  category: public.app-category.entertainment
+  icon: resources/icons/icon.icns
+  entitlements: null
+  entitlementsInherit: null
+  hardenedRuntime: true
+  gatekeeperAssess: false
+
+win:
+  target:
+    - nsis
+  icon: resources/icons/icon.ico
+  publisherName: StorySphere
+  verifyUpdateCodeSignature: false
+
+linux:
+  target:
+    - AppImage
+  icon: resources/icons/icon.png
+  category: Entertainment
+
+# Auto-updater configuration
+publish:
+  provider: generic
+  url: https://updates.storysphere.com

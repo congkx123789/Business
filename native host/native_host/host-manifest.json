@@ -1,0 +1,14 @@
+{
+  "name": "com.example.automation_bridge",
+  "description": "Native host for Automation Bridge",
+  "path": "pythonw.exe",
+  "type": "stdio",
+  "arguments": [
+    "-u",
+    "native_host/main.py"
+  ],
+  "allowed_origins": [
+    "chrome-extension://REPLACE_WITH_EXTENSION_ID/"
+  ]
+}
+

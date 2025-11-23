@@ -1,0 +1,18 @@
+# Core
+pydantic>=2.7,<3
+
+# Optional (uncomment when integrating)
+# playwright>=1.48,<2
+# selenium>=4.23,<5
+
+# Testing
+pytest>=8.3,<9
+
+# Windows desktop automation
+pywinauto>=0.6.8,<1
+psutil>=6.0,<7
+Pillow>=10.4,<11
+
+# Optional OCR (install tesseract separately and then enable)
+# pytesseract>=0.3.13,<1
+

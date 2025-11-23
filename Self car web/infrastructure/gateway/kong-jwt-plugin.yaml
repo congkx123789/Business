@@ -1,0 +1,13 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: jwt-propagate
+  namespace: staging
+config:
+  header_name: Authorization
+  claims_to_forward:
+    - user_id: X-User-Id
+    - role: X-User-Role
+  passthrough: true
+  secret_key: ${JWT_SECRET_KEY}
+

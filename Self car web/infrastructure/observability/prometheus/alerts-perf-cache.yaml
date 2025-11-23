@@ -1,0 +1,32 @@
+groups:
+  - name: perf-cache-alerts
+    interval: 30s
+    rules:
+      # API p95 latency > 800ms for 10m
+      - alert: ApiP95LatencyHigh
+        expr: sli:api_p95_latency:seconds > 0.8
+        for: 10m
+        labels: {severity: warning, service: api}
+        annotations:
+          summary: "API p95 latency > 800ms"
+          description: "Investigate hot endpoints, DB, or dependencies."
+
+      # VDP cache hit ratio below 80%
+      - alert: VdpCacheHitLow
+        expr: cache:hit_ratio:5m{namespace="vdp"} < 0.8
+        for: 15m
+        labels: {severity: warning, service: api}
+        annotations:
+          summary: "VDP cache hit ratio below 80%"
+          description: "Check TTLs, cache invalidation, and upstream changes."
+
+      # Search cache hit ratio below 70%
+      - alert: SearchCacheHitLow
+        expr: cache:hit_ratio:5m{namespace="search"} < 0.7
+        for: 15m
+        labels: {severity: warning, service: search}
+        annotations:
+          summary: "Search cache hit ratio below 70%"
+          description: "Investigate query patterns, filters, and cache key variance."
+
+

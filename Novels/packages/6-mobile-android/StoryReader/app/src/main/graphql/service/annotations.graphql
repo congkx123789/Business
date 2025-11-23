@@ -1,0 +1,61 @@
+query GetAnnotations($userId: ID!, $chapterId: ID) {
+  annotations(userId: $userId, chapterId: $chapterId) {
+    id
+    userId
+    storyId
+    chapterId
+    startPosition
+    endPosition
+    selectedText
+    note
+    color
+    tags
+    createdAt
+    updatedAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation CreateAnnotation($input: AnnotationInput!) {
+  createAnnotation(input: $input) {
+    id
+    userId
+    storyId
+    chapterId
+    startPosition
+    endPosition
+    selectedText
+    note
+    color
+    tags
+    createdAt
+    updatedAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation UpdateAnnotation($input: AnnotationUpdateInput!) {
+  updateAnnotation(input: $input) {
+    id
+    userId
+    storyId
+    chapterId
+    startPosition
+    endPosition
+    selectedText
+    note
+    color
+    tags
+    createdAt
+    updatedAt
+    syncStatus
+    lastSyncedAt
+  }
+}
+
+mutation DeleteAnnotation($id: ID!) {
+  deleteAnnotation(id: $id)
+}
+

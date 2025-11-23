@@ -1,0 +1,63 @@
+env:
+  contexts:
+    - name: staging
+      urls:
+        - ${TARGET_BASE_URL}
+      includePaths:
+        - ${TARGET_BASE_URL}/.*
+      excludePaths:
+        - ${TARGET_BASE_URL}/logout
+      authentication:
+        method: httpHeader
+        parameters:
+          header: Authorization
+          value: Bearer ${DAST_JWT}
+      sessionManagement:
+        method: cookieBased
+      technology:
+        exclude: []
+
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+
+jobs:
+  - type: import
+    parameters:
+      # Import API definition for better coverage of REST/GraphQL
+      apiDefinitionUrls:
+        - ${OPENAPI_URL}
+      target: ${TARGET_BASE_URL}
+
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 60
+
+  - type: spider
+    parameters:
+      context: staging
+      maxDuration: 5
+      url: ${TARGET_BASE_URL}
+      user: ''
+
+  - type: activeScan
+    parameters:
+      context: staging
+      addQueryParam: true
+      delayInMs: 0
+      maxRuleDurationInMins: 15
+      scanPolicyName: API-Minimal-High
+      maxAlertsPerRule: 50
+    rules:
+      # example: disable noisy rules if needed
+      - id: 40012
+        action: OFF
+
+  - type: report
+    parameters:
+      template: traditional-json
+      reportDir: security/dast/reports
+      reportFile: zap-report.json
+      theme: dark
+

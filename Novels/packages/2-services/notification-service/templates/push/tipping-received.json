@@ -1,0 +1,10 @@
+{
+  "title": "You received a tip!",
+  "body": "A fan sent {{tipAmount}} {{currency}}",
+  "data": {
+    "type": "tip.received",
+    "tipAmount": "{{tipAmount}}",
+    "currency": "{{currency}}"
+  }
+}
+

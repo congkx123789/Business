@@ -1,0 +1,18 @@
+{
+  "title": "เสร็จสิ้นการจองของคุณ",
+  "startDate": "วันที่เริ่มต้น",
+  "endDate": "วันที่สิ้นสุด",
+  "pickupLocation": "สถานที่รับรถ",
+  "pickupPlaceholder": "ใส่ที่อยู่รับรถ",
+  "dropoffLocation": "สถานที่คืนรถ",
+  "dropoffPlaceholder": "ใส่ที่อยู่คืนรถ",
+  "paymentInfo": "ข้อมูลการชำระเงิน",
+  "paymentDemo": "นี่คือการสาธิต ในโปรดักชันจะรวมเข้ากับเกตเวย์การชำระเงินเช่น Stripe หรือ PayPal",
+  "confirmBooking": "ยืนยันการจอง",
+  "bookingSummary": "สรุปการจอง",
+  "pricePerDay": "ราคาต่อวัน:",
+  "numberOfDays": "จำนวนวัน:",
+  "total": "รวม:",
+  "perDay": "/วัน"
+}
+

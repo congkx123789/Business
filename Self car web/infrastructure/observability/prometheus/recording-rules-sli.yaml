@@ -1,0 +1,38 @@
+groups:
+  - name: sli-inputs
+    interval: 30s
+    rules:
+      # 1) Payments success ratio
+      - record: sli:payments_success:ratio
+        expr: |
+          sum(rate(payments_total{status="success"}[5m]))
+          /
+          sum(rate(payments_total[5m]))
+
+      # 2) API availability ratio
+      - record: sli:api_availability:ratio
+        expr: |
+          1 - (
+            sum(rate(http_requests_total{code=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          )
+
+      # 3) Search P99 latency (seconds)
+      - record: sli:search_p99_latency:seconds
+        expr: |
+          histogram_quantile(
+            0.99,
+            sum by (le) (rate(http_server_duration_seconds_bucket{route="/search"}[5m]))
+          )
+
+      # 4) Inventory consistency ratio
+      - record: sli:inventory_consistency:ratio
+        expr: |
+          1 - (
+            sum(rate(inventory_reconciliation_total{result="failure"}[5m]))
+            /
+            sum(rate(inventory_reconciliation_total[5m]))
+          )
+
+

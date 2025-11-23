@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package websocket;
+
+import "google/protobuf/struct.proto";
+
+service WebsocketService {
+  rpc BroadcastEvent (BroadcastEventRequest) returns (BroadcastResponse);
+}
+
+message BroadcastEventRequest {
+  string event = 1;
+  google.protobuf.Struct payload = 2;
+  string room = 3;
+  repeated string rooms = 4;
+  string userId = 5;
+  string storyId = 6;
+  string chapterId = 7;
+  string groupId = 8;
+  string walletUserId = 9;
+  bool broadcastAll = 10;
+}
+
+message BroadcastResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+

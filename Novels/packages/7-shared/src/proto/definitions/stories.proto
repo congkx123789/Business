@@ -1,0 +1,433 @@
+syntax = "proto3";
+
+package stories;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service StoriesService {
+  // Core Story CRUD
+  rpc GetStory(GetStoryRequest) returns (Story);
+  rpc ListStories(ListStoriesRequest) returns (ListStoriesResponse);
+  rpc CreateStory(CreateStoryRequest) returns (Story);
+  rpc UpdateStory(UpdateStoryRequest) returns (Story);
+  rpc DeleteStory(DeleteStoryRequest) returns (google.protobuf.Empty);
+
+  // Chapters & Content
+  rpc GetChapter(GetChapterRequest) returns (Chapter);
+  rpc ListChapters(ListChaptersRequest) returns (ListChaptersResponse);
+  rpc CreateChapter(CreateChapterRequest) returns (Chapter);
+  rpc UpdateChapter(UpdateChapterRequest) returns (Chapter);
+  rpc DeleteChapter(DeleteChapterRequest) returns (google.protobuf.Empty);
+  rpc DownloadChapter(DownloadChapterRequest) returns (DownloadChapterResponse);
+
+  // Discovery & Rankings
+  rpc GetRankings(GetRankingsRequest) returns (GetRankingsResponse);
+  rpc GetEditorPicks(GetEditorPicksRequest) returns (GetEditorPicksResponse);
+  rpc GetGenres(GetGenresRequest) returns (GetGenresResponse);
+  rpc GetStoriesByGenre(GetStoriesByGenreRequest) returns (ListStoriesResponse);
+  rpc GetStorefrontData(GetStorefrontDataRequest) returns (StorefrontData);
+
+  // Voting & Engagement
+  rpc CastPowerStone(CastPowerStoneRequest) returns (VoteResult);
+  rpc CastMonthlyVote(CastMonthlyVoteRequest) returns (VoteResult);
+  rpc GetUserVotes(GetUserVotesRequest) returns (UserVotes);
+
+  // Reading Experience
+  rpc GetReadingProgress(GetReadingProgressRequest) returns (ReadingProgressResponse);
+  rpc UpdateReadingProgress(UpdateReadingProgressRequest) returns (ReadingProgressResponse);
+
+  // Author Ecosystem
+  rpc GetAuthorDashboard(GetAuthorDashboardRequest) returns (AuthorDashboard);
+  rpc GetAuthorAnalytics(GetAuthorAnalyticsRequest) returns (AuthorAnalyticsResponse);
+  rpc GetAuthorRevenue(GetAuthorRevenueRequest) returns (AuthorRevenueResponse);
+  rpc GetAuthorEngagement(GetAuthorEngagementRequest) returns (AuthorEngagementResponse);
+  rpc GetReaderInsights(GetReaderInsightsRequest) returns (ReaderInsightsResponse);
+
+  // DRM & Access
+  rpc CheckDrmStatus(CheckDrmStatusRequest) returns (DrmStatus);
+  rpc GetWatermarkedContent(GetWatermarkedContentRequest) returns (WatermarkedContent);
+  rpc DetectWatermark(DetectWatermarkRequest) returns (DetectWatermarkResponse);
+}
+
+// ===== Stories =====
+message Story {
+  string id = 1;
+  string title = 2;
+  string authorId = 3;
+  string authorName = 4;
+  string description = 5;
+  string coverUrl = 6;
+  repeated string genreIds = 7;
+  StoryStats stats = 8;
+  StoryPaywall paywall = 9;
+  bool isCompleted = 10;
+  string status = 11;
+  google.protobuf.Timestamp createdAt = 12;
+  google.protobuf.Timestamp updatedAt = 13;
+}
+
+message StoryStats {
+  double rating = 1;
+  int64 reviewCount = 2;
+  int64 totalWords = 3;
+  int64 totalChapters = 4;
+  int64 views = 5;
+  int64 readers = 6;
+  int64 bookmarks = 7;
+  int64 powerStones = 8;
+  int64 monthlyVotes = 9;
+}
+
+message StoryPaywall {
+  bool hasPaywall = 1;
+  int32 freeChapters = 2;
+  double pricePerThousand = 3;
+  bool privilegeEnabled = 4;
+}
+
+message GetStoryRequest {
+  string storyId = 1;
+  optional string userId = 2;
+}
+
+message ListStoriesRequest {
+  optional string query = 1;
+  repeated string genreIds = 2;
+  optional string sort = 3;
+  optional string status = 4;
+  optional int32 page = 5;
+  optional int32 limit = 6;
+}
+
+message ListStoriesResponse {
+  repeated Story stories = 1;
+  int32 page = 2;
+  int32 totalPages = 3;
+  int32 totalCount = 4;
+}
+
+message CreateStoryRequest {
+  string title = 1;
+  string authorId = 2;
+  string description = 3;
+  repeated string genreIds = 4;
+  optional string coverUrl = 5;
+}
+
+message UpdateStoryRequest {
+  string storyId = 1;
+  optional string title = 2;
+  optional string description = 3;
+  repeated string genreIds = 4;
+  optional string coverUrl = 5;
+  optional string status = 6;
+}
+
+message DeleteStoryRequest {
+  string storyId = 1;
+}
+
+// ===== Chapters =====
+message Chapter {
+  string id = 1;
+  string storyId = 2;
+  string title = 3;
+  string slug = 4;
+  string content = 5;
+  int32 order = 6;
+  int64 wordCount = 7;
+  bool isPaid = 8;
+  bool privilegeRequired = 9;
+  double price = 10;
+  google.protobuf.Timestamp publishedAt = 11;
+  google.protobuf.Timestamp createdAt = 12;
+  google.protobuf.Timestamp updatedAt = 13;
+}
+
+message GetChapterRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  optional string userId = 3;
+}
+
+message ListChaptersRequest {
+  string storyId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message ListChaptersResponse {
+  repeated Chapter chapters = 1;
+  int32 total = 2;
+}
+
+message CreateChapterRequest {
+  string storyId = 1;
+  string title = 2;
+  string content = 3;
+  optional int32 order = 4;
+  optional bool isPaid = 5;
+  optional bool privilegeRequired = 6;
+  optional double price = 7;
+}
+
+message UpdateChapterRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  optional string title = 3;
+  optional string content = 4;
+  optional int32 order = 5;
+  optional bool isPaid = 6;
+  optional bool privilegeRequired = 7;
+  optional double price = 8;
+}
+
+message DeleteChapterRequest {
+  string storyId = 1;
+  string chapterId = 2;
+}
+
+message DownloadChapterRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  optional string format = 3;
+}
+
+message DownloadChapterResponse {
+  string downloadUrl = 1;
+  optional bytes content = 2;
+}
+
+// ===== Discovery =====
+message GetRankingsRequest {
+  string rankingType = 1;
+  optional string genre = 2;
+  optional string timeRange = 3;
+  optional int32 limit = 4;
+}
+
+message RankingEntry {
+  string storyId = 1;
+  int32 position = 2;
+  double score = 3;
+  Story story = 4;
+}
+
+message GetRankingsResponse {
+  repeated RankingEntry rankings = 1;
+}
+
+message GetEditorPicksRequest {
+  optional int32 limit = 1;
+  optional string genre = 2;
+}
+
+message EditorPick {
+  string storyId = 1;
+  int32 priority = 2;
+  google.protobuf.Timestamp featuredUntil = 3;
+  optional string bannerImage = 4;
+  optional string description = 5;
+  Story story = 6;
+}
+
+message GetEditorPicksResponse {
+  repeated EditorPick editorPicks = 1;
+}
+
+message GetGenresRequest {}
+
+message Genre {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  optional string parentId = 4;
+  optional string description = 5;
+  optional string icon = 6;
+}
+
+message GetGenresResponse {
+  repeated Genre genres = 1;
+}
+
+message GetStoriesByGenreRequest {
+  string genreId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+  optional string sort = 4;
+  optional string filters = 5;
+}
+
+message GetStorefrontDataRequest {
+  optional string userId = 1;
+}
+
+message StorefrontData {
+  repeated EditorPick editorPicks = 1;
+  repeated RankingEntry topRankings = 2;
+  repeated Genre genres = 3;
+  repeated Story trendingStories = 4;
+}
+
+// ===== Voting =====
+message CastPowerStoneRequest {
+  string userId = 1;
+  string storyId = 2;
+  int32 stones = 3;
+}
+
+message CastMonthlyVoteRequest {
+  string userId = 1;
+  string storyId = 2;
+  int32 votes = 3;
+}
+
+message VoteResult {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetUserVotesRequest {
+  string userId = 1;
+}
+
+message UserVotes {
+  int32 powerStones = 1;
+  int32 monthlyVotes = 2;
+  google.protobuf.Timestamp refreshAt = 3;
+}
+
+// ===== Reading Progress =====
+message GetReadingProgressRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+message UpdateReadingProgressRequest {
+  string userId = 1;
+  string storyId = 2;
+  string chapterId = 3;
+  double progress = 4;
+}
+
+message ReadingProgress {
+  string storyId = 1;
+  string chapterId = 2;
+  double progress = 3;
+  google.protobuf.Timestamp updatedAt = 4;
+}
+
+message ReadingProgressResponse {
+  bool success = 1;
+  optional ReadingProgress data = 2;
+  string message = 3;
+}
+
+// ===== Author Ecosystem =====
+message GetAuthorDashboardRequest {
+  string authorId = 1;
+}
+
+message AuthorDashboard {
+  string authorId = 1;
+  repeated Story stories = 2;
+  AuthorMetrics metrics = 3;
+}
+
+message AuthorMetrics {
+  double earningsToday = 1;
+  double earningsMonth = 2;
+  double earningsTotal = 3;
+  int64 activeReaders = 4;
+  int64 newFollowers = 5;
+}
+
+message GetAuthorAnalyticsRequest {
+  string authorId = 1;
+  optional string storyId = 2;
+  optional string dateRange = 3;
+}
+
+message AuthorAnalyticsResponse {
+  repeated AuthorAnalyticsPoint points = 1;
+}
+
+message AuthorAnalyticsPoint {
+  google.protobuf.Timestamp date = 1;
+  int64 views = 2;
+  int64 reads = 3;
+  double revenue = 4;
+  int64 engagement = 5;
+}
+
+message GetAuthorRevenueRequest {
+  string authorId = 1;
+  optional string storyId = 2;
+  optional string dateRange = 3;
+}
+
+message AuthorRevenueResponse {
+  repeated RevenueBreakdown breakdown = 1;
+}
+
+message RevenueBreakdown {
+  string source = 1;
+  double amount = 2;
+}
+
+message GetAuthorEngagementRequest {
+  string authorId = 1;
+  optional string storyId = 2;
+}
+
+message AuthorEngagementResponse {
+  int64 votes = 1;
+  int64 comments = 2;
+  int64 tips = 3;
+  int64 followers = 4;
+}
+
+message GetReaderInsightsRequest {
+  string authorId = 1;
+  optional string storyId = 2;
+}
+
+message ReaderInsightsResponse {
+  double completionRate = 1;
+  repeated double dropOffPoints = 2;
+  repeated string readingPatterns = 3;
+}
+
+// ===== DRM =====
+message CheckDrmStatusRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  string userId = 3;
+}
+
+message DrmStatus {
+  bool isProtected = 1;
+  bool watermarkEnabled = 2;
+  bool copyDisabled = 3;
+}
+
+message GetWatermarkedContentRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  string userId = 3;
+}
+
+message WatermarkedContent {
+  string content = 1;
+  string watermark = 2;
+}
+
+message DetectWatermarkRequest {
+  string content = 1;
+}
+
+message DetectWatermarkResponse {
+  optional string userId = 1;
+  optional string encodingMethod = 2;
+}

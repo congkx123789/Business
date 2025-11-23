@@ -1,0 +1,226 @@
+
+Phân Tích Dữ Liệu Công Khai và Hệ Sinh Thái Nguồn Mở của Mô Hình Hành Động Lớn (LAMs) và Tác Tử AI
+
+
+I. Giới Thiệu Tổng Quan về Hệ Sinh Thái Tác Tử AI và Mô Hình Hành động Lớn (LAMs)
+
+
+1.1. Sự Chuyển đổi Khái niệm: Từ LLMs Thụ động đến Tác tử Hành động Tự chủ
+
+Trí tuệ Nhân tạo (AI) đang trải qua một sự chuyển đổi căn bản từ các Mô hình Ngôn ngữ Lớn (LLMs) thụ động sang các hệ thống Tác tử Hành động Tự chủ (Agentic AI). LLMs truyền thống, mặc dù xuất sắc trong khả năng suy luận và tạo ngôn ngữ tự nhiên, vẫn bị giới hạn bởi tính thụ động và sự thiếu hụt khả năng grounding (nền tảng hóa) hành động.1 Chúng hoạt động tốt nhất trong các môi trường khép kín hoặc thông qua các công cụ truy xuất thông tin, nhưng cần các cơ chế bổ sung để tương tác thực tế với thế giới kỹ thuật số hoặc vật lý.2
+Sự ra đời của Mô hình Hành động Lớn (LAMs), cùng với các mô hình Đa phương thức Lớn (LMMs), đánh dấu bước tiến quan trọng này. LAMs được định nghĩa là các mô hình có khả năng thực thi các hành động phức tạp dựa trên sự kết hợp của nhiều loại dữ liệu (đa phương thức), vượt qua giới hạn tạo văn bản và giải thích của LLMs.3 Mục tiêu cuối cùng của các hệ thống này là tiến gần hơn đến Trí tuệ Tổng quát Nhân tạo (AGI) bằng cách cho phép AI không chỉ hiểu mà còn thực hiện các mục tiêu. Khung cảnh phát triển này được thúc đẩy mạnh mẽ bởi các dự án nguồn mở công khai, một yếu tố cốt lõi trong việc thúc đẩy sự phát triển của hệ sinh thái Agentic.4 Cần lưu ý rằng trong bối cảnh AI tạo sinh, thuật ngữ LAM được sử dụng để chỉ các mô hình hành động lớn, khác biệt hoàn toàn với các định nghĩa cũ hơn trong vật lý tính toán như LAMMPS (Large-scale Atomic/Molecular Massively Parallel Simulator).5
+
+1.2. Giải phẫu Kiến trúc Hành động: World Model và Action Engine
+
+Để LAMs có thể hoạt động tự chủ, các nhà phát triển nguồn mở đã thiết lập một kiến trúc hai thành phần rõ ràng. Ví dụ điển hình là khung LaVague, một khuôn khổ nguồn mở được thiết kế để tạo ra các Tác tử Web AI nhằm tự động hóa quy trình.2 Kiến trúc này cung cấp một mô hình blueprint vững chắc cho các nhà phát triển khác, phân tách rõ ràng giữa suy luận cấp cao và thực thi cấp thấp.
+Các thành phần chính bao gồm:
+World Model (Mô hình Thế giới): Thành phần này chịu trách nhiệm lập kế hoạch cấp cao và suy luận. Nó tiếp nhận mục tiêu của người dùng (ví dụ: "In các bước cài đặt cho thư viện Diffusers của Hugging Face") và trạng thái hiện tại của môi trường (ví dụ: trang web đang xem) để tạo ra một chuỗi hướng dẫn hoặc một tập hợp hành động hợp lý.2
+Action Engine (Công cụ Hành động): Thành phần này chịu trách nhiệm cho việc grounding và thực thi. Nó biên dịch các hướng dẫn cấp cao được tạo ra bởi World Model thành mã hành động cụ thể và có thể thực thi được, thường sử dụng các thư viện như Selenium hoặc Playwright, sau đó thực hiện các hành động này trên môi trường thực (ví dụ: trình duyệt web).2
+Việc công khai kiến trúc chi tiết như của LaVague cho thấy một sự chuyển đổi chiến lược trong phát triển AI, từ tập trung vào các mô hình chỉ xử lý văn bản (LLM/NLP) sang các mô hình tích hợp thị giác và hành động (VLM/Embodied AI).3 Bằng cách tách World Model khỏi Action Engine, các nhà phát triển có một khung lý thuyết vững chắc để tổ chức mã nguồn, nơi Action Engine trở thành trọng tâm cho việc tối ưu hóa khả năng thực thi. Điều này giải thích tại sao các mô hình hành động chuyên biệt lại xuất hiện, chẳng hạn như Hercules, tác tử kiểm thử nguồn mở đầu tiên trên thế giới, nhằm tự động hóa kiểm thử UI, API và bảo mật.4 Kiến trúc này là nền tảng cho xu hướng Tự động hóa Quy trình Sinh tạo (Generative Process Automation hay Generative RPA), cho phép LLMs thay thế các tập lệnh RPA cứng nhắc bằng khả năng lập kế hoạch và hành động linh hoạt, động thái hơn.4
+
+II. Khung Phát Triển Tác Tử AI Nguồn Mở (Agentic Frameworks)
+
+Sự phát triển của Agentic AI đã tạo ra một hệ sinh thái mạnh mẽ của các khuôn khổ nguồn mở, mỗi khuôn khổ được thiết kế với một triết lý kiến trúc và mục tiêu sử dụng riêng.
+
+2.1. Phân loại và Phân tích So sánh Kiến trúc Khung
+
+Các khuôn khổ hàng đầu hiện nay tập trung vào việc đơn giản hóa việc xây dựng ứng dụng AI bằng cách cung cấp các công cụ để tích hợp mô hình, công cụ bên ngoài, và quản lý luồng làm việc phức tạp.6
+
+LangChain
+
+LangChain nổi lên như một bộ công cụ linh hoạt và đa năng, trở thành lựa chọn hàng đầu cho các nhà phát triển xây dựng các ứng dụng dựa trên LLM, đặc biệt là các ứng dụng sử dụng kỹ thuật Tăng cường Tạo sinh bằng Truy xuất (RAG).6 Khung này cung cấp các đối tượng trừu tượng (abstractions) và mô-đun hóa để xử lý các quy trình phức tạp. Tuy nhiên, tính linh hoạt quá mức này cũng đi kèm với rủi ro, khiến nó có thể trở nên "bloated" và khó quản lý trong các luồng làm việc đa bước lớn.7
+
+AutoGen
+
+Được phát triển bởi Microsoft, AutoGen tập trung vào cộng tác đa tác tử tự động, sử dụng mô hình chat bất đồng bộ (asynchronous multi-agent chat) và giao diện AgentChat.7 Kiến trúc này ưu tiên việc điều phối hội thoại hơn là các lưu đồ cấu trúc cứng nhắc, mang lại sự linh hoạt nhưng có thể làm tăng độ phức tạp.7 AutoGen đặc biệt xuất sắc trong các tác vụ nặng về mã nguồn (code-heavy tasks), chẳng hạn như xây dựng trợ lý lập trình, nhờ khả năng tự động thực thi mã và gỡ lỗi, đồng thời khuyến khích các tác tử tự làm chủ kết quả đầu ra.7
+
+CrewAI
+
+CrewAI cung cấp một cách tiếp cận đơn giản và hiệu quả để mô hình hóa các quy trình làm việc theo nhóm (team-like workflows) bằng cách sử dụng các vai trò và cộng tác.9 Khung này dựa trên thiết kế theo Vai trò (Roles) và Nhiệm vụ (Tasks), lý tưởng cho việc tạo mẫu nhanh (rapid prototyping) hoặc các thiết lập tác tử quy mô nhỏ đến trung bình.7 Với các luồng làm việc tương đối cứng nhắc, CrewAI rất phù hợp cho các quy trình có tính phê duyệt cao (approval-heavy pipelines), ví dụ trong các lĩnh vực HR hoặc Pháp lý, mặc dù tính cứng nhắc này có thể không phù hợp với các quy trình phát triển lặp đi lặp lại.7
+
+Các Khuôn khổ Chuyên biệt Khác
+
+Các khuôn khổ khác bao gồm Semantic Kernel, tập trung vào các tính năng dựa trên kỹ năng (Skill-based), tuân thủ doanh nghiệp (enterprise compliance), và hỗ trợ đa ngôn ngữ.8 Strands Agents nổi bật nhờ tính chất độc lập với mô hình (Model-agnostic) và khả năng quan sát (Observability) mạnh mẽ thông qua OTEL.8
+Việc chuyên môn hóa này cho thấy một điều kiện quan trọng: các ứng dụng cấp sản xuất thường cần một kiến trúc hỗn hợp. Sự kết hợp giữa khả năng lập trình và gỡ lỗi của AutoGen với khả năng RAG mạnh mẽ của LangChain là một ví dụ về việc tận dụng điểm mạnh của cả hai khuôn khổ để đạt được phạm vi phủ sóng CI/CD đầy đủ.7
+Table II.1: So sánh Khuôn khổ Tác tử Nguồn mở Hàng đầu
+
+Khuôn khổ
+Mục tiêu Thiết kế Cốt lõi
+Kiến trúc Chính
+Ưu điểm Chiến lược
+LangChain
+Tool-Rich Pipelines, RAG Integration
+Modular Chains and Tools
+Linh hoạt tối đa, Hệ sinh thái API rộng lớn, RAG mạnh mẽ 7
+AutoGen
+Asynchronous Multi-Agent Collaboration
+Event-Driven AgentChat, Low-Level Core
+Tối ưu hóa cho tác vụ code, Cộng tác tự động, Debugging 7
+CrewAI
+Role-Based Workflow Orchestration
+Missions, Agents, and Crew
+Phù hợp cho quy trình phê duyệt, Dễ dàng mô hình hóa nhóm 7
+Semantic Kernel
+Skill-Based, Enterprise Readiness
+Plugins and Skills
+Multi-language, Enterprise Compliance, Robust Enterprise Integrations 8
+
+
+2.2. Phân tích Các Thách thức Kiến trúc Cấp độ Nghiên cứu
+
+Trong khi các khuôn khổ nguồn mở phổ biến hiện nay tập trung vào tích hợp công cụ, nghiên cứu tiên tiến đang giải quyết các yếu tố kiến trúc cần thiết để đạt được sự tự chủ hoàn toàn. Điều này bao gồm:
+Phản ánh và Lập kế hoạch Nâng cao (Advanced Reflection and Planning): Đây là khả năng cho phép tác tử tinh chỉnh lặp đi lặp lại đầu ra và phát triển các chiến lược lập kế hoạch thích ứng.10
+Không gian Hành động Thích ứng (Adaptive Action Spaces): Kỹ thuật này kiểm tra khả năng LLMs tích hợp và sử dụng các công cụ bên ngoài một cách linh hoạt trong các môi trường động.10
+Độ tin cậy và An toàn Hệ thống (System Reliability and Safety): Đề xuất các chiến lược như cơ chế rollback và xác minh sau thực tế để đảm bảo hoạt động tự chủ an toàn và có trách nhiệm giải trình.10
+Việc các khuôn khổ như CrewAI và Semantic Kernel bắt đầu nhấn mạnh các yêu cầu phi chức năng như vai trò, tính tuân thủ và khả năng tích hợp doanh nghiệp 8 cho thấy các nhà phát triển đang chuyển từ thử nghiệm tính năng sang việc đạt được độ tin cậy và khả năng quản lý trong môi trường sản xuất. Tuy nhiên, các cơ chế phức tạp như Phản ánh và An toàn, vốn cần thiết cho sự tự chủ cấp cao, vẫn chưa được chuẩn hóa hoặc công khai rộng rãi trong các khuôn khổ nguồn mở phổ thông.
+
+III. Hệ Sinh Thái Dữ Liệu Công Khai cho Huấn luyện Tác Tử
+
+LAMs và các tác tử AI yêu cầu một loại dữ liệu huấn luyện khác biệt hoàn toàn so với LLMs. Sự phát triển của chúng đòi hỏi các bộ dữ liệu mô tả hành động, trạng thái môi trường và tương tác đa phương thức.3
+
+3.1. Dữ liệu Huấn luyện Đa phương thức và Nền tảng hóa (Grounding)
+
+Các nghiên cứu chỉ ra rằng LLMs đang dần cạn kiệt nguồn dữ liệu văn bản tĩnh để huấn luyện.1 Để vượt qua thách thức này, LAMs cần dữ liệu động, mô tả các tình huống mà chúng phải hành động. Dữ liệu đa phương thức là cần thiết để trang bị cho LAM khả năng ra quyết định phức tạp.3
+Một cơ chế đột phá là khả năng Tự sinh Dữ liệu (Generative Data Loop) của tác tử. Các tác tử tự phản ánh có thể sử dụng các vòng phản hồi để chủ động theo dõi và thu thập luồng dữ liệu mới (từ thiết bị IoT, mạng xã hội, hoặc tương tác thực tế) để tinh chỉnh mô hình trong thời gian suy luận.11 Khả năng này cho phép các LLMs tiếp tục học hỏi mà không cần dựa vào các bộ dữ liệu tĩnh ngày càng lớn.1
+
+3.2. Bộ Dữ liệu Công khai Chuyên biệt cho Tương tác Web và UI
+
+Để tác tử có thể tương tác với giao diện người dùng (UI) như con người, chúng phải được huấn luyện trên dữ liệu thể hiện các phức tạp của thiết kế UI (nút bấm, nhấp chuột).12
+WaveUI-25K Dataset: Đây là một bộ sưu tập quan trọng cung cấp nền tảng thị giác (Visual Grounding) cho các tác tử web. Bộ dữ liệu này chứa 25.000 ví dụ được chú thích về các phần tử UI (buttons, links, text fields), được tổng hợp từ nhiều nguồn như WebUI, RoboFlow, và GroundUI-18K.12 Với dung lượng khoảng 10.6 GB và 24,978 mẫu, WaveUI-25K là nguồn dữ liệu quan trọng để huấn luyện các mô hình thị giác-ngôn ngữ (VLM) nhận dạng và định vị chính xác các phần tử trên trang web, một yêu cầu cơ bản đối với Action Engine của LaVague.2 Sự tồn tại của bộ dữ liệu này chứng minh sự hội tụ chiến lược giữa VLM và mô hình hành động, cung cấp cầu nối bắt buộc để LLMs có thể hành động trên giao diện.12
+WebShop Dataset: Bộ dữ liệu này được thiết kế để huấn luyện các tác tử AI hoạt động trong miền thương mại điện tử. Nó bao gồm nhật ký tương tác người dùng, mô hình duyệt web và mô tả sản phẩm chi tiết, rất cần thiết cho việc phát triển các tác tử ra quyết định mua hàng.14
+OpenAI WebGPT Dataset: Tập trung vào việc huấn luyện các tác tử truy xuất thông tin và duyệt web năng động, chứa dữ liệu tương tác duyệt web thực tế do con người chú thích.14
+
+3.3. Dữ liệu AI Hiện thân (Embodied AI) và Rô-bốt
+
+Để phát triển các tác tử có thể tương tác với môi trường vật lý, dữ liệu AI hiện thân là cần thiết.
+Meta EAI Dataset (Embodied AI): Bộ dữ liệu này cung cấp các kịch bản mô phỏng chi tiết, hỗ trợ lập kế hoạch và thực thi các tác vụ trong môi trường ảo và thế giới thực, đặc biệt cho lĩnh vực rô-bốt và lập kế hoạch tác vụ gia đình.14 Bộ dữ liệu giúp các mô hình học cách lập kế hoạch và thực thi hiệu quả trong các môi trường năng động, tương tác.14
+Các Nguồn Robotics Khác: Các tài nguyên như MuJoCo cũng được sử dụng làm môi trường thử nghiệm và huấn luyện cho các ứng dụng rô-bốt.14
+Table III.1: Tổng hợp Bộ Dữ liệu Công khai Chuyên biệt cho Hành động và Grounding
+
+Tên Bộ Dữ liệu
+Lĩnh vực Tập trung
+Loại Dữ liệu Công khai
+Đặc điểm Kỹ thuật Chính
+Ứng dụng Chính
+WaveUI-25K
+Tương tác UI, Tự động hóa Web
+Ảnh chụp màn hình, Chú thích Hộp giới hạn (Bounding Box)
+25,000 mẫu, ~10.6 GB, Hugging Face 12
+Grounding thị giác cho Action Engine, Generative RPA
+WebShop Dataset
+Thương mại Điện tử
+Nhật ký tương tác người dùng, Trạng thái môi trường
+Chi tiết sản phẩm, Mô hình quyết định mua hàng 14
+Huấn luyện Tác tử mua sắm (Web Shopping Agent)
+Meta EAI Dataset
+AI Hiện thân (Embodied AI)
+Kịch bản mô phỏng 3D/ảo, Thử thách tương tác
+Hỗ trợ lập kế hoạch đa bước và thực thi vật lý 14
+Robotics, Household Task Planning
+
+
+IV. Các Tiêu Chuẩn Đánh Giá và Benchmark Công khai
+
+Việc đánh giá tác tử AI khác biệt đáng kể so với việc đánh giá LLMs đơn thuần. Vì tác tử là các hệ thống phức tạp, đa thành phần, việc đánh giá phải mở rộng ra ngoài chất lượng ngôn ngữ để kiểm tra toàn bộ luồng làm việc, bao gồm lập kế hoạch, sử dụng công cụ, và thực thi.15
+
+4.1. Khác biệt trong Phương pháp Đánh giá Tác tử
+
+Các metrics truyền thống dựa trên sự trùng lặp văn bản (như BLEU hoặc ROUGE) không còn phù hợp, vì thành công của tác tử được đo lường bằng việc hoàn thành mục tiêu chức năng trong môi trường, chứ không phải chất lượng phản hồi ngôn ngữ.16 Do đó, việc đánh giá tác tử yêu cầu các benchmark có thể mô phỏng các tình huống thực tế và phức tạp, đòi hỏi khả năng ra quyết định tự động và sử dụng công cụ bên ngoài.15
+
+4.2. Phân tích Các Benchmark Đánh giá Kỹ năng Nhận thức (Cognitive & Planning)
+
+Các benchmark này tập trung vào khả năng suy luận và lập kế hoạch dài hạn của LLM trong vai trò tác tử.
+AgentBench: Đây là một công cụ đánh giá khả năng suy luận và ra quyết định của LLM trong các thiết lập đa lượt (multi-turn open-ended settings).17 AgentBench kiểm tra khả năng khái quát hóa công cụ và lập kế hoạch phức tạp của tác tử trên tám môi trường khác nhau: Hệ điều hành, Cơ sở dữ liệu, Đồ thị Tri thức, Trò chơi Thẻ kỹ thuật số, Câu đố Tư duy Phản biện, Công việc Gia đình, Mua sắm Web và Duyệt Web.17 Các thử thách đòi hỏi từ 5 đến 50 lượt giải quyết, nhấn mạnh vào khả năng suy luận bền bỉ.17
+GAIA (General AI Agents): GAIA tập trung vào việc đánh giá khả năng giải quyết các vấn đề đa bước, phức tạp, thường là các tác vụ đòi hỏi sự kết hợp của nhiều công cụ và kiến thức trong thế giới thực.17
+
+4.3. Phân tích Các Benchmark Đánh giá Kỹ năng Thực thi (Grounded Execution)
+
+Các benchmark này đánh giá độ tin cậy của tác tử trong việc chuyển đổi kế hoạch thành hành động vật lý hoặc kỹ thuật số.
+WebArena: WebArena là một benchmark và một môi trường tự lưu trữ, được thiết kế để các tác tử tự chủ thực hiện các tác vụ web.17 Nó mô phỏng các tình huống trong bốn miền thực tế: thương mại điện tử, diễn đàn xã hội, phát triển mã cộng tác, và quản lý nội dung.17 Metrics cốt lõi của WebArena là Tính đúng đắn Chức năng (Functional Correctness)—tác tử được đánh giá dựa trên việc đạt được mục tiêu cuối cùng, không quan tâm đến các bước hoặc đường đi đã sử dụng.17 Tiêu chí này khiến WebArena trở thành chuẩn mực thực tế cho Generative RPA, thúc đẩy các mô hình phải có khả năng tự phục hồi và thích ứng cao với các lỗi thực thi.18
+OSWorld: Benchmark này tập trung vào việc đánh giá khả năng tương tác và thao tác của tác tử với hệ điều hành ở cấp độ hệ thống.18
+BFCL (Berkeley Function-Calling Leaderboard): Đây là một công cụ tập trung vào việc đánh giá tính chính xác của việc gọi hàm và sử dụng công cụ bên ngoài.17
+Sự đối lập giữa AgentBench (kiểm tra khả năng lập kế hoạch) và WebArena (kiểm tra khả năng thực thi) phản ánh hai loại thất bại chính trong Agentic AI: Lỗi Lập kế hoạch (Planning Failure) và Lỗi Nền tảng hóa/Thực thi (Grounding/Execution Failure). Để triển khai thành công trong môi trường sản xuất, một mô hình phải vượt qua cả hai thách thức này.
+Table IV.1: So sánh Tiêu chí Đánh giá Tác tử Hàng đầu
+
+Benchmark
+Trọng tâm Chính
+Môi trường Đánh giá
+Metrics Cốt lõi
+AgentBench
+Reasoning & Multi-turn Decision Making
+8 Môi trường ảo (OS, Database, Web Shopping) 17
+Tỉ lệ hoàn thành nhiệm vụ, Số lượt giải quyết
+WebArena
+Grounded Execution & Functional Correctness
+4 Miền Web mô phỏng (E-commerce, Code Dev) 17
+Tính đúng đắn chức năng (Functional Correctness)
+GAIA
+Complex Problem Solving
+Real-World Tasks (Multi-Domain) 17
+Tỉ lệ thành công, Hiệu quả công cụ
+ToolLLM
+Tool Utilization and API Calling
+Tập hợp các API và Hàm gọi
+Độ chính xác gọi hàm, Hiệu suất
+
+
+V. Phân Tích Chuyên Sâu: Thách thức về Độ tin cậy và Tính Đạo đức
+
+
+5.1. Độ tin cậy (Reliability) và Tính Mạnh mẽ (Robustness)
+
+Độ tin cậy của tác tử là yếu tố quyết định cho việc triển khai trong môi trường sản xuất. Độ tin cậy được đánh giá bằng sự nhất quán của hành vi khi nhận cùng một đầu vào và tính mạnh mẽ khi đầu vào hoặc môi trường thay đổi.19 Mặc dù các nghiên cứu học thuật nhấn mạnh tầm quan trọng của các cơ chế an toàn như rollback để đảm bảo hệ thống tự chủ hoạt động có trách nhiệm giải trình 10, các benchmark công khai hiện tại ít tập trung vào việc đánh giá tính nhất quán này dưới điều kiện căng thẳng hoặc thay đổi môi trường nhỏ (ví dụ: thay đổi giao diện UI).
+Việc WebArena đo lường tính đúng đắn chức năng mà không quan tâm đến đường đi 17 đã thúc đẩy các mô hình phải có khả năng tự phục hồi cao. Tuy nhiên, sự thiếu hụt các bộ dữ liệu công khai cho phép đánh giá cấp độ thành phần (component-level evaluation) và theo dõi dấu vết (trace) luồng làm việc đang cản trở khả năng gỡ lỗi khoa học cho các kiến trúc đa tác tử như AutoGen.15 Hiện nay, các doanh nghiệp thường buộc phải tự phát triển các bộ dữ liệu kiểm tra nội bộ để đảm bảo độ ổn định cấp độ sản xuất, làm chậm tốc độ tiêu chuẩn hóa an toàn trong hệ sinh thái nguồn mở.
+
+5.2. An toàn và Căn chỉnh Hành động (Safety and Action Alignment)
+
+Rủi ro của LAMs vượt xa rủi ro của LLMs. Trong khi các dự án như SafetyPrompts.com liệt kê 149 bộ dữ liệu công khai tập trung vào việc đánh giá tính an toàn ngôn ngữ và các prompt nhạy cảm 20, thách thức lớn nhất của LAMs là hành động độc hại (Action Harm). Một tác tử có thể thực hiện các hành vi không an toàn trong môi trường hoạt động thực tế, chẳng hạn như xóa dữ liệu trong môi trường Database của AgentBench.17
+Sự thiếu hụt dữ liệu công khai về Action Harm là một rào cản pháp lý và đạo đức lớn đối với việc triển khai LAMs trong các miền rủi ro cao (như chẩn đoán y tế, logistics và phân tích thị trường tài chính).1 Để giải quyết vấn đề này, các nỗ lực như EthicsNet đang crowdsource dữ liệu về các quy tắc đạo đức và hành vi xã hội (prosocial/anti-social behavior).21 Đối với các tác tử hiện thân tương tác vật lý (như Meta EAI Dataset 14), dữ liệu đạo đức cần phải bao gồm các chú thích thị giác và hành vi thân thiện với máy học (machine-vision friendly).21
+
+5.3. Khung Đánh giá Cấp độ Thành phần (Component-level Evaluation)
+
+Do kiến trúc phức tạp, đa thành phần của tác tử, việc đánh giá chỉ dựa trên kết quả cuối cùng là không đủ. Cần phải kiểm tra từng thành phần riêng lẻ, chẳng hạn như tính đúng đắn của việc gọi công cụ (tool correctness) hoặc lỗi chuyển giao giữa các tác tử (agent handoff errors).15
+Để thúc đẩy khả năng gỡ lỗi khoa học, cộng đồng nghiên cứu và phát triển nguồn mở cần khẩn trương chuẩn hóa và công bố các bộ dữ liệu trace công khai. Những bộ dữ liệu này phải ghi lại chi tiết mọi bước suy luận, mọi lệnh gọi công cụ và mọi phản hồi của LLM trong toàn bộ quy trình làm việc. Điều này sẽ giúp xác định chính xác điểm yếu kiến trúc và cho phép tối ưu hóa các hệ thống đa tác tử một cách có hệ thống.
+
+VI. Kết Luận và Khuyến Nghị Chiến Lược
+
+
+6.1. Tóm tắt Hiện trạng Hệ Sinh Thái Nguồn mở
+
+Hệ sinh thái Mô hình Hành động Lớn (LAMs) và Tác tử AI hiện đang ở giai đoạn trưởng thành nhanh chóng, được xây dựng trên ba trụ cột chính:
+Mã nguồn và Khuôn khổ: Đã đạt mức độ trưởng thành cao (LangChain, AutoGen, CrewAI) và cung cấp các giải pháp mạnh mẽ cho việc tích hợp công cụ và điều phối đa tác tử. Tuy nhiên, các khuôn khổ này vẫn còn thiếu các tính năng tự chủ cấp cao (Reflection, Safety) được mô tả trong nghiên cứu chuyên sâu.10
+Dữ liệu Grounding: Nguồn dữ liệu chuyên biệt đang phát triển mạnh (WaveUI-25K cho UI, WebShop cho thương mại điện tử, Meta EAI cho AI hiện thân), nhưng vẫn còn phân mảnh theo miền tác vụ.12 Sự hội tụ giữa VLM và Action Models, thể hiện qua WaveUI-25K, là yếu tố then chốt để giải quyết vấn đề nền tảng hóa thị giác.
+Benchmark: Đủ mạnh về đánh giá khả năng suy luận (AgentBench) và khả năng thực thi chức năng (WebArena).17 Tuy nhiên, vẫn thiếu các chuẩn mực công khai về Độ tin cậy hệ thống (Reliability) và khả năng truy vết, gỡ lỗi cấp độ thành phần.
+
+6.2. Khuyến nghị Chiến lược
+
+Dựa trên phân tích các tài nguyên công khai, các khuyến nghị sau được đưa ra cho các bên liên quan:
+Đối với Phát triển Mô hình (LAM Development): Các nhà phát triển cần tích hợp các kỹ thuật suy luận tiên tiến (Reflection and Planning) vào các khuôn khổ nguồn mở hiện có.10 Việc huấn luyện bắt buộc phải sử dụng dữ liệu đa phương thức, đặc biệt là WaveUI-25K, để cải thiện khả năng nền tảng hóa thị giác và độ chính xác của Action Engine.2
+Đối với Triển khai Doanh nghiệp (Enterprise Deployment): Nên ưu tiên các khuôn khổ có cấu trúc và tính năng tuân thủ rõ ràng như CrewAI và Semantic Kernel, đặc biệt cho các quy trình yêu cầu tính quản lý và sự tuân thủ cao.8 Cần sử dụng WebArena làm tiêu chuẩn thử nghiệm độ tin cậy thực thi cốt lõi, tập trung vào việc đảm bảo tính đúng đắn chức năng cuối cùng.17
+Khuyến nghị Cộng đồng Nghiên cứu: Cần có sự phối hợp khẩn trương để phát triển và công bố các bộ dữ liệu kiểm tra tính nhất quán (Reliability) dưới điều kiện môi trường thay đổi và các bộ dữ liệu trace đầy đủ (ghi lại mọi bước của luồng làm việc). Điều này sẽ thúc đẩy khả năng gỡ lỗi hệ thống đa tác tử và chuẩn hóa các giao thức an toàn trong ngành.15
+
+6.3. Triển vọng Tương lai: Tự chủ Toàn diện và Căn chỉnh Hành động
+
+Thế hệ tiếp theo của AI sẽ được xác định bởi khả năng thực hiện hành động tự chủ trong thế giới thực. Sự thành công của LAMs phụ thuộc vào việc giải quyết các khoảng trống dữ liệu công khai hiện có trong ba lĩnh vực then chốt: Khả năng Phản ánh/Lập kế hoạch, Độ tin cậy hệ thống, và An toàn Hành động/Căn chỉnh Đạo đức. Chỉ khi những rào cản này được khắc phục bằng các nguồn lực mở, toàn diện, thì việc triển khai các tác tử AI tự chủ, an toàn và đáng tin cậy mới trở thành hiện thực.
+Nguồn trích dẫn
+Agentic Large Language Models, a survey - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2503.23037v1
+lavague-ai/LaVague: Large Action Model framework to develop AI Web Agents - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/lavague-ai/LaVague
+From LLMs to LAMs: Pioneering AI's multimodal future - AI Accelerator Institute, truy cập vào tháng 11 3, 2025, https://www.aiacceleratorinstitute.com/from-llms-to-lams-pioneering-ais-multimodal-future/
+large-action-model · GitHub Topics, truy cập vào tháng 11 3, 2025, https://github.com/topics/large-action-model
+LAMMPS Code | Code Repository | ICME - cavs.msstate.edu - Mississippi State University, truy cập vào tháng 11 3, 2025, https://www.cavs.msstate.edu/icme/code/lammps/material_models/codeLAMMPS.php
+Top 9 AI Agent Frameworks as of October 2025 - Shakudo, truy cập vào tháng 11 3, 2025, https://www.shakudo.io/blog/top-9-ai-agent-frameworks
+Autogen vs LangChain vs CrewAI: Our AI Engineers' Ultimate Comparison Guide, truy cập vào tháng 11 3, 2025, https://www.instinctools.com/blog/autogen-vs-langchain-vs-crewai/
+Comparing Open-Source AI Agent Frameworks - Langfuse Blog, truy cập vào tháng 11 3, 2025, https://langfuse.com/blog/2025-03-19-ai-agent-comparison
+LangChain vs CrewAI vs Autogen: A Practical Guide to Choosing an AI Agent Framework, truy cập vào tháng 11 3, 2025, https://medium.com/@data.ai.oliver/langchain-vs-crewai-vs-autogen-a-practical-guide-to-choosing-an-ai-agent-framework-a2d5de59b6c4
+System Architecture for Agentic Large Language Models - UC Berkeley EECS, truy cập vào tháng 11 3, 2025, https://www2.eecs.berkeley.edu/Pubs/TechRpts/2025/EECS-2025-5.pdf
+Agentic AI: 4 reasons why it's the next big thing in AI research - IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/insights/agentic-ai
+Train AI agents on Web UI with WaveUI-25K dataset - Codingscape, truy cập vào tháng 11 3, 2025, https://codingscape.com/blog/train-ai-agents-on-web-ui-with-waveui-25k-dataset
+Voxel51/WaveUI-25k · Datasets at Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/datasets/Voxel51/WaveUI-25k
+20 Open-Source Datasets for Generative AI and ... - Analytics Vidhya, truy cập vào tháng 11 3, 2025, https://www.analyticsvidhya.com/blog/2025/02/open-source-datasets-for-generative-and-agentic-ai/
+LLM Agent Evaluation: Assessing Tool Use, Task Completion, Agentic Reasoning, and More, truy cập vào tháng 11 3, 2025, https://www.confident-ai.com/blog/llm-agent-evaluation-complete-guide
+Agentic AI: On Evaluations | Towards Data Science, truy cập vào tháng 11 3, 2025, https://towardsdatascience.com/agentic-ai-evaluation-playbook/
+10 AI agent benchmarks - Evidently AI, truy cập vào tháng 11 3, 2025, https://www.evidentlyai.com/blog/ai-agent-benchmarks
+AI Autonomous Agents in 2025: Performance Benchmarks and Comparisons, truy cập vào tháng 11 3, 2025, https://www.appypieautomate.ai/blog/best-ai-autonomous-agents
+Evaluation and Benchmarking of LLM Agents: A Survey - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2507.21504v1
+SafetyPrompts.com, truy cập vào tháng 11 3, 2025, https://safetyprompts.com/
+Datasets - EthicsNet, truy cập vào tháng 11 3, 2025, https://www.ethicsnet.org/datasets

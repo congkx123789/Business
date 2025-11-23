@@ -1,0 +1,29 @@
+groups:
+  - name: slo-rollups
+    interval: 30s
+    rules:
+      # Targets
+      - record: slo:target:payments_success
+        expr: 0.9999
+      - record: slo:target:api_availability
+        expr: 0.999
+      - record: slo:target:inventory_consistency
+        expr: 0.99999
+
+      # Error rates (1 - SLI)
+      - record: error:rate:payments
+        expr: 1 - sli:payments_success:ratio
+      - record: error:rate:api
+        expr: 1 - sli:api_availability:ratio
+      - record: error:rate:inventory
+        expr: 1 - sli:inventory_consistency:ratio
+
+      # Burn rates = error rate / error budget fraction
+      - record: burn:payments
+        expr: (1 - sli:payments_success:ratio) / (1 - slo:target:payments_success)
+      - record: burn:api
+        expr: (1 - sli:api_availability:ratio) / (1 - slo:target:api_availability)
+      - record: burn:inventory
+        expr: (1 - sli:inventory_consistency:ratio) / (1 - slo:target:inventory_consistency)
+
+

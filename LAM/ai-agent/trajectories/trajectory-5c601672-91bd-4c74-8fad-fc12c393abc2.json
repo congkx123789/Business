@@ -1,0 +1,67 @@
+{
+  "goal": "Move mouse to (400, 400)",
+  "steps": [
+    {
+      "state": {
+        "screenshot": "temp_screenshot_0.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        }
+      },
+      "action": null,
+      "next_state": {},
+      "reward": -0.1,
+      "metadata": {
+        "step": 0
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_1.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        }
+      },
+      "action": null,
+      "next_state": {},
+      "reward": -0.1,
+      "metadata": {
+        "step": 1
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_2.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        }
+      },
+      "action": null,
+      "next_state": {},
+      "reward": -0.1,
+      "metadata": {
+        "step": 2
+      }
+    }
+  ],
+  "success": false,
+  "metadata": {}
+}

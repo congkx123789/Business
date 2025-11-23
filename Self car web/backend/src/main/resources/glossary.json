@@ -1,0 +1,27 @@
+{
+  "en-th": {
+    "SelfCar": "SelfCar",
+    "BMW": "BMW",
+    "Mercedes-Benz": "Mercedes-Benz",
+    "Audi": "Audi",
+    "Toyota": "Toyota",
+    "Honda": "Honda",
+    "Tesla": "Tesla",
+    "Ferrari": "Ferrari",
+    "Lamborghini": "Lamborghini",
+    "Porsche": "Porsche"
+  },
+  "th-en": {
+    "SelfCar": "SelfCar",
+    "บีเอ็มดับเบิลยู": "BMW",
+    "เมอร์เซเดส-เบนซ์": "Mercedes-Benz",
+    "ออดี้": "Audi",
+    "โตโยต้า": "Toyota",
+    "ฮonda": "Honda",
+    "เทสลา": "Tesla",
+    "เฟอร์รารี่": "Ferrari",
+    "ลัมโบร์กีนี่": "Lamborghini",
+    "พอร์ช": "Porsche"
+  }
+}
+

@@ -1,0 +1,9 @@
+{
+  "title": "VIP {{vipLevel}} unlocked",
+  "body": "Enjoy your new perks!",
+  "data": {
+    "type": "vip.level.upgraded",
+    "vipLevel": "{{vipLevel}}"
+  }
+}
+

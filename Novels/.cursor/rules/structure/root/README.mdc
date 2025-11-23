@@ -1,0 +1,165 @@
+---
+alwaysApply: true
+---
+
+# 🏗️ Root Structure Documentation
+
+## 🎯 Overview
+
+Folder này chứa tài liệu về cấu trúc root của monorepo, bao gồm các file cấu hình chung, documentation, và scripts.
+
+## 📁 Structure
+
+```
+root/
+├── README.mdc (this file)              # Overview & Navigation
+└── 02-root-structure.md                # Root Structure Details
+```
+
+## 🏗️ Monorepo Structure
+
+```
+truyen-app-monorepo/
+│
+├── 📁 Root Configuration Files
+│   ├── .gitignore                      # Git ignore patterns
+│   ├── .npmrc                          # NPM configuration
+│   ├── .cursorignore                   # Cursor AI ignore patterns
+│   ├── package.json                    # Root package.json (workspace manager)
+│   ├── pnpm-workspace.yaml             # PNPM workspace configuration
+│   ├── tsconfig.base.json              # Base TypeScript configuration (shared)
+│   ├── turbo.json                      # Turborepo configuration
+│   ├── README.md                       # Project documentation
+│   └── docker-compose.yml              # Docker services (PostgreSQL, Redis, MeiliSearch)
+│
+├── 📁 Documentation & Scripts
+│   ├── docs/                           # Project documentation
+│   │   ├── ARCHITECTURE.md             # System architecture overview
+│   │   ├── PORT_MANAGEMENT.md          # Port allocation guide
+│   │   ├── HOW_TO_VIEW_LOGS.md        # Logging guide
+│   │   └── structure/                  # Structure documentation (this folder)
+│   │       ├── README.md               # Structure documentation index
+│   │       ├── overview/                # Overview documentation
+│   │       ├── services/                # Services documentation
+│   │       ├── clients/                 # Clients documentation
+│   │       └── ...                      # Other structure files
+│   ├── scripts/                        # Utility scripts
+│   │   ├── start-all.ps1               # Start all services (PowerShell)
+│   │   ├── check-services.ps1          # Health check script
+│   │   └── fix-ports.ts                # Port conflict resolver
+│   └── logs/                           # Service logs directory
+│
+└── 📁 packages/                        # Monorepo packages (all services & apps)
+    │
+    ├── 📦 1-gateway/                   # API Gateway (BFF Layer)
+    │   └── src/                        # NestJS application
+    │
+    ├── 📦 2-services/                  # Microservices
+    │   ├── users-service/              # User management (Port 3001)
+    │   ├── stories-service/            # Content management (Port 3002)
+    │   ├── comments-service/           # Comments & ratings (Port 3003)
+    │   ├── search-service/             # Full-text search (Port 3004)
+    │   ├── ai-service/                 # AI features (Port 3005)
+    │   ├── notification-service/       # Notifications (Port 3006)
+    │   ├── websocket-service/          # Real-time communication (Port 3007)
+    │   ├── social-service/             # Social features (Port 3008)
+    │   ├── community-service/          # Community & Fan Economy (Port 3009)
+    │   └── monetization-service/       # PPC & Virtual Currency (Port 3010)
+    │
+    ├── 📦 3-web/                       # Next.js Web Frontend
+    │   └── src/                        # Next.js application
+    │
+    ├── 📦 4-desktop/                   # Electron Desktop App
+    │   └── src/                        # Electron application
+    │
+    ├── 📦 5-mobile-ios/                # iOS Native App
+    │   └── {AppName}/                  # SwiftUI application
+    │
+    ├── 📦 6-mobile-android/            # Android Native App
+    │   └── app/                        # Jetpack Compose application
+    │
+    └── 📦 7-shared/                    # Shared Library (Types, DTOs, Proto)
+        └── src/                        # Shared code
+```
+
+## 📋 Files
+
+- **[02-root-structure.md](./02-root-structure.md)** - Root Structure
+  - Root Configuration Files (package.json, pnpm-workspace.yaml, tsconfig.base.json, turbo.json, docker-compose.yml)
+  - Documentation & Scripts (docs/, scripts/, logs/)
+  - Cấu trúc packages/ và mô tả các thành phần
+
+## 🔑 Key Features
+
+### Root Configuration Files
+Các file cấu hình ở root level quản lý toàn bộ monorepo:
+
+- **package.json**: 
+  - Workspace manager
+  - Shared dependencies
+  - Root-level scripts
+  - PNPM workspace configuration
+
+- **pnpm-workspace.yaml**: 
+  - PNPM workspace configuration
+  - Defines workspace packages
+  - Enables package linking
+
+- **tsconfig.base.json**: 
+  - Base TypeScript configuration
+  - Shared compiler options
+  - Path aliases (@shared, @gateway, etc.)
+  - Extended by all packages
+
+- **turbo.json**: 
+  - Turborepo configuration
+  - Build pipeline
+  - Caching strategy
+  - Task dependencies
+
+- **docker-compose.yml**: 
+  - Infrastructure services
+  - PostgreSQL (per service)
+  - Redis (cache & Event Bus)
+  - MeiliSearch (search)
+
+### Documentation & Scripts
+
+- **docs/**: 
+  - Architecture documentation
+  - Port management guide
+  - Logging guide
+  - Structure documentation (`.cursor/rules/structure/`)
+
+- **scripts/**: 
+  - `start-all.ps1`: Start all services in development
+  - `check-services.ps1`: Health check all services
+  - `fix-ports.ts`: Resolve port conflicts
+
+- **logs/**: 
+  - Service logs directory
+  - Organized by service name
+
+### Packages Structure
+Thư mục `packages/` chứa tất cả services và applications:
+
+- **1-gateway/**: API Gateway (BFF Layer) - Port 3000
+- **2-services/**: 10 microservices - Ports 3001-3010
+- **3-web/**: Next.js Web Frontend - Port 3000 (dev)
+- **4-desktop/**: Electron Desktop App
+- **5-mobile-ios/**: iOS Native App
+- **6-mobile-android/**: Android Native App
+- **7-shared/**: Shared Library (no port, imported by all)
+
+## 🔗 Related Documentation
+
+- [Overview](../overview/README.mdc) - Tổng quan về architecture
+- [Gateway](../gateway/README.mdc) - Gateway service
+- [Services](../services/README.mdc) - Microservices
+- [Clients](../clients/README.mdc) - Client applications
+- [Shared](../shared/README.mdc) - Shared library
+- [Main README](../README.md) - Main structure documentation
+
+---
+
+**💡 Tip**: Root configuration files manage the entire monorepo. Changes here affect all packages!

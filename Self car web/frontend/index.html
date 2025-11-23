@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/car-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Typography System: Montserrat/Oswald for headings, Roboto/Noto Sans for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>SelfCar - Premium Car Rental Service</title>
+    <!-- Color scheme meta for native form control styling -->
+    <meta name="color-scheme" content="dark light" />
+    <!-- SSR-safe theme initialization to prevent flash (FE-011) -->
+    <script>
+      (function() {
+        // Initialize theme immediately to prevent flash of unstyled content (FOUC)
+        // This script runs synchronously before React hydration
+        const storedTheme = localStorage.getItem('theme') || 'system';
+        const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const effectiveTheme = storedTheme === 'system' ? systemTheme : storedTheme;
+        
+        // Apply theme class and data attribute
+        document.documentElement.classList.add(effectiveTheme);
+        document.documentElement.setAttribute('data-theme', effectiveTheme);
+        
+        // Listen for system theme changes (for 'system' preference)
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleSystemThemeChange = (e) => {
+          const currentTheme = localStorage.getItem('theme') || 'system';
+          if (currentTheme === 'system') {
+            const newEffectiveTheme = e.matches ? 'dark' : 'light';
+            document.documentElement.classList.remove('light', 'dark');
+            document.documentElement.classList.add(newEffectiveTheme);
+            document.documentElement.setAttribute('data-theme', newEffectiveTheme);
+          }
+        };
+        
+        // Modern browsers
+        if (mediaQuery.addEventListener) {
+          mediaQuery.addEventListener('change', handleSystemThemeChange);
+        } else {
+          // Fallback for older browsers
+          mediaQuery.addListener(handleSystemThemeChange);
+        }
+        
+        // Initialize locale detection (will be enhanced by Vite plugin)
+        const acceptLanguage = navigator.language || navigator.userLanguage || 'en';
+        const supportedLocales = ['en', 'en-US', 'th', 'th-TH'];
+        let detectedLocale = 'en';
+        
+        if (supportedLocales.includes(acceptLanguage)) {
+          detectedLocale = acceptLanguage;
+        } else {
+          const langCode = acceptLanguage.split('-')[0].toLowerCase();
+          const matched = supportedLocales.find(loc => 
+            loc.toLowerCase().startsWith(langCode)
+          );
+          if (matched) detectedLocale = matched;
+        }
+        
+        // Set HTML lang attribute
+        document.documentElement.lang = detectedLocale.split('-')[0];
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+

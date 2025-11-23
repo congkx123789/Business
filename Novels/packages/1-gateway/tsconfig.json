@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "composite": false,
+    "paths": {
+      "@shared/*": ["../7-shared/src/*"],
+      "7-shared": ["../7-shared/dist/index.d.ts"],
+      "7-shared/*": ["../7-shared/dist/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "test"],
+  "include": ["src/**/*", "src/**/*.ts"]
+}

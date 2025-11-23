@@ -1,0 +1,18 @@
+# AuthorizationPolicy to block non-mesh traffic (Phase 2)
+# Apply: kubectl apply -f infrastructure/istio/authorization-policy-block-non-mesh.yaml
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: require-mtls
+  namespace: default
+spec:
+  action: DENY
+  rules:
+  - from:
+    - source:
+        notPrincipals: ["cluster.local/*"]  # Only allow cluster-local identities
+  selector:
+    matchLabels:
+      app: "*"
+

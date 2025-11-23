@@ -1,0 +1,16 @@
+# PeerAuthentication for strict mTLS (Phase 2)
+# Apply: kubectl apply -f infrastructure/istio/peer-authentication-strict.yaml
+# WARNING: Enable in staging first, monitor for 24h, then production
+
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: STRICT  # Only mTLS allowed
+  selector:
+    matchLabels:
+      app: "*"
+

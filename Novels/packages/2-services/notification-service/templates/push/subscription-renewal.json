@@ -1,0 +1,10 @@
+{
+  "title": "Subscription renewed",
+  "body": "We added {{amount}} {{currency}} to your wallet",
+  "data": {
+    "type": "subscription.renewed",
+    "amount": "{{amount}}",
+    "currency": "{{currency}}"
+  }
+}
+

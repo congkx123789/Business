@@ -1,0 +1,348 @@
+---
+alwaysApply: true
+---
+# 📋 Quy tắc bảo trì Structure Documentation
+
+## 🎯 Mục đích
+
+File này định nghĩa **QUY TẮC BẮT BUỘC** về việc cập nhật structure documentation khi có bất kỳ thay đổi nào trong codebase. Mục tiêu là đảm bảo tài liệu luôn đồng bộ với code thực tế và dễ hiểu.
+
+## ⚠️ QUY TẮC VÀNG
+
+**Khi bạn thay đổi code, bạn PHẢI cập nhật structure documentation tương ứng.**
+
+Tài liệu structure là "single source of truth" về cấu trúc hệ thống. Nếu tài liệu không khớp với code, nó sẽ gây nhầm lẫn và làm chậm development.
+
+## 📋 Checklist: Khi nào cần cập nhật Structure
+
+### ✅ Khi thêm Service/Module/Feature mới
+
+**Bạn PHẢI cập nhật:**
+
+1. ✅ **Service/Client file tương ứng**
+   - Thêm module/feature mới vào source code structure
+   - Thêm endpoints/APIs mới
+   - Thêm dependencies mới
+
+2. ✅ **Shared contracts (nếu có)**
+   - Thêm types/DTOs vào `shared/17-7-shared.md`
+   - Thêm proto files nếu có gRPC contracts mới
+
+3. ✅ **Overview files**
+   - Cập nhật `overview/01-overview.md` - Package Quick Reference table
+   - Cập nhật architecture diagram nếu cần
+
+4. ✅ **README files**
+   - Cập nhật README.md trong folder tương ứng (services/, clients/, etc.)
+   - Cập nhật `structure/README.md` nếu có thay đổi về cấu trúc tài liệu
+
+5. ✅ **Navigation files**
+   - Cập nhật `overview/HOW_TO_USE.md` - Bản đồ tài liệu
+   - Thêm vào phần "Tìm theo chức năng" hoặc "Tìm theo công nghệ"
+
+### ✅ Khi thay đổi Port/Database/Technology
+
+**Bạn PHẢI cập nhật:**
+
+1. ✅ **Package Quick Reference table** trong `overview/01-overview.md`
+   - Port number
+   - Database type
+   - Key Technologies
+
+2. ✅ **Service/Client file tương ứng**
+   - Configuration section
+   - Development setup
+
+### ✅ Khi thay đổi Communication Pattern
+
+**Bạn PHẢI cập nhật:**
+
+1. ✅ **Communication Patterns section** trong `overview/01-overview.md`
+   - Thêm hoặc sửa communication flow
+   - Cập nhật examples
+
+2. ✅ **Service files liên quan**
+   - gRPC contracts
+   - Event Bus events
+
+### ✅ Khi thêm/xóa Service
+
+**Bạn PHẢI cập nhật:**
+
+1. ✅ **Tạo/Xóa service file** trong `services/` hoặc `clients/`
+   - Tạo file mới: `XX-service-name.md` hoặc `XX-client-name.md`
+   - Xóa file cũ nếu service/client không còn tồn tại
+
+2. ✅ **Package Quick Reference table** trong `overview/01-overview.md`
+   - Thêm/xóa row tương ứng
+
+3. ✅ **Architecture diagram** trong `overview/01-overview.md`
+   - Cập nhật diagram nếu cần
+
+4. ✅ **Services/Clients README**
+   - Cập nhật `services/README.md` hoặc `clients/README.md`
+   - Thêm/xóa trong file list
+
+5. ✅ **Main README**
+   - Cập nhật `structure/README.md` - Cấu trúc folder
+   - Cập nhật navigation links
+
+6. ✅ **HOW_TO_USE.md**
+   - Thêm/xóa trong bản đồ tài liệu
+   - Cập nhật navigation sections
+
+### ✅ Khi thay đổi Architecture Pattern
+
+**Bạn PHẢI cập nhật:**
+
+1. ✅ **Architecture diagram** trong `overview/01-overview.md`
+   - Cập nhật diagram để phản ánh thay đổi
+
+2. ✅ **Communication Patterns** trong `overview/01-overview.md`
+   - Cập nhật patterns nếu có thay đổi
+
+3. ✅ **All affected service/client files**
+   - Cập nhật source code structure
+   - Cập nhật communication sections
+
+## 🔄 Workflow: Cập nhật Structure Documentation
+
+### Bước 1: Xác định phạm vi thay đổi
+
+Trước khi bắt đầu code, xác định:
+- Service/Client nào sẽ bị ảnh hưởng?
+- Có thay đổi về contracts không?
+- Có thay đổi về ports/databases không?
+- Có thay đổi về communication patterns không?
+
+### Bước 2: Cập nhật trong quá trình development
+
+**KHÔNG đợi đến cuối mới cập nhật!** Cập nhật tài liệu song song với code:
+
+1. **Khi thêm module mới:**
+   - Ngay lập tức cập nhật source code structure trong service/client file
+   - Thêm vào Package Quick Reference nếu cần
+
+2. **Khi thêm endpoint/API mới:**
+   - Thêm vào API endpoints section
+   - Cập nhật examples nếu có
+
+3. **Khi thêm contract mới:**
+   - Thêm vào `shared/17-7-shared.md` TRƯỚC
+   - Sau đó mới implement trong services/apps
+
+### Bước 3: Review và hoàn thiện
+
+Sau khi code xong, review lại:
+
+1. ✅ **Kiểm tra tính nhất quán:**
+   - Tất cả ports đúng chưa?
+   - Tất cả databases đúng chưa?
+   - Tất cả technologies đúng chưa?
+   - Tất cả links hoạt động chưa?
+
+2. ✅ **Kiểm tra tính đầy đủ:**
+   - Tất cả modules/features đã được document chưa?
+   - Tất cả endpoints/APIs đã được document chưa?
+   - Tất cả contracts đã được document chưa?
+
+3. ✅ **Kiểm tra navigation:**
+   - File mới đã được thêm vào navigation chưa?
+   - Links đã được cập nhật chưa?
+
+### Bước 4: Commit
+
+Khi commit code, **LUÔN commit structure documentation cùng lúc:**
+
+```bash
+git add packages/users-service/...
+git add .cursor/rules/structure/services/05-users-service.md
+git add .cursor/rules/structure/overview/01-overview.md
+git commit -m "feat: add new user preferences module
+
+- Add user preferences module to users-service
+- Update structure documentation
+- Update Package Quick Reference table"
+```
+
+## 📝 Examples: Các trường hợp cụ thể
+
+### Example 1: Thêm Module mới vào Service
+
+**Tình huống:** Thêm "Analytics Module" vào users-service
+
+**Cần cập nhật:**
+
+1. ✅ `services/05-users-service.md`
+   ```markdown
+   ### Analytics Module
+   - Track user reading behavior
+   - Generate reading statistics
+   - Export analytics data
+   ```
+
+2. ✅ `overview/01-overview.md` (nếu thay đổi port/tech)
+   - Không cần nếu chỉ thêm module, không thay đổi infrastructure
+
+3. ✅ `overview/HOW_TO_USE.md` (nếu cần thêm vào navigation)
+   - Thêm vào phần "Tìm theo chức năng" nếu là feature quan trọng
+
+### Example 2: Thêm Service mới
+
+**Tình huống:** Thêm "analytics-service" mới
+
+**Cần cập nhật:**
+
+1. ✅ Tạo file mới: `services/15-analytics-service.md`
+   - Package Info
+   - Source Code Structure
+   - Configuration
+   - Development Steps
+
+2. ✅ `overview/01-overview.md`
+   - Thêm vào Package Quick Reference table:
+     ```
+     | analytics-service | Analytics & Reporting | 3011 | PostgreSQL | NestJS, Prisma, gRPC Server | gRPC (in), Event Bus (out) |
+     ```
+   - Cập nhật architecture diagram
+
+3. ✅ `services/README.md`
+   - Thêm vào file list
+   - Thêm vào Services Overview section
+
+4. ✅ `structure/README.md`
+   - Thêm vào cấu trúc folder
+
+5. ✅ `overview/HOW_TO_USE.md`
+   - Thêm vào bản đồ tài liệu
+   - Thêm vào navigation sections
+
+### Example 3: Thay đổi Port
+
+**Tình huống:** Đổi port của users-service từ 3001 sang 3011
+
+**Cần cập nhật:**
+
+1. ✅ `overview/01-overview.md`
+   - Sửa port trong Package Quick Reference table: `3001` → `3011`
+
+2. ✅ `services/05-users-service.md`
+   - Sửa port trong Configuration section
+
+3. ✅ `root/02-root-structure.md` (nếu có port management section)
+   - Cập nhật port list
+
+### Example 4: Thay đổi Communication Pattern
+
+**Tình huống:** Thêm WebSocket support cho stories-service
+
+**Cần cập nhật:**
+
+1. ✅ `overview/01-overview.md`
+   - Cập nhật Communication Patterns section
+   - Thêm WebSocket flow example
+
+2. ✅ `services/06-stories-service.md`
+   - Thêm WebSocket endpoints section
+   - Cập nhật communication section
+
+3. ✅ `gateway/03-1-gateway.md` (nếu gateway cần thay đổi)
+   - Cập nhật WebSocket routing
+
+### Example 5: Thêm Contract mới
+
+**Tình huống:** Thêm `CreateStoryDto` mới
+
+**Cần cập nhật:**
+
+1. ✅ `shared/17-7-shared.md` (TRƯỚC TIÊN)
+   ```markdown
+   ### Story DTOs
+   - CreateStoryDto: Create new story
+     - title: string
+     - description: string
+     - genreId: number
+   ```
+
+2. ✅ `services/06-stories-service.md`
+   - Reference đến shared DTO
+   - Không hard-code DTO trong service file
+
+3. ✅ `overview/01-overview.md` (nếu cần)
+   - Cập nhật Rule #3 example
+
+## 🚫 Những điều KHÔNG được làm
+
+### ❌ KHÔNG hard-code thông tin trong service files
+
+```markdown
+<!-- ❌ WRONG -->
+### Create Story DTO
+```typescript
+interface CreateStoryDto {
+  title: string;
+  description: string;
+}
+```
+
+<!-- ✅ CORRECT -->
+### Create Story DTO
+See [shared/17-7-shared.md](../shared/17-7-shared.md) - Story DTOs section
+```
+
+### ❌ KHÔNG để tài liệu lỗi thời
+
+Nếu code đã thay đổi nhưng tài liệu chưa cập nhật, đó là bug. Phải fix ngay.
+
+### ❌ KHÔNG bỏ qua việc cập nhật overview
+
+Overview files (`01-overview.md`, `HOW_TO_USE.md`) là entry points. Nếu không cập nhật, người khác sẽ không tìm thấy thông tin mới.
+
+### ❌ KHÔNG commit code mà không commit structure docs
+
+Code và documentation phải đi cùng nhau. Không có lý do nào để commit code mà không commit docs.
+
+## ✅ Checklist trước khi commit
+
+Trước khi commit, đảm bảo:
+
+- [ ] Đã cập nhật service/client file tương ứng
+- [ ] Đã cập nhật shared contracts (nếu có)
+- [ ] Đã cập nhật Package Quick Reference table (nếu có thay đổi port/db/tech)
+- [ ] Đã cập nhật architecture diagram (nếu có thay đổi architecture)
+- [ ] Đã cập nhật README files (services/, clients/, structure/)
+- [ ] Đã cập nhật navigation files (HOW_TO_USE.md)
+- [ ] Đã kiểm tra tất cả links hoạt động
+- [ ] Đã kiểm tra tính nhất quán (ports, databases, technologies)
+- [ ] Đã commit structure docs cùng với code
+
+## 🎯 Best Practices
+
+### 1. Cập nhật song song vcócóới code
+Đừng đợi đến cuối mới cập nhật. Cập nhật ngay khi thêm module/endpoint mới.
+
+### 2. Sử dụng templates
+Khi tạo service/client file mới, sử dụng template từ file tương tự để đảm bảo consistency.
+
+### 3. Review structure docs trong code review
+Khi review code, cũng review structure documentation để đảm bảo nó đã được cập nhật.
+
+### 4. Test links
+Sau khi cập nhật, test tất cả links để đảm bảo chúng hoạt động.
+
+### 5. Keep it simple
+Tài liệu phải dễ hiểu. Nếu quá phức tạp, hãy refactor.
+
+## 📚 Related Documentation
+
+- [Main README](./README.md) - Main structure documentation
+- [Overview README](./overview/README.md) - Overview documentation guide
+- [How to Use](./overview/HOW_TO_USE.md) - Detailed usage guide
+- [Architecture Overview](./overview/01-overview.md) - Architecture overview
+
+---
+
+**⚠️ Lưu ý quan trọng:** File này là quy tắc bắt buộc. Mọi thay đổi code đều phải kèm theo cập nhật structure documentation. Đây không phải là optional, mà là requirement.
+
+**💡 Tip:** Bookmark file này và tham khảo mỗi khi bạn thay đổi code. Checklist ở trên sẽ giúp bạn không bỏ sót gì.
+

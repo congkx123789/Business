@@ -1,0 +1,6 @@
+rules:
+  - domain: "*"
+    allow: ["NAVIGATE", "CLICK", "TYPE", "SCROLL"]
+    hitl_for: ["purchase", "delete"]
+
+

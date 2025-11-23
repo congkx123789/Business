@@ -1,0 +1,37 @@
+[project]
+name = "ai-agent"
+version = "0.1.0"
+description = "AI Agent base (Perceive → Think → Act) with DOM+vision grounding"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "LAM", email = "lam@example.com" }]
+
+dependencies = [
+  "pydantic>=2.5",
+  "click>=8.1",
+  "rich>=13.7",
+  "playwright>=1.48",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "python-dotenv>=1.0",
+  "pyautogui>=0.9.54",
+  "pynput>=1.7.6",
+  "keyboard>=0.13.5",
+  "mss>=9.0.1",
+  "openai>=1.0.0",
+]
+
+[project.scripts]
+agent = "ai_agent.apps.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ai_agent"]
+
+[tool.black]
+line-length = 100
+
+

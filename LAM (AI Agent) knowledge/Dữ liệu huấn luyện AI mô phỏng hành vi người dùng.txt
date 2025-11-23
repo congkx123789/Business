@@ -1,0 +1,256 @@
+
+BÁO CÁO CHUYÊN SÂU: PHÂN TÍCH VỀ DỮ LIỆU HUẤN LUYỆN VÀ KIẾN TRÚC MÔ HÌNH TÁC NHÂN AI MÔ PHỎNG HÀNH VI CON NGƯỜI TRÊN GIAO DIỆN MÁY TÍNH (WEB AGENTS & LARGE ACTION MODELS)
+
+
+PHẦN I: NỀN TẢNG KIẾN TRÚC VÀ LÝ THUYẾT VỀ TÁC NHÂN HÀNH ĐỘNG (ACTION AGENTS)
+
+
+1.1. Sự Chuyển Đổi Mô hình: Từ LLMs Tĩnh sang Large Action Models (LAMs) Động
+
+Sự phát triển của trí tuệ nhân tạo đã chứng kiến một sự dịch chuyển đáng kể từ các Mô hình Ngôn ngữ Lớn (LLMs) thụ động, chủ yếu tập trung vào khả năng sinh và lý luận ngôn ngữ, sang các Mô hình Hành động Lớn (LAMs - Large Action Models). Sự ra đời của LAMs đánh dấu một bước tiến hóa tự nhiên, biến khả năng lý luận ngôn ngữ thành khả năng thực thi tác vụ trong thế giới thực.1
+LAM không chỉ đơn thuần là mô hình ngôn ngữ được tinh chỉnh; chúng là các hệ thống AI được huấn luyện cụ thể để chuyển đổi các nhiệm vụ phức tạp thành chuỗi hành động.1 Trong khi LLMs tập trung vào việc tạo phản hồi văn bản, LAMs có chức năng thực thi hành động, như gửi yêu cầu API hoặc tương tác với giao diện người dùng (UI).2 Khả năng này biến chúng thành "người họ hàng hành động" của LLM, có thể xử lý toàn bộ quy trình công việc chỉ từ một lệnh duy nhất của người dùng, chẳng hạn như duyệt qua các giao diện, điền vào biểu mẫu, hoặc thực hiện đặt chỗ.1
+Khả năng kết hợp giữa năng lực lý luận ngôn ngữ của LLM và khả năng thực thi hành động (LAM) cho phép tự động hóa quy trình phức tạp hơn nhiều so với các công cụ Tự động hóa Quy trình Bằng Robot (RPA) truyền thống.3 Các công cụ RPA truyền thống thường yêu cầu quy tắc cứng nhắc và dễ thất bại khi môi trường web hoặc hệ điều hành thay đổi. Ngược lại, LAMs học từ các tương tác thực tế và sử dụng lý luận đa phương thức, cho phép chúng thích ứng với các thay đổi giao diện (UI changes) và xử lý các tình huống ngoại lệ một cách linh hoạt mà không cần lập trình lại.4 Do đó, sự nổi lên của LAMs được coi là đại diện cho thế hệ RPA 2.0, chuyển đổi AI từ một công cụ tạo văn bản thụ động thành một đối tác tích cực, có khả năng hoàn thành công việc độc lập trong thời gian thực.2
+Khái niệm và Cơ chế hoạt động của Large Action Models (LAMs) và AI Agents
+Thuật ngữ "Large Action Model" (LAM) lần đầu tiên được giới thiệu bởi Rabbit Inc., nhà phát triển thiết bị rabbit r1, như là mô hình nền tảng mới giúp đưa AI từ lời nói đến hành động. LAM là một hệ thống trí tuệ nhân tạo có khả năng hiểu đầu vào của con người và thực hiện hành động tương ứng. Chúng được đào tạo trên một bộ dữ liệu lớn về hành động của người dùng, học bằng cách bắt chước hành động của con người hoặc thông qua trình diễn (demo).
+AI Agents (Tác nhân AI) là các thực thể phần mềm có khả năng tự mình thực hiện các nhiệm vụ, không chỉ đơn thuần là trả lời các truy vấn từ người dùng.2 Sự kết hợp khả năng ngôn ngữ của LLM với khả năng hoàn thành nhiệm vụ và tự đưa ra quyết định biến AI tạo sinh (Generative AI) từ một công cụ thụ động thành một đối tác tích cực.2
+Cơ chế chính cho phép LAMs và AI Agents chuyển từ lý luận ngôn ngữ sang hành động là thông qua Lệnh gọi hàm (Function Calling).
+Function Calling là một khả năng mạnh mẽ, cho phép Mô hình Ngôn ngữ Lớn (LLMs) tương tác với mã nguồn và các hệ thống bên ngoài một cách có cấu trúc.
+Thay vì chỉ tạo phản hồi văn bản, LLMs có thể hiểu được khi nào nên gọi các hàm cụ thể và cung cấp các tham số cần thiết để thực thi các hành động trong thế giới thực.
+Cơ chế này cho phép mô hình tạo ra các tham số cho các tác vụ, từ đó kích hoạt các quy trình bên ngoài như truy vấn cơ sở dữ liệu (database queries) hoặc các lệnh gọi API. Điều này khiến tác nhân không chỉ phản ứng (reactive) mà còn định hướng hành động (action-oriented), biến các phản hồi thụ động thành các tương tác năng động.
+Các LLM Agent nâng cao khả năng của mình bằng cách kết hợp nhiều thành phần cốt lõi:
+Lý luận (Reasoning) và Lập kế hoạch (Planning): Giúp hệ thống tự động xác định chuỗi hành động hoặc các bước cần thiết để hoàn thành các nhiệm vụ phức tạp.
+Sử dụng công cụ (Tool Use): Cung cấp cho tác nhân những khả năng chuyên biệt để thực hiện nhiệm vụ một cách chính xác. Ví dụ, LangChain tích hợp cho phép tác nhân tương tác linh hoạt với môi trường của nó.
+Ghi nhớ (Memory) và Truy xuất (Retrieval): Để duy trì ngữ cảnh và sử dụng thông tin từ các nguồn dữ liệu lớn.
+Phản chiếu (Reflection): Là một phương pháp quan trọng để tăng cường hiệu quả, tích hợp cơ chế phản hồi (feedback) vào quy trình làm việc. Giai đoạn tự phê bình này cho phép LLM nhận diện các lỗi trong phản hồi trước đó (như vấn đề về tính đúng đắn hoặc hiệu quả) và xác định các điểm cần cải thiện, thể hiện khả năng tự cải thiện (self-improving).
+
+1.2. Kiến Trúc Tác nhân Đa Cấp: Lý luận và Thực thi
+
+Để quản lý và thực hiện các nhiệm vụ phức tạp trong môi trường máy tính, các hệ thống tác nhân tiên tiến thường áp dụng một kiến trúc phân cấp (hierarchical model architecture).5 Kiến trúc này phân chia trách nhiệm lý luận và thực thi thành các cấp độ chuyên biệt, đảm bảo tính liên tục và hiệu quả của luồng công việc.
+Ở cấp độ cao nhất là Plan Controller Agent (Tác nhân Kiểm soát Kế hoạch). Tác nhân này chịu trách nhiệm cho việc lập kế hoạch tổng thể và lý luận cấp cao.6 Nhiệm vụ của nó bao gồm phân rã một mục tiêu phức tạp của người dùng thành các nhiệm vụ con có thể quản lý được, lựa chọn trình tự tối ưu để thực hiện các nhiệm vụ con đó, xử lý các cấu trúc luồng phức tạp như vòng lặp và danh sách, theo dõi tiến trình tổng thể, và quan trọng nhất là duy trì ngữ cảnh (context) và truyền biến giữa các nhiệm vụ con để đảm bảo tính liên tục của quá trình thực thi.6
+Ở cấp độ thấp hơn là Sub-task Plan-Execute Agents (Tác nhân Lập kế hoạch và Thực thi Nhiệm vụ con). Các tác nhân này tập trung vào lập kế hoạch cho từng bước hành động cục bộ, định vị các phần tử UI (grounding), và tương tác thực hiện hành động.6 Quá trình hoạt động của hệ thống tác nhân thường diễn ra trong một vòng lặp liên tục: bắt đầu bằng việc khởi tạo và lập kế hoạch mục tiêu từ người dùng, sau đó chia nhỏ nhiệm vụ, thực thi các hành động đã lên kế hoạch, và cuối cùng là học tập, cải thiện liên tục từ kinh nghiệm trước đó.7
+Khả năng thực hiện các hành động phức tạp đòi hỏi tác nhân phải có năng lực lý luận đa phương thức (Multimodal Reasoning). Một tác nhân thành công không thể chỉ dựa vào ngôn ngữ hoặc mã nguồn. Thay vào đó, nó phải liên tục xử lý đồng thời các đầu vào thị giác (ảnh chụp màn hình của giao diện) và cấu trúc (mã HTML/DOM) để diễn giải mục tiêu của người dùng.4 Ví dụ, Project Mariner của Google DeepMind minh họa rõ điều này: nó quan sát những gì được hiển thị trong trình duyệt, lý luận để diễn giải mục tiêu, lập kế hoạch chi tiết, và sau đó hành động.4 Khả năng chuyển đổi đầu vào đa phương thức này thành lệnh gọi hàm (Function Call) cụ thể—đại diện cho một hành động UI—là yếu tố nền tảng cho sự hiệu quả của các mô hình tác nhân đa năng hiện đại.
+
+PHẦN II: NGUỒN DỮ LIỆU HUẤN LUYỆN VÀ CHIẾN LƯỢC THU THẬP
+
+
+2.1. Yêu cầu Về Dữ liệu Trình diễn Hành vi Người dùng (Human Demonstration Data)
+
+Phương pháp huấn luyện chủ đạo cho các tác nhân AI mô phỏng hành vi là Học Bắt chước (Imitation Learning - IL), một phương pháp yêu cầu dữ liệu chuyên gia để huấn luyện tác nhân thực hiện một nhiệm vụ cụ thể.9 Việc thu thập dữ liệu chuyên gia chất lượng cao là một công việc tốn kém, khó khăn, và thường dẫn đến sự thiếu hụt các bộ dữ liệu nhất quán cần thiết cho việc đánh giá các kỹ thuật khác nhau một cách công bằng.9
+Tuy nhiên, giá trị của dữ liệu hành vi con người đã được chứng minh qua các mô hình đột phá. Ví dụ, mô hình Centaur—một hệ thống AI tiên tiến có khả năng mô phỏng và dự đoán lựa chọn của con người—được xây dựng bằng cách tinh chỉnh mô hình ngôn ngữ lớn Llama của Meta dựa trên dữ liệu khổng lồ thu thập từ 160 nghiên cứu tâm lý học.11 Bộ dữ liệu này ghi nhận hơn 10 triệu lựa chọn của 60,000 người tham gia vào nhiều nhiệm vụ khác nhau, từ trò chơi cờ bạc, trò chơi trí nhớ đến giải quyết vấn đề.11 Centaur chứng minh rằng dữ liệu hành vi thực tế có giá trị to lớn trong việc mô phỏng quá trình ra quyết định và nhận thức của con người, mở ra hướng nghiên cứu mới về khoa học nhận thức, thậm chí cho phép các nhà khoa học tiến hành các thí nghiệm ảo thay vì phải tuyển dụng người thật.11
+Để cung cấp ngữ cảnh kỹ thuật cho báo cáo này, Bảng I trình bày so sánh các bộ dữ liệu chính được sử dụng để huấn luyện các tác nhân tương tác UI.
+Table I: So sánh Các Bộ Dữ liệu Huấn luyện Tác nhân Web Chính
+
+Bộ Dữ Liệu
+Quy Mô
+Loại Môi Trường
+Định dạng Dữ liệu
+Mục Đích Huấn luyện
+Mind2Web
+2,350 tác vụ / 137 websites
+Thực tế, Đa miền
+HTML (raw/cleaned), Chuỗi hành động, Mô tả nhiệm vụ
+Tổng quát hóa chéo nhiệm vụ và miền 12
+Centaur Data
+>10 Triệu Lựa chọn (từ 160 NC)
+Tác vụ Tâm lý/Ra quyết định
+Dữ liệu lựa chọn hành vi con người
+Mô phỏng quá trình nhận thức/Quyết định 11
+OSWorld/WindowsAgentArena
+Điểm chuẩn
+Hệ điều hành (Linux/Mac/Win)
+Ảnh chụp màn hình, Hành động GUI
+Tác nhân điều khiển máy tính 14
+Synthetic Trajectories
+>150,000 trang web
+Internet-scale
+Trajectories, Trạng thái thành công/thất bại
+Mở rộng quy mô, Khắc phục dữ liệu con người 15
+
+
+2.2. Mind2Web: Tiêu chuẩn Vàng cho Khả năng Tổng quát hóa
+
+Mind2Web đã nổi lên như một bộ dữ liệu nền tảng cho việc phát triển và đánh giá các tác nhân web đa năng (generalist agents). Sự khác biệt cốt lõi của Mind2Web so với các bộ dữ liệu trước đây là việc nó sử dụng các trang web thực tế (real-world websites) thay vì các môi trường mô phỏng đơn giản.12 Các bộ dữ liệu cũ hơn thường chỉ tập trung vào các trang web tĩnh hoặc ứng dụng di động được chụp ảnh (ví dụ: Rico, với những hạn chế về việc nắm bắt yếu tố động và tương tác 16), khiến tác nhân được huấn luyện khó xử lý được sự phức tạp và thay đổi liên tục của web hiện đại.
+Mind2Web giải quyết vấn đề này bằng cách cung cấp 2,350 nhiệm vụ được thu thập từ 137 trang web trải rộng trên 31 miền khác nhau.12 Phạm vi bao phủ rộng này đảm bảo rằng các tác nhân được huấn luyện phải học các quy tắc tương tác trừu tượng thay vì chỉ học thuộc lòng cấu trúc giao diện của một số trang nhất định. Bộ dữ liệu này được thiết kế để kiểm tra ba cấp độ tổng quát hóa chính 13:
+Tổng quát hóa Chéo Nhiệm vụ: Khả năng thực hiện các nhiệm vụ khác nhau trên cùng một môi trường.
+Tổng quát hóa Chéo Trang web: Khả năng hoạt động trên các trang web khác nhau nhưng cùng một miền (domain).
+Tổng quát hóa Chéo Miền: Khả năng xử lý các nhiệm vụ và môi trường hoàn toàn mới.
+Cấu trúc chi tiết của Mind2Web bao gồm mã nhận dạng, tên trang web, mô tả nhiệm vụ, và một danh sách các hành động chi tiết (action sequences) được thực hiện bởi người dùng (crowdsourced).12 Việc tập trung vào độ phức tạp thực tế, nơi các trang web sử dụng nội dung động, cơ chế chống bot, và yêu cầu xử lý đăng nhập hoặc CAPTCHA 17, là yếu tố quan trọng để đo lường tính khả dụng thương mại của tác nhân web đa năng. Nếu một tác nhân chỉ được huấn luyện trên môi trường mô phỏng, nó sẽ thất bại trong việc xử lý các rào cản thực tế này.
+
+2.3. Xu hướng Dữ liệu Tổng hợp do LLM Tạo ra (LLM-Generated Synthetic Data)
+
+Mặc dù dữ liệu con người có giá trị cao, chi phí và thời gian cần thiết để thu thập, chú thích, và lọc dữ liệu trình diễn chuyên gia là rào cản lớn đối với việc mở rộng quy mô huấn luyện trên phạm vi toàn Internet.9 Do đó, một xu hướng nghiên cứu quan trọng gần đây là sử dụng LLMs để tạo ra dữ liệu tổng hợp (synthetic data) chất lượng cao cho việc huấn luyện tác nhân.
+Quy trình tạo dữ liệu tổng hợp tiên tiến thường diễn ra qua ba giai đoạn sử dụng LLM như một công cụ giám sát và quản lý dữ liệu 15:
+Giai đoạn Chú thích Nhiệm vụ: Một LLM được sử dụng để chú thích một lượng lớn trang web (ví dụ: 150,000 trang web) với các tác vụ Agentic cụ thể.
+Giai đoạn Sinh Quỹ đạo Hành động: Sau đó, các tác nhân LLM được triển khai để thực hiện các tác vụ này, tạo ra các quỹ đạo hành động (trajectories) tự động.
+Giai đoạn Lọc Chất lượng: Cuối cùng, một LLM được sử dụng để lọc và đánh giá sự thành công của các quỹ đạo đã tạo ra (đạt độ chính xác phán đoán thành công là 82.6%).15
+Chiến lược này đã chứng minh tính hiệu quả vượt trội. Bằng cách tạo ra dữ liệu huấn luyện đa dạng, được lọc và chú thích chất lượng cao, các nhà nghiên cứu có thể huấn luyện các mô hình suy luận nhỏ hơn (ví dụ: Qwen 3 1.7B) đạt hiệu suất cạnh tranh.15 Trên thực tế, mô hình được huấn luyện bằng dữ liệu tổng hợp này đã vượt trội hơn các mô hình lớn hơn hàng trăm lần (ví dụ: Llama 4 Maverick, Qwen 3 235B) và đạt được 94.7% hiệu suất của Gemini 2.5 Flash.15 Điều này chỉ ra rằng khả năng tạo ra dữ liệu chất lượng cao, nhắm mục tiêu—thông qua vòng lặp phản hồi tự giám sát do LLM cung cấp—là yếu tố quyết định hiệu suất tác nhân, thậm chí còn quan trọng hơn kích thước thô của mô hình.
+
+PHẦN III: PHƯƠNG PHÁP HUẤN LUYỆN HÀNH VI (LEARNING PARADIGMS)
+
+
+3.1. Phân tích Chuyên sâu về Học Bắt chước (Imitation Learning - IL)
+
+Học Bắt chước (IL) là một phương pháp huấn luyện AI tập trung vào việc mô phỏng hành vi của chuyên gia. Ưu điểm chính của IL là tính hiệu quả trong học tập: tác nhân học nhanh chóng bằng cách tận dụng các trình diễn sẵn có, giảm đáng kể nhu cầu về quá trình thăm dò kéo dài thường thấy trong các phương pháp khác.20 Phương pháp này đặc biệt thích hợp cho các môi trường nơi quá trình thăm dò (exploration) có thể tốn kém, nguy hiểm, hoặc cần hiệu suất đáng tin cậy ngay lập tức trong các tác vụ có cấu trúc.10
+Tuy nhiên, IL có những hạn chế nghiêm trọng. Mặc dù quá trình huấn luyện nhanh chóng, chất lượng của tác nhân IL bị ràng buộc trực tiếp bởi chất lượng của dữ liệu trình diễn chuyên gia.10 Nếu dữ liệu chuyên gia là không tối ưu, tác nhân sẽ sao chép hành vi không tối ưu đó.10 Hạn chế lớn nhất là khả năng tổng quát hóa (generalization) kém. Khi tác nhân gặp phải các tình huống hoặc trạng thái môi trường nằm ngoài phân phối của dữ liệu huấn luyện ban đầu (distribution shift), hiệu suất của nó suy giảm nhanh chóng.10
+
+3.2. Vai trò của Học Tăng cường (Reinforcement Learning - RL)
+
+Ngược lại, Học Tăng cường (RL) cho phép tác nhân học độc lập thông qua tương tác liên tục với môi trường của nó.10 Tác nhân RL không yêu cầu dữ liệu dán nhãn; thay vào đó, nó học bằng cách thực hiện hành động, nhận phản hồi dưới dạng phần thưởng (Reward), và tinh chỉnh quá trình ra quyết định của mình để tối đa hóa phần thưởng nhận được.20
+RL vượt trội trong các môi trường phức tạp và động, nơi các chiến lược tối ưu có thể không được biết trước hoặc thay đổi nhanh chóng.10 Đặc điểm nổi bật của RL là khả năng khám phá chính sách tối ưu (Optimal Policy Discovery), cho phép tác nhân tìm ra các chiến lược vượt xa khả năng của con người nếu được cung cấp đủ thời gian huấn luyện.10 Trong bối cảnh tự động hóa web, các hệ thống RL đang được phát triển để kiểm thử UI động, sử dụng không gian hành động và cơ chế phần thưởng để hướng dẫn quá trình thăm dò các trạng thái giao diện người dùng, mang lại cải thiện đáng kể trong phát hiện lỗi và độ bao phủ kiểm thử.21
+Bảng II trình bày sự so sánh chi tiết giữa hai phương pháp này trong bối cảnh tác vụ tương tác web:
+Table II: So sánh Phương pháp Huấn luyện IL và RL cho Tác vụ Tương tác Web
+
+Khía Cạnh
+Học Bắt chước (Imitation Learning - IL)
+Học Tăng cường (Reinforcement Learning - RL)
+Yêu cầu Dữ liệu
+Dữ liệu trình diễn chuyên gia chất lượng cao
+Không cần dữ liệu dán nhãn, học từ tương tác (Reward) 10
+Tốc độ Huấn luyện
+Nhanh, hiệu quả đối với hành vi đã biết 20
+Thường chậm hơn, đòi hỏi giai đoạn thăm dò 10
+Khả năng Tổng quát hóa
+Hạn chế, dễ sao chép hành vi không tối ưu 10
+Cao, có khả năng khám phá chính sách tối ưu mới 10
+Phù hợp với
+Các tác vụ web có cấu trúc, dễ ghi lại (e.g., điền form cơ bản)
+Các môi trường web động, kiểm thử UI, tối ưu hóa đường dẫn (multi-step planning) 21
+
+
+3.3. Tương lai: Mô hình Lai và Cơ chế Đánh giá nhất quán
+
+Trong ứng dụng thực tế, các tác nhân web hiện đại thường không chỉ dựa vào một phương pháp duy nhất. Nhiều hệ thống sử dụng cách tiếp cận lai (hybrid approach): IL được sử dụng để học hành vi cơ bản một cách nhanh chóng và an toàn, cung cấp một điểm khởi đầu mạnh mẽ.20 Sau đó, các kỹ thuật tương tự như RL hoặc tự học tăng cường được áp dụng để tinh chỉnh và tối ưu hóa hành vi trong môi trường thực tế, cho phép tác nhân vượt qua các giới hạn của dữ liệu huấn luyện ban đầu và thích nghi với các giao diện hoặc tình huống mới (zero-shot generalization).14
+Một thách thức đáng kể đối với cộng đồng nghiên cứu là việc thiếu sự nhất quán trong đánh giá. Việc tạo ra các bộ dữ liệu mới, không chuẩn hóa cho mỗi kỹ thuật IL hoặc RL mới làm giảm khả năng so sánh hiệu suất một cách đáng tin cậy.9 Do đó, cần có các bộ công cụ chuẩn hóa (toolkit) nhằm quản lý việc tạo chính sách chuyên gia, tập hợp các bộ dữ liệu có sẵn, và cung cấp các triển khai kỹ thuật IL phổ biến để thiết lập một quy trình đánh giá nhất quán (benchmarking).9 Việc chuẩn hóa này là thiết yếu để thúc đẩy sự phát triển của các tác nhân đa năng thực sự mạnh mẽ.
+
+PHẦN IV: CƠ CHẾ TƯƠNG TÁC GIAO DIỆN (ACTION SPACE) VÀ MÔ PHỎNG HÀNH VI
+
+
+4.1. Không gian Hành động và Thao tác UI Cốt lõi
+
+Để một tác nhân AI có thể mô phỏng hành vi của con người trên máy tính, nó phải thực hiện một tập hợp các hành động tương tác với Giao diện Người dùng (UI). Không gian hành động của các tác nhân web (Web Agents) và tác nhân kiểm soát máy tính (Generalist Agents) bao gồm các thao tác vật lý cơ bản mà con người thực hiện, chẳng hạn như nhấp chuột (clicking), gõ phím (typing), và cuộn (scrolling).8
+Các công cụ tự động hóa UI cấp thấp cung cấp các hoạt động cốt lõi cho tác nhân, bao gồm các hoạt động đầu vào như SimulateType (gõ mô phỏng), SimulateClick (nhấp mô phỏng), Set Text (đặt văn bản), Check (kiểm tra hộp), và Select Item (chọn mục trong danh sách thả xuống). Ngoài ra, các hoạt động đầu ra như Get Text và WebScraping cho phép tác nhân trích xuất thông tin cần thiết từ giao diện.22
+Các Agentic AI Browser tiên tiến phải vượt qua rào cản kỹ thuật để tự động hóa toàn bộ quy trình làm việc. Chúng có khả năng thực hiện tự động hóa end-to-end, bao gồm việc cạo dữ liệu phức tạp, điền biểu mẫu, và điều hướng các trang web yêu cầu đăng nhập, xác thực, và thậm chí giải quyết các thử thách CAPTCHA bằng cách mô phỏng hành vi con người với độ chính xác cao.17
+
+4.2. Khung Hành động: Tọa độ so với DOM (Coordinate vs. DOM-based Interaction)
+
+Việc xác định vị trí và tương tác với các phần tử UI có thể được thực hiện thông qua hai khung hành động chính, mỗi khung có ưu điểm và hạn chế riêng, đặc biệt đối với nhu cầu tự động hóa của AI.
+
+Khung Tương tác Dựa trên Tọa độ (Coordinate-based)
+
+Phương pháp này định vị các phần tử UI dựa trên các giá trị pixel (x, y) so với một điểm gốc cố định, thường là góc trên bên trái của cửa sổ hiển thị.23 Phương pháp này mô phỏng trực quan cách con người nhìn và tương tác với màn hình. Tuy nhiên, nó cực kỳ nhạy cảm với các yếu tố bên ngoài như độ phân giải màn hình, kích thước cửa sổ trình duyệt, hoặc thay đổi nhỏ trong bố cục giao diện (layout). Bất kỳ sự thay đổi nào về mặt thị giác cũng có thể làm hỏng chuỗi hành động được ghi lại hoặc dự đoán, khiến nó kém ổn định cho các tác vụ tự động hóa quy mô lớn.
+
+Khung Tương tác Dựa trên DOM (DOM-based)
+
+Tương tác dựa trên Mô hình Đối tượng Tài liệu (DOM) hoạt động trực tiếp với cấu trúc mã nguồn (HTML) của trang web, sử dụng các định danh cấu trúc như CSS Selectors hoặc XPath để định vị các phần tử UI.24 Lợi thế lớn nhất của phương pháp này là tính ổn định và khả năng thực hiện tự động hóa nền (Background Automation).22 Tác nhân có thể làm việc trực tiếp với các đối tượng phần tử UI, cho phép cửa sổ ứng dụng được ẩn hoặc thu nhỏ trong quá trình thực thi, bằng cách sử dụng các phương thức như SendWindowMessages.22
+Bảng III phân tích kỹ thuật các khía cạnh của hai khung hành động này:
+Table III: Phân tích Kỹ thuật về Không gian Hành động (Action Space) của Web Agents
+
+Khía Cạnh
+Tương tác Dựa trên Tọa độ (Coordinate-based)
+Tương tác Dựa trên DOM (DOM-based)
+Cơ chế Định vị
+Pixel (x, y) so với gốc (thường là Top-Left) 23
+Cấu trúc HTML, CSS Selectors, XPath 24
+Ưu điểm
+Dễ dàng áp dụng cho các mô hình thị giác (vision models)
+Ổn định, độc lập với độ phân giải màn hình/kích thước cửa sổ
+Nhược điểm
+Nhạy cảm với thay đổi layout và kích thước màn hình
+Cần phân tích mã nguồn (parsing) phức tạp hơn
+Tự động hóa Nền
+KHÔNG hỗ trợ
+CÓ hỗ trợ (Background Automation) 22
+
+Các mô hình tác nhân tiên tiến nhất buộc phải hợp nhất cả hai phương pháp. Tác nhân cần sử dụng ảnh chụp màn hình (tương tự tọa độ) để thực hiện lý luận đa phương thức và xác định ngữ cảnh (ví dụ: nút "Mua hàng" trông như thế nào), nhưng sau đó phải chuyển đổi kết quả đó thành một hành động dựa trên cấu trúc DOM (Function Call) để đảm bảo độ chính xác và khả năng tự động hóa nền.4 Sự hợp nhất này là cần thiết để tác nhân không bị gián đoạn nếu người dùng thay đổi kích thước cửa sổ hoặc chuyển sang tab khác.
+
+4.3. Cơ chế Vòng lặp Hành động của Mô hình SOTA (Gemini 2.5 Computer Use)
+
+Mô hình Gemini 2.5 Computer Use của Google DeepMind là ví dụ điển hình cho kiến trúc tác nhân SOTA (State-of-the-Art) được tối ưu hóa cho tương tác UI, đặc biệt là trong môi trường trình duyệt web.8 Mô hình này hoạt động trong một vòng lặp điều khiển liên tục, chuyển LLM thành một Bộ điều khiển (Controller) hành động trực tiếp.
+Cơ chế Vòng lặp Cốt lõi bao gồm các bước sau:
+Đầu vào (Inputs): Mô hình nhận yêu cầu của người dùng, ảnh chụp màn hình của giao diện hiện tại, và lịch sử các hành động gần đây.8
+Phân tích và Phản hồi: Mô hình phân tích các đầu vào đa phương thức (hình ảnh, văn bản, ngữ cảnh) để đưa ra quyết định hành động tiếp theo. Phản hồi của nó thường là một lệnh gọi hàm (Function Call) đại diện cho một hành động UI cụ thể, như clicking hoặc typing. Đối với các hành động nhạy cảm (ví dụ: thực hiện mua hàng), mô hình được lập trình để yêu cầu xác nhận từ người dùng cuối.8
+Thực thi và Lặp lại: Mã phía máy khách thực thi hành động đã nhận được. Sau khi hành động hoàn thành, một ảnh chụp màn hình mới của GUI và URL hiện tại được gửi lại cho mô hình như một phản hồi hàm (function response), khởi động lại vòng lặp điều khiển.8
+Vòng lặp này tiếp tục cho đến khi tác vụ hoàn thành, xảy ra lỗi, hoặc người dùng chấm dứt tương tác.8 Cơ chế này cho thấy sự dịch chuyển kiến trúc quan trọng: mô hình LLM không chỉ suy luận bằng văn bản, mà đã trở thành một hệ thống điều khiển đưa ra các lệnh hành động chuẩn hóa. Khả năng này là nền tảng cho sự thành công của các tác nhân đa năng (ví dụ: Agent S đạt 69.9% độ chính xác trên điểm chuẩn OSWorld 14), vì nó cung cấp giao diện chuẩn hóa (Function Call) để thực hiện các thao tác UI phức tạp trên nhiều nền tảng (web, mobile, desktop).
+
+PHẦN V: HIỆU SUẤT VÀ CÁC ỨNG DỤNG MÔ HÌNH TIÊN TIẾN
+
+
+5.1. Các Mô hình Đột phá về Tác nhân Tổng quát (Generalist Agents)
+
+Hiệu suất của các tác nhân AI mô phỏng hành vi đã đạt được những bước đột phá đáng kể, đặc biệt trong khả năng tổng quát hóa và mô phỏng nhận thức:
+Centaur: Được phát triển tại Viện Helmholtz về AI hướng con người, Centaur là một mô hình nổi bật trong lĩnh vực mô phỏng quyết định của con người. Được tinh chỉnh trên dữ liệu tâm lý học khổng lồ 11, Centaur chứng minh khả năng dự đoán lựa chọn của con người với độ chính xác vượt trội hơn 31 trên 32 nhiệm vụ so với mô hình Llama gốc và 14 mô hình nhận thức/thống kê kinh điển khác. Điều đáng chú ý là Centaur thể hiện khả năng tổng quát hóa zero-shot đáng kể, dự đoán chính xác các lựa chọn ngay cả trên các tác vụ mà nó chưa từng được huấn luyện.11
+Agent S: Là một framework mã nguồn mở tập trung vào giao diện Tác nhân-Máy tính (Agent-Computer Interface).14 Agent S3 đã chứng minh hiệu suất mạnh mẽ trong việc điều khiển máy tính cấp độ hệ điều hành. Trên điểm chuẩn OSWorld, Agent S3 đạt 62.6% và có thể nâng cao lên 69.9% khi kết hợp với kỹ thuật Behavior Best-of-N, tiệm cận mức độ chính xác của con người (72%). Điều này cho thấy sự tiến bộ trong việc xây dựng các tác nhân đa năng có thể học từ kinh nghiệm quá khứ và thực hiện các tác vụ phức tạp tự động trên máy tính.14
+Gemini 2.5 Computer Use: Mô hình này cung cấp hiệu suất dẫn đầu cho việc kiểm soát trình duyệt với độ trễ thấp nhất. Nó vượt trội hơn các giải pháp thay thế hàng đầu trên nhiều điểm chuẩn kiểm soát web và di động, được tối ưu hóa đặc biệt cho các tương tác trực tiếp với giao diện người dùng.8 Mặc dù chủ yếu được tối ưu hóa cho trình duyệt web, mô hình cũng cho thấy tiềm năng đối với các tác vụ kiểm soát UI di động, mặc dù chưa được tối ưu hóa cho kiểm soát cấp độ hệ điều hành máy tính để bàn.8
+
+5.2. Ứng dụng Thực tiễn và Tiềm năng Công nghiệp
+
+Sự phát triển của các tác nhân AI đã tạo ra tác động chuyển đổi trong nhiều ngành công nghiệp. Trong quản trị doanh nghiệp, AI đang giải quyết hiệu quả nhiều vấn đề từ tự động hóa tác vụ quy mô lớn, giảm thời gian và chi phí phân tích dữ liệu, đến hỗ trợ ra quyết định và tối ưu hóa nhân sự.25 Các công ty tư vấn và triển khai AI đang áp dụng các giải pháp này để tối ưu hóa quy trình vận hành, tự động hóa báo cáo, nhập liệu, và quản lý nội bộ cho cả doanh nghiệp lớn và Doanh nghiệp vừa và nhỏ (SME).27
+Sự xuất hiện của các Trình duyệt AI Agentic (Agentic AI Browsers) đã dân chủ hóa tự động hóa web. Các công cụ này cung cấp khả năng tự động hóa quy trình làm việc end-to-end (từ đầu đến cuối), từ cạo dữ liệu phức tạp đến điền biểu mẫu, mà không cần người dùng viết mã.17 Chúng có thể tự động thực hiện các quy trình tùy chỉnh, nhiều bước do người dùng định nghĩa, vượt qua các rào cản như xác thực và CAPTCHA, và thực hiện tự động hóa chéo nền tảng (pull data từ LinkedIn và sử dụng nó trong Notion).17
+Ngoài ra, khả năng mô phỏng quá trình ra quyết định của con người, như đã thấy ở Centaur, mang lại tiềm năng lớn trong khoa học nhận thức. Nó cho phép các nhà nghiên cứu thực hiện thử nghiệm ảo (virtual experimentation), một khả năng đặc biệt hữu ích khi việc tuyển dụng các đối tượng nghiên cứu thực tế là chậm chạp hoặc khó khăn, ví dụ như với trẻ nhỏ hoặc người mắc bệnh tâm thần.11 Khả năng mô phỏng nhận thức này có thể được chuyển giao cho các tác nhân web, giúp chúng đưa ra các quyết định hành động "mang tính con người" hơn, từ đó cải thiện sự tương tác tự nhiên giữa người và máy (HCI).
+
+PHẦN VI: RỦI RO, THÁCH THỨC BẢO MẬT VÀ KHUYẾN NGHỊ
+
+
+6.1. Thách thức Về Dữ liệu và Kỹ thuật
+
+Mặc dù các tác nhân AI đang phát triển mạnh mẽ, chúng vẫn phải đối mặt với những thách thức kỹ thuật cố hữu. Web hiện đại sử dụng nội dung tải động (dynamic content loading) và các biện pháp chống bot tinh vi, đòi hỏi các phương pháp cạo dữ liệu truyền thống phải liên tục được cập nhật và điều chỉnh.18
+Về mặt huấn luyện, có những vấn đề liên quan đến sự phụ thuộc quá mức vào dữ liệu (over-reliance on data), đặc biệt là trong Học Bắt chước, nơi tác nhân có thể không tổng quát hóa tốt khi dữ liệu thực tế thay đổi.10 Hơn nữa, chi phí triển khai và bảo trì các hệ thống AI Agent phức tạp, đặc biệt là trong môi trường doanh nghiệp quy mô lớn, vẫn còn cao.26
+
+6.2. Các Nguy cơ Bảo mật Hệ thống và Đạo đức
+
+Sự mạnh mẽ của tác nhân AI đi kèm với các rủi ro bảo mật hệ thống mới, chủ yếu phát sinh từ khả năng truy cập và thực hiện hành động của chúng trên các nền tảng tin cậy.29
+
+Vấn đề "Confused Deputy" (Phó Thống Đốc Bị Nhầm lẫn)
+
+Đây là một vấn đề bảo mật đã biết nhưng đã có thêm khía cạnh mới với sự trỗi dậy của AI Agents.29 Các tác nhân AI thường được cấp quyền truy cập vào dữ liệu riêng tư và các API đặc quyền để thực hiện nhiệm vụ. Nếu tác nhân bị lừa bằng cách nhận đầu vào độc hại từ một nguồn không đáng tin cậy (ví dụ: một trang web), nó có thể lạm dụng các quyền hạn được giao để thực hiện các hành động mà người dùng hoặc hệ thống không cho phép.29 Vấn đề này xảy ra khi tác nhân, hoạt động như một "phó thống đốc" được tin cậy, bị "nhầm lẫn" và thực hiện hành động theo chỉ thị của kẻ tấn công thay vì người dùng hợp pháp.
+
+Tấn công Tiêm nhiễm Lệnh Gián tiếp (Indirect Prompt Injection)
+
+Nguy cơ nghiêm trọng nhất đối với các tác nhân duyệt web là Tấn công Tiêm nhiễm Lệnh Gián tiếp.30 Trong kịch bản này, kẻ tấn công chèn các lệnh ẩn vào nội dung của trang web (có thể là văn bản, hình ảnh, hoặc kết quả tìm kiếm). Khi tác nhân AI duyệt trang đó (ví dụ: trong quá trình tìm kiếm thông tin theo yêu cầu của người dùng), nó đọc các lệnh ẩn này và bị chỉ thị thực hiện các hành động nguy hiểm.30
+Ví dụ, kẻ tấn công có thể chèn một lệnh vào một trang web khiến tác nhân, khi đọc trang, tự động trích xuất dữ liệu nội bộ và gửi chúng đến một máy chủ từ xa.30 Chuỗi tấn công này đặc biệt nguy hiểm vì người dùng khởi động quy trình làm việc có thể nghĩ rằng họ chỉ đang yêu cầu một tìm kiếm thường lệ, trong khi tác nhân đang bí mật truyền thông tin mật ở chế độ nền. Do đó, các tác nhân AI cần phải được quản lý với sự giám sát chặt chẽ tương đương với các chính sách thực thi mã và bảo mật trình duyệt truyền thống.30
+Các thách thức về đạo đức, tính công bằng, quyền riêng tư, và khó khăn trong việc giải thích (Explainability) các quyết định phức tạp của AI cũng là những rào cản cần được giải quyết để đảm bảo việc triển khai AI Agent có trách nhiệm.26
+
+6.3. Khuyến nghị và Hướng Phát triển Tương lai
+
+Để khai thác tiềm năng của các tác nhân hành động trong khi quản lý các rủi ro đã nêu, các khuyến nghị sau đây được đưa ra cho các nhà nghiên cứu và doanh nghiệp:
+Chuẩn hóa Dữ liệu và Đánh giá Hiệu suất: Cần tiếp tục đầu tư vào việc phát triển các bộ công cụ và tiêu chuẩn đánh giá nhất quán (benchmarks) để so sánh hiệu suất của các kỹ thuật huấn luyện khác nhau, như đã được đề xuất với các công cụ tạo dữ liệu chuyên gia được quản lý.9 Việc mở rộng các bộ dữ liệu thực tế, đa miền như Mind2Web và OSWorld là rất quan trọng để đo lường khả năng tổng quát hóa thực sự.
+Ưu tiên Kiến trúc Tự Giám sát và Xác nhận của Con người: Các hệ thống tác nhân phải được thiết kế với khả năng tự đánh giá rủi ro nội tại. Đối với các hành động có đặc quyền hoặc nhạy cảm về tài chính (ví dụ: mua hàng), kiến trúc phải bao gồm một bước yêu cầu xác nhận rõ ràng từ người dùng cuối.8 Biện pháp này là cần thiết để phá vỡ chuỗi tấn công của Confused Deputy và ngăn chặn việc lạm dụng quyền hạn tự động.
+Tối ưu hóa Huấn luyện bằng Dữ liệu Tổng hợp: Tăng cường nghiên cứu về việc sử dụng LLM để tạo và lọc dữ liệu huấn luyện tổng hợp. Phương pháp này cung cấp lộ trình mở rộng quy mô huấn luyện internet-scale một cách hiệu quả về chi phí và thời gian, cho phép các mô hình nhỏ hơn đạt hiệu suất cạnh tranh.15
+Phát triển Giải pháp An ninh AI-Native: Cần xây dựng các cơ chế bảo mật mới được thiết kế đặc biệt để phát hiện và ngăn chặn các cuộc tấn công nhúng lệnh từ nội dung bên ngoài (Indirect Prompt Injection). Điều này bao gồm việc xử lý các đầu vào từ môi trường không tin cậy (Internet) với sự thận trọng tương đương với mã độc thực thi.
+
+KẾT LUẬN
+
+Sự phát triển của Tác nhân AI và Mô hình Hành động Lớn (LAMs) đại diện cho một bước tiến hóa quan trọng từ khả năng sinh văn bản sang khả năng thực thi tác vụ phức tạp trên các giao diện máy tính. Các mô hình hiện đại thành công nhờ vào kiến trúc phân cấp (Plan Controller và Sub-task Agents) và khả năng lý luận đa phương thức, kết hợp giữa ảnh chụp màn hình thị giác và cấu trúc DOM kỹ thuật để đưa ra các lệnh gọi hàm chính xác.6
+Dữ liệu huấn luyện, đặc biệt là các bộ dữ liệu thực tế như Mind2Web và dữ liệu tổng hợp chất lượng cao do LLM tạo ra, là yếu tố then chốt cho khả năng tổng quát hóa của tác nhân. Mặc dù Học Bắt chước cung cấp nền tảng vững chắc, việc kết hợp với Học Tăng cường là cần thiết để đạt được tính thích ứng và khám phá chính sách tối ưu trong môi trường web năng động.10
+Tuy nhiên, việc trao quyền hành động cho các tác nhân này kéo theo các rủi ro bảo mật đáng kể, cụ thể là Confused Deputy và Indirect Prompt Injection. Do đó, tương lai của tự động hóa Agentic phụ thuộc vào việc tích hợp các cơ chế an toàn cấp độ kiến trúc, đòi hỏi sự giám sát và xác nhận của con người đối với các hành động có rủi ro cao, đồng thời xây dựng các công cụ đánh giá và chuẩn hóa dữ liệu nhất quán để thúc đẩy sự phát triển của các tác nhân đa năng, an toàn, và có trách nhiệm.
+Nguồn trích dẫn
+Large Action Models: Hype or Real? - Research AIMultiple, truy cập vào tháng 11 3, 2025, https://research.aimultiple.com/large-action-models/
+What Are Large Action Models (LAMs)? - Salesforce, truy cập vào tháng 11 3, 2025, https://www.salesforce.com/agentforce/large-action-models/
+OpenAI Agent Builder, truy cập vào tháng 11 3, 2025, https://cobusgreyling.medium.com/openai-agent-builder-9da01ae73e84
+Project Mariner - Google DeepMind, truy cập vào tháng 11 3, 2025, https://deepmind.google/models/project-mariner/
+Web 4.0: The Agentic Web - Gate.com, truy cập vào tháng 11 3, 2025, https://www.gate.com/vi/learn/articles/web-4-0-the-agentic-web/4768
+Towards Enterprise-Ready Computer Using Generalist Agent - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2503.01861v3
+AI Agent là gì? Đặc điểm, cấu trúc và cách thức hoạt động | Lợi ích - VR360, truy cập vào tháng 11 3, 2025, https://vr360.com.vn/ai-agent-la-gi
+Introducing the Gemini 2.5 Computer Use model - Google Blog, truy cập vào tháng 11 3, 2025, https://blog.google/technology/google-deepmind/gemini-computer-use-model/
+Imitation Learning Datasets: A Toolkit For Creating Datasets, Training Agents and Benchmarking - IFAAMAS, truy cập vào tháng 11 3, 2025, https://www.ifaamas.org/Proceedings/aamas2024/pdfs/p2800.pdf
+Reinforcement Learning vs. Imitation Learning: Learning Through Trial and Error vs. Learning by Example | by Hassaan Idrees | Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@hassaanidrees7/reinforcement-learning-vs-0744a860ffa7
+Mô hình AI mới đạt đột phá về mô phỏng hành vi con người | baotintuc.vn, truy cập vào tháng 11 3, 2025, https://baotintuc.vn/khoa-hoc-cong-nghe/mo-hinh-ai-moi-dat-dot-pha-ve-mo-phong-hanh-vi-con-nguoi-20250703071510722.htm
+osunlp/Mind2Web · Datasets at Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/datasets/osunlp/Mind2Web
+Mind2Web: Towards a Generalist Agent for the Web - GitHub Pages, truy cập vào tháng 11 3, 2025, https://osu-nlp-group.github.io/Mind2Web/
+Agent S: an open agentic framework that uses computers like a human - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/simular-ai/Agent-S
+Towards Internet-Scale Training For Agents, truy cập vào tháng 11 3, 2025, https://data-for-agents.github.io/
+WebUI: A Dataset for Enhancing Visual UI Understanding with Web Semantics - 3D Virtual and Augmented Reality, truy cập vào tháng 11 3, 2025, https://3dvar.com/Wu2023WebUI.pdf
+Fellou: Agentic AI Browser for Deep Search & Automation, truy cập vào tháng 11 3, 2025, https://fellou.ai/
+AI Agent Web Scraping: Revolutionizing Data Collection and Analysis | ScrapeGraphAI, truy cập vào tháng 11 3, 2025, https://scrapegraphai.com/blog/ai-agent-webscraping
+NNetscape navigator: complex demonstrations for web agents without a demonstrator, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2410.02907v1
+Reinforcement Learning vs Imitation Learning - AI at work for all - secure AI agents, search, workflows - Shieldbase AI, truy cập vào tháng 11 3, 2025, https://shieldbase.ai/blog/reinforcement-learning-vs-imitation-learning
+An Autonomous RL Agent Methodology for Dynamic Web UI Testing in a BDD Framework, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2503.08464
+Studio - UI Automation, truy cập vào tháng 11 3, 2025, https://docs.uipath.com/studio/standalone/2023.4/user-guide/ui-automation
+Coordinate systems - Web APIs | MDN, truy cập vào tháng 11 3, 2025, https://developer.mozilla.org/en-US/docs/Web/API/CSSOM_view_API/Coordinate_systems
+DOM Based XSS | OWASP Foundation, truy cập vào tháng 11 3, 2025, https://owasp.org/www-community/attacks/DOM_Based_XSS
+Nâng hiệu suất quản trị doanh nghiệp với ứng dụng AI, truy cập vào tháng 11 3, 2025, https://nhandan.vn/nang-hieu-suat-quan-tri-doanh-nghiep-voi-ung-dung-ai-post919900.html
+AI Agent là gì? Phân loại và cách hoạt động của tác nhân AI - Tokyo Tech Lab, truy cập vào tháng 11 3, 2025, https://tokyotechlab.com/vi/blogs/what-are-ai-agents
+10 CÔNG TY TƯ VẤN TRIỂN KHAI AI CHO SME TẠI VIỆT NAM - Innocom, truy cập vào tháng 11 3, 2025, https://innocom.vn/10-cong-ty-tu-van-trien-khai-ai-cho-sme-tai-viet-nam/
+An AI agent which fills web forms on a website i don’t own, truy cập vào tháng 11 3, 2025, https://www.reddit.com/r/AI_Agents/comments/1of707k/an_ai_agent_which_fills_web_forms_on_a_website_i/
+Are AI Agents the Ultimate Confused Deputy? How AI Agents' Capabilities Are Being Abused, truy cập vào tháng 11 3, 2025, https://medium.com/appsec-untangled/are-ai-agents-the-ultimate-confused-deputy-how-ai-agents-capabilities-are-being-abused-64444e002316
+AI agents can leak company data through simple web searches - Help Net Security, truy cập vào tháng 11 3, 2025, https://www.helpnetsecurity.com/2025/10/29/agentic-ai-security-indirect-prompt-injection/

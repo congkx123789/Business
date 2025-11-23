@@ -1,0 +1,252 @@
+{
+  "goal": "Move mouse to center of screen",
+  "steps": [
+    {
+      "state": {
+        "screenshot": "temp_screenshot_0_before.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1090,
+          335
+        ],
+        "mouse_after": [
+          1038,
+          323
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1090,
+          335
+        ],
+        "mouse_after": [
+          1038,
+          323
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 0
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_1_before.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1056,
+          295
+        ],
+        "mouse_after": [
+          1056,
+          293
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1056,
+          295
+        ],
+        "mouse_after": [
+          1056,
+          293
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 1
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_2_before.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          1046,
+          368
+        ],
+        "mouse_after": [
+          1046,
+          368
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          1046,
+          368
+        ],
+        "mouse_after": [
+          1046,
+          368
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 2
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_3_before.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          98,
+          1
+        ],
+        "mouse_after": [
+          64,
+          21
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          98,
+          1
+        ],
+        "mouse_after": [
+          64,
+          21
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 3
+      }
+    },
+    {
+      "state": {
+        "screenshot": "temp_screenshot_4_before.png",
+        "dom": {
+          "url": "about:blank",
+          "title": "",
+          "dom": "<html></html>"
+        },
+        "ui_graph": {
+          "nodes": [],
+          "edges": []
+        },
+        "typed": "of screen",
+        "mouse_before": [
+          87,
+          22
+        ],
+        "mouse_after": [
+          985,
+          355
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "action": {
+        "action_id": "step-1",
+        "kind": "TYPE",
+        "target": {},
+        "input_text": "of screen",
+        "meta": {}
+      },
+      "next_state": {
+        "typed": "of screen",
+        "mouse_before": [
+          87,
+          22
+        ],
+        "mouse_after": [
+          985,
+          355
+        ],
+        "overlay_active": true,
+        "footprint_active": true
+      },
+      "reward": 1.0,
+      "metadata": {
+        "step": 4
+      }
+    }
+  ],
+  "success": true,
+  "metadata": {}
+}

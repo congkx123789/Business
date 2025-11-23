@@ -1,0 +1,78 @@
+{
+  "app": {
+    "name": "SelfCar",
+    "tagline": "เช่าความฝันรถยนต์ของคุณวันนี้"
+  },
+  "nav": {
+    "home": "หน้าแรก",
+    "cars": "รถยนต์",
+    "login": "เข้าสู่ระบบ",
+    "register": "สมัครสมาชิก",
+    "profile": "โปรไฟล์",
+    "messages": "ข้อความ",
+    "logout": "ออกจากระบบ",
+    "dashboard": "แดชบอร์ด",
+    "live": "ไลฟ์",
+    "main": "เมนูนำทางหลัก"
+  },
+  "skipToMain": "ข้ามไปเนื้อหาหลัก",
+  "skipToNav": "ข้ามไปเมนูนำทาง",
+  "sort": {
+    "title": "เรียงตาม",
+    "priceLow": "ราคา: ต่ำไปสูง",
+    "priceHigh": "ราคา: สูงไปต่ำ",
+    "nameAsc": "ชื่อ: ก-ฮ",
+    "nameDesc": "ชื่อ: ฮ-ก",
+    "newest": "ใหม่ล่าสุด",
+    "oldest": "เก่าที่สุด",
+    "featured": "แนะนำ"
+  },
+  "badges": {
+    "freeShipping": "ส่งฟรี",
+    "flashSale": "ลดแรง",
+    "voucher": "คูปอง",
+    "new": "ใหม่",
+    "hot": "ร้อนแรง",
+    "bestSeller": "ขายดี"
+  },
+  "chat": {
+    "contactSeller": "ติดต่อผู้ขาย",
+    "startChat": "เริ่มสนทนา",
+    "message": "ข้อความ"
+  },
+  "search": {
+    "label": "ค้นหารถยนต์",
+    "placeholder": "ค้นหาตามยี่ห้อ รุ่น หรือสถานที่...",
+    "submit": "ส่งการค้นหา",
+    "savedSearch": "การค้นหาที่บันทึกไว้"
+  },
+  "cta": {
+    "contact": "ติดต่อ",
+    "testDrive": "ทดลองขับ",
+    "finance": "การเงิน",
+    "bookNow": "จองตอนนี้",
+    "unavailable": "ไม่พร้อมใช้งาน"
+  },
+  "footer": {
+    "securePayment": "การชำระเงินที่ปลอดภัย",
+    "securePaymentDesc": "ธุรกรรมที่เข้ารหัส SSL",
+    "verifiedSellers": "ผู้ขายที่ยืนยันแล้ว",
+    "verifiedSellersDesc": "ผู้ขายทั้งหมดได้รับการยืนยัน",
+    "returnPolicy": "นโยบายการคืนสินค้า",
+    "returnPolicyDesc": "รับประกันการคืนภายใน 7 วัน",
+    "cancellationPolicy": "นโยบายการยกเลิก",
+    "cancellationPolicyDesc": "ยกเลิกฟรีภายใน 24 ชม.",
+    "description": "บริการเช่ารถพรีเมียมพร้อมรถที่ดีที่สุดในราคาคุ้มค่า การเดินทางของคุณคือความสำคัญของเรา",
+    "help": "ศูนย์ช่วยเหลือ",
+    "helpCenter": "ศูนย์ช่วยเหลือ",
+    "contactUs": "ติดต่อเรา",
+    "faq": "คำถามที่พบบ่อย",
+    "guides": "คู่มือการซื้อ",
+    "policies": "นโยบาย",
+    "terms": "ข้อกำหนดและเงื่อนไข",
+    "privacy": "นโยบายความเป็นส่วนตัว",
+    "language": "ภาษา",
+    "allRightsReserved": "สงวนลิขสิทธิ์"
+  }
+}
+

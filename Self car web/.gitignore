@@ -1,0 +1,91 @@
+**/node_modules/
+frontend/dist/
+backend/target/
+coverage/
+tests/**/test-results/
+*.log
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# General
+.DS_Store
+Thumbs.db
+*.log
+*.swp
+*.swo
+*~
+
+# Frontend (React/Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+frontend/.env.production
+frontend/coverage/
+frontend/.vite/
+
+# Backend (Spring Boot/Maven)
+backend/target/
+backend/.mvn/
+backend/mvnw
+backend/mvnw.cmd
+backend/.settings/
+backend/.project
+backend/.classpath
+backend/.factorypath
+backend/.sts4-cache/
+backend/bin/
+backend/build/
+backend/out/
+*.class
+*.jar
+*.war
+*.ear
+backend/.env
+backend/.env.local
+backend/.env.production
+backend/src/main/resources/application-local.properties
+backend/src/main/resources/application-dev.properties
+!backend/src/main/resources/application.properties
+
+# IDE Files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.settings/
+.classpath
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database
+*.sql.backup
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Assets (keep templates, ignore generated/copied configs)
+config/*/application*.properties
+!config/*/*.template
+config/*/.env
+!config/*/*.template

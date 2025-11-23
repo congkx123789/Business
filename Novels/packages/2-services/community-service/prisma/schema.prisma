@@ -1,0 +1,303 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/@prisma/community-service-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("COMMUNITY_SERVICE_DATABASE_URL")
+}
+
+enum ParagraphReaction {
+  LIKE
+  LAUGH
+  CRY
+  ANGRY
+  WOW
+  LOVE
+}
+
+enum FanRankingType {
+  STORY
+  AUTHOR
+  ALL_TIME
+  MONTHLY
+}
+
+enum FanRankingWindow {
+  ALL_TIME
+  MONTHLY
+  WEEKLY
+}
+
+enum GamificationRewardType {
+  BONUS_VOTES
+  BADGE
+  STATUS
+}
+
+enum AuthorInteractionType {
+  QA
+  UPDATE
+  ANNOUNCEMENT
+}
+
+model ParagraphComment {
+  id               String                  @id @default(cuid())
+  userId           String
+  storyId          String
+  chapterId        String
+  authorId         String?
+  paragraphIndex   Int
+  paragraphText    String?
+  content          String
+  reactionType     ParagraphReaction?
+  likeCount        Int                     @default(0)
+  replyCount       Int                     @default(0)
+  isAuthorLiked    Boolean                 @default(false)
+  isAuthorReplied  Boolean                 @default(false)
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  likes            ParagraphCommentLike[]
+  replies          ParagraphCommentReply[]
+
+  @@index([chapterId])
+  @@index([chapterId, paragraphIndex])
+  @@index([userId])
+}
+
+model ParagraphCommentLike {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String
+  isAuthor  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  comment ParagraphComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, userId])
+}
+
+model ParagraphCommentReply {
+  id            String   @id @default(cuid())
+  commentId     String
+  userId        String
+  content       String
+  isAuthorReply Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  comment ParagraphComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+}
+
+model ChapterComment {
+  id         String        @id @default(cuid())
+  userId     String
+  storyId    String
+  chapterId  String
+  content    String
+  parentId   String?
+  upvotes    Int           @default(0)
+  downvotes  Int           @default(0)
+  isPinned   Boolean       @default(false)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  parent   ChapterComment? @relation("ChapterCommentThread", fields: [parentId], references: [id])
+  children ChapterComment[] @relation("ChapterCommentThread")
+
+  @@index([chapterId])
+  @@index([parentId])
+}
+
+model BookReview {
+  id           String   @id @default(cuid())
+  storyId      String
+  userId       String
+  rating       Int
+  title        String
+  content      String
+  isSpoiler    Boolean  @default(false)
+  helpfulCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  helpfuls BookReviewHelpful[]
+
+  @@index([storyId])
+}
+
+model BookReviewHelpful {
+  id       String   @id @default(cuid())
+  reviewId String
+  userId   String
+  createdAt DateTime @default(now())
+
+  review BookReview @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@unique([reviewId, userId])
+}
+
+model ForumPost {
+  id         String   @id @default(cuid())
+  storyId    String?
+  userId     String
+  title      String
+  content    String
+  category   String
+  isPinned   Boolean  @default(false)
+  viewCount  Int      @default(0)
+  replyCount Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([storyId])
+  @@index([category])
+}
+
+model Poll {
+  id         String    @id @default(cuid())
+  storyId    String?
+  createdBy  String
+  question   String
+  isActive   Boolean   @default(true)
+  endsAt     DateTime?
+  totalVotes Int       @default(0)
+  createdAt  DateTime  @default(now())
+
+  options PollOption[]
+  votes   PollVote[]
+}
+
+model PollOption {
+  id      String @id @default(cuid())
+  pollId  String
+  label   String
+  order   Int
+  votes   Int    @default(0)
+
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  pollVotes PollVote[]
+}
+
+model PollVote {
+  id        String   @id @default(cuid())
+  pollId    String
+  optionId  String
+  userId    String
+  votedAt   DateTime @default(now())
+
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, userId])
+}
+
+model Quiz {
+  id        String   @id @default(cuid())
+  storyId   String?
+  createdBy String
+  title     String
+  createdAt DateTime @default(now())
+
+  questions QuizQuestion[]
+  submissions QuizSubmission[]
+}
+
+model QuizQuestion {
+  id        String   @id @default(cuid())
+  quizId    String
+  prompt    String
+  options   Json
+  answerIdx Int
+  order     Int
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model QuizSubmission {
+  id        String   @id @default(cuid())
+  quizId    String
+  userId    String
+  answers   Json
+  score     Int
+  createdAt DateTime @default(now())
+
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@unique([quizId, userId])
+}
+
+model Tip {
+  id             String   @id @default(cuid())
+  storyId        String
+  authorId       String
+  userId         String
+  amount         Decimal  @db.Decimal(12, 2)
+  message        String?
+  platformShare  Decimal  @db.Decimal(12, 2)
+  taxShare       Decimal  @db.Decimal(12, 2)
+  authorShare    Decimal  @db.Decimal(12, 2)
+  isLargeTip     Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model FanRanking {
+  id          String            @id @default(cuid())
+  userId      String
+  storyId     String?
+  authorId    String?
+  rankingType FanRankingType
+  timeRange   FanRankingWindow
+  score       Decimal           @db.Decimal(18, 4)
+  rank        Int
+  updatedAt   DateTime          @updatedAt
+
+  @@index([storyId])
+  @@index([authorId])
+  @@unique([userId, storyId, authorId, rankingType, timeRange])
+}
+
+model GamificationReward {
+  id          String                   @id @default(cuid())
+  userId      String
+  storyId     String?
+  rewardType  GamificationRewardType
+  amount      Int?
+  badgeName   String?
+  triggeredBy String?
+  createdAt   DateTime                 @default(now())
+}
+
+model MonthlyVote {
+  id         String   @id @default(cuid())
+  storyId    String
+  userId     String
+  votes      Int
+  bonusVotes Int      @default(0)
+  month      Int
+  year       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([storyId, month, year])
+  @@index([userId, month, year])
+  @@unique([userId, storyId, month, year])
+}
+
+model AuthorFanInteraction {
+  id              String                @id @default(cuid())
+  authorId        String
+  userId          String?
+  interactionType AuthorInteractionType
+  title           String?
+  question        String?
+  answer          String?
+  content         String?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([authorId])
+}
+

@@ -1,0 +1,16 @@
+Requirement ID,Requirement Name,Control Category,Evidence Owner,Collection Method,Status,Evidence
+1.1,Install and maintain network security controls,Network Security,DevOps,Network diagrams firewall rules access logs,IMPLEMENTED,
+2.1,Apply secure configurations to all system components,System Configuration,DevOps,Configuration files hardening checklists change logs,IMPLEMENTED,
+3.1,Protect stored account data,Data Protection,Security,Data encryption documentation key management procedures,IMPLEMENTED,
+4.1,Protect cardholder data transmission,Data Transmission,Security,TLS configuration certificate management encryption logs,IMPLEMENTED,
+5.1,Protect systems from malicious software,Malware Protection,DevOps,Antivirus logs malware scans patch management records,IMPLEMENTED,
+6.1,Develop and maintain secure systems and software,Secure Development,Engineering,Code reviews vulnerability scans patch logs,IMPLEMENTED,
+6.4.3,Payment page security,Payment Page Security,Security,CSP headers script inventory tamper detection logs,IMPLEMENTED,
+7.1,Restrict access to system components and cardholder data,Access Control,Security,Access control lists user permissions access logs,IMPLEMENTED,
+8.1,Identify users and authenticate access,Authentication,Security,Authentication logs MFA records password policies,IMPLEMENTED,
+9.1,Restrict physical access to cardholder data,Physical Security,Operations,Access logs visitor logs security camera footage,IMPLEMENTED,
+10.1,Log and monitor all access,Logging,Security,Access logs audit trails security event logs,IMPLEMENTED,
+11.1,Test security of systems and networks regularly,Security Testing,Security,Penetration test reports vulnerability scans security assessments,IMPLEMENTED,
+11.6.1,Change and tamper detection,Change Detection,Security,File integrity monitoring change detection logs tamper alerts,IMPLEMENTED,
+12.1,Support information security with organizational policies,Security Policy,Management,Security policies training records incident response plans,IMPLEMENTED,
+

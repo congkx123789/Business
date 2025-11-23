@@ -1,0 +1,261 @@
+
+Báo Cáo Chuyên Sâu: Mô Hình Hành Động Lớn (LAMs) và Kiến Trúc Tác Tử AI
+
+
+CHƯƠNG 1: NỀN TẢNG KHÁI NIỆM VÀ PHÂN LOẠI HỆ THỐNG TÁC TỬ (LAMs & AI AGENTS)
+
+
+1.1. Định nghĩa và Bản chất của Large Action Models (LAMs)
+
+Large Action Models (LAMs) đại diện cho một bước tiến hóa quan trọng trong lĩnh vực Trí tuệ Nhân tạo (AI), chuyển đổi trọng tâm từ việc chỉ tạo ra nội dung sang việc thực hiện hành động. Về cơ bản, một mô hình hành động lớn (LAM) là một loại AI tạo sinh được thiết kế để thực hiện các hành động cụ thể dựa trên truy vấn của người dùng.1 Các mô hình này không chỉ dừng lại ở việc phân tích dữ liệu; chúng được thiết kế để chủ động hành động dựa trên kết quả phân tích đó.1
+LAMs được mô tả như "người anh em có khả năng hành động" của Large Language Models (LLMs).1 Trong khi LLMs đã chứng minh tính linh hoạt và hiệu quả trong các tác vụ dựa trên văn bản, từ tạo mã đến sáng tạo nội dung, chúng bị giới hạn ở từ ngữ và không thể trực tiếp thực hiện hành động.2 Ngược lại, LAMs được thiết kế để vượt qua khả năng tạo ngôn ngữ đơn thuần, nhằm mục đích hiểu và thực thi các hành động phức tạp, nhiều bước trong nhiều môi trường kỹ thuật số và vật lý khác nhau.3 Sự xuất hiện của LAMs đánh dấu sự chuyển dịch từ AI chỉ tập trung vào nhận thức (Perceptive AI) sang AI vận hành (Operational AI), nơi đầu ra cuối cùng là một hành động được thực thi, có tác động thực tế (ví dụ: tự động hóa quy trình, điều khiển robot).4
+
+1.2. Khái niệm Cốt lõi và Bốn Thành phần của AI Agents
+
+Khái niệm AI Agent (Tác tử AI) có nguồn gốc sâu xa trong nghiên cứu AI, đề cập đến một hệ thống phần mềm hoặc robot có khả năng cảm nhận môi trường thông qua các cảm biến và tác động lên môi trường đó thông qua các bộ chấp hành (actuators) để đạt được một mục tiêu cụ thể.5
+Đặc điểm nổi bật nhất của AI Agents là khả năng hoạt động tự chủ (autonomously), đưa ra quyết định và thực hiện hành động mà không cần sự can thiệp liên tục của con người.6 Các tác tử này khác biệt với AI Assistants và Bots ở chỗ chúng có thể thực hiện các hành động phức tạp, nhiều bước, học hỏi, thích nghi, và đưa ra quyết định một cách độc lập.7
+Mọi AI Agent đều được xây dựng dựa trên bốn thành phần thiết yếu, hoạt động hài hòa để tạo ra các hệ thống thông minh, tự chủ 6:
+Perception (Nhận thức): Là khả năng thu thập và diễn giải thông tin từ môi trường xung quanh.6 Đối với các hệ thống trong thế giới thực như xe tự lái hoặc robot, điều này bao gồm việc tích hợp dữ liệu từ nhiều cảm biến (multisensor fusion) cùng với thị giác máy tính, xử lý và cấu trúc dữ liệu thô thành định dạng hữu ích (ví dụ: chuyển lời nói thành văn bản, phát hiện đối tượng).5
+Reasoning (Lập luận): Quá trình xử lý thông tin nhận thức để đưa ra quyết định hoặc tạo ra kế hoạch hành động.6 Đây là bộ não của tác tử, thường được cung cấp bởi một mô hình nền tảng (Foundation Model) hoặc LLM.9
+Action (Hành động): Việc tác động vật lý hoặc kỹ thuật số lên môi trường để đạt được mục tiêu.5
+Learning (Học tập): Khả năng cải thiện hiệu suất theo thời gian dựa trên kinh nghiệm và phản hồi.6
+Các tác tử AI có thể được phân loại dựa trên mức độ phức tạp của chúng, từ các tác tử phản xạ đơn giản (Simple reflex agents) chỉ hành động dựa trên nhận thức hiện tại, đến các tác tử dựa trên tiện ích (Utility-based agents) mở rộng tư duy dựa trên mục tiêu bằng cách đánh giá hành động dựa trên hàm tiện ích để tối đa hóa kết quả mong đợi.10
+
+1.3. Phân biệt Ngữ nghĩa: LLMs vs. LAMs vs. Agentic LLMs vs. Agentic AI
+
+Sự phân biệt rõ ràng giữa các thuật ngữ này là rất quan trọng đối với các nhà phát triển và lãnh đạo kỹ thuật.
+Large Language Model (LLM): Là công cụ nền tảng, mạnh mẽ cho các tác vụ dựa trên văn bản, từ tạo mã đến sáng tạo nội dung. LLMs có khả năng suy luận cơ bản, hiểu ngôn ngữ tự nhiên, nhưng chúng bị giới hạn ở đầu ra văn bản và hoạt động chủ yếu theo cơ chế phản ứng (Reactive) với các lệnh hoặc prompt.2
+AI Assistant/Bot: Có tính tự chủ thấp hơn LLM Agents. AI Assistant phản ứng với các yêu cầu, cung cấp thông tin, và hoàn thành các tác vụ đơn giản; quyết định cuối cùng thường do người dùng đưa ra. Bots thường tuân theo các quy tắc xác định trước và có khả năng học tập hạn chế nhất.7
+AI Agent / Agentic LLM: Đây là các hệ thống sử dụng LLM làm động cơ lập luận (reasoning engine), sau đó trang bị cho mô hình khả năng lập kế hoạch, truy cập công cụ (APIs, cơ sở dữ liệu), và thực hiện các hành động phức tạp, đa bước.7 Một tác tử sử dụng LLM để quyết định luồng kiểm soát của ứng dụng—ví dụ, quyết định công cụ nào cần gọi hoặc liệu câu trả lời đã đủ chưa.12 Agentic LLMs hoạt động chủ động (Proactive) và định hướng mục tiêu (Goal-oriented).7
+Large Action Model (LAM): Mặc dù LAM được định nghĩa là một loại AI có thể thực hiện hành động 1, trong bối cảnh triển khai hiện tại (ví dụ: Rabbit R1), chúng thường được coi là Agentic LLMs được đổi thương hiệu (rebranded LLM agents).2 Các triển khai này thường dựa vào LLM kết hợp với các quy trình làm việc được viết kịch bản (scripted workflows), chứ chưa phải kiến trúc học hành động thực sự (true action-learning architectures).2 Việc sử dụng thuật ngữ LAM nhấn mạnh sự tiến hóa từ việc chỉ hiểu ngôn ngữ sang việc thực hiện hành động có ý nghĩa.2
+Agentic AI (Tầm nhìn Tương lai): Thuật ngữ này ám chỉ một hệ thống thể hiện mức độ tự chủ cao hơn nhiều so với LAMs hiện tại.13 Để đạt được Agentic AI đích thực, hệ thống phải vượt qua các khuôn khổ có cấu trúc cao mà LAMs hiện tại đang dựa vào.13 Các yêu cầu bao gồm:
+Nhận thức có ý thức (Conscious Perception): Khả năng hiểu cả trạng thái nội bộ và môi trường bên ngoài một cách phức tạp và độc lập.13
+Tự chủ Ra quyết định (Decision-making Autonomy): Không chỉ dựa vào các quy tắc xác định trước.13
+Học tập Liên tục (Continuous Learning): Khả năng học hỏi độc lập từ kinh nghiệm mới theo thời gian thực mà không cần sự can thiệp của con người.13
+Sự phân biệt này cho thấy sự nhầm lẫn giữa LAMs và Agentic LLMs là một hệ quả của xu hướng công nghiệp sử dụng thuật ngữ mới để tái định vị các khả năng công nghệ hiện có.2 Tuy nhiên, sự khác biệt quan trọng vẫn là mục tiêu cuối cùng: chuyển đổi từ các mô hình phụ thuộc vào tập dữ liệu tĩnh và quy trình ra quyết định xác định, sang các thực thể thích ứng, định hướng mục tiêu thực sự.13
+Bảng 1: Phân biệt Khái niệm Cốt lõi: LLM, LAM, và AI Agent
+
+Tiêu chí
+Large Language Model (LLM)
+Large Action Model (LAM)
+AI Agent (Agentic LLM)
+Agentic AI (Tầm nhìn)
+Mục tiêu Chính
+Tạo và hiểu ngôn ngữ
+Thực hiện hành động phức tạp
+Tự chủ hoàn thành mục tiêu thông qua lập kế hoạch và hành động lặp lại
+Tự chủ, nhận thức, học tập liên tục, ra quyết định độc lập
+Tính Tự chủ
+Thấp (Phản ứng với prompt)
+Trung bình (Cần hướng dẫn mục tiêu cấp cao)
+Cao (Lập kế hoạch, thích nghi) 7
+Rất Cao (Tự khởi xướng hành động) 13
+Kiến trúc Hiện tại
+Mô hình Biến áp
+LLM + Tool-Calling + Kịch bản
+LLM + Tool-Calling + Reasoning Engine + Memory
+Yêu cầu Mô hình Học Hành động thực sự (True Action Learning Architecture) 2
+Vòng đời Học tập
+Dựa trên Tập dữ liệu Đóng
+Phụ thuộc vào mô hình được huấn luyện trước và phản hồi có giới hạn 13
+Có khả năng học hỏi và thích nghi 7
+Học độc lập theo thời gian thực (Continuous learning) 13
+
+
+CHƯƠNG 2: KIẾN TRÚC VÀ CÁC MÔ-ĐUN CẤU THÀNH CỦA AGENTIC LLMS
+
+Kiến trúc tác tử (Agentic architecture) là nền tảng cho hành vi tự chủ và khả năng ra quyết định của AI Agents. Nó được thiết kế để cung cấp một cấu trúc cho LLM để tự động hóa việc hoàn thành các nhiệm vụ phức tạp và thích ứng với các môi trường động.14
+
+2.1. Kiến trúc Tác tử Cốt lõi (Agentic Architecture Frameworks)
+
+Các kiến trúc tác tử xác định cách các tác tử thực hiện nhiệm vụ, ra quyết định và tương tác với môi trường một cách thông minh, tự chủ.14
+Kiến trúc Phản ứng (Reactive Architectures): Đây là kiến trúc đơn giản nhất, ánh xạ trực tiếp các tình huống thành hành động. Chúng mang tính phản xạ (reflexive), ra quyết định dựa trên các kích thích tức thời từ môi trường chứ không cần dựa vào trí nhớ hay khả năng dự đoán tương lai.14 Các tác tử phản xạ đơn giản (Simple reflex agents) nằm trong danh mục này.10
+Kiến trúc Cân nhắc (Deliberative Architectures): Các hệ thống này đưa ra quyết định dựa trên lập luận, lập kế hoạch và các mô hình nội bộ về thế giới.14 Tác tử dựa trên mục tiêu (Goal-based agents) và tác tử dựa trên tiện ích (Utility-based agents) là các ví dụ, đòi hỏi khả năng lập kế hoạch hành động với một mục tiêu cụ thể trong tâm trí.10 Việc phát triển các mô hình nội bộ về thế giới là cực kỳ quan trọng, cho phép tác tử thực hiện lập kế hoạch dài hạn.
+Kiến trúc Nhận thức (Cognitive Architectures): Đây là các hệ thống tiên tiến bắt chước tư duy, lập luận, học tập và ra quyết định giống con người.14 Chúng tích hợp các mô-đun phức tạp hơn nhiều, đặc biệt là hệ thống trí nhớ nội bộ chi tiết, để hỗ trợ lập kế hoạch dài hạn và sự thích ứng.
+Về cấu trúc triển khai, các kiến trúc được phân loại thành Kiến trúc Đơn Tác tử (Single-Agent Architecture) và Hệ thống Đa Tác tử (Multi-Agent Systems). Kiến trúc đơn tác tử đơn giản, dễ triển khai nhưng có thể bị hạn chế về khả năng mở rộng khi xử lý các tác vụ phức tạp hoặc khối lượng lớn.14 Ngược lại, hệ thống đa tác tử yêu cầu nhiều tác tử tương tác, phối hợp hoặc cạnh tranh để đạt được mục tiêu chung hoặc riêng lẻ.10
+
+2.2. Mô-đun Lập kế hoạch (Planning Engine) và Cơ chế Hành động (Execution)
+
+Mô-đun lập kế hoạch là trái tim của các tác tử Agentic LLM và LAM, đóng vai trò tạo ra các chuỗi hành động có cấu trúc để đạt được các mục tiêu mong muốn.15 Không giống như các tác tử phản ứng đơn giản, tác tử lập kế hoạch dự đoán các trạng thái tương lai và tạo ra một kế hoạch hành động trước khi thực thi.16
+LLM đóng một vai trò trung tâm trong giai đoạn này thông qua Phân rã Nhiệm vụ (Task Decomposition). Mô hình nền tảng chịu trách nhiệm phá vỡ một mục tiêu cấp cao (ví dụ: "lên kế hoạch cho một chuyến đi") thành các nhiệm vụ phụ nhỏ hơn và có thể quản lý được (ví dụ: đặt chuyến bay, tìm khách sạn, lên lịch trình).16
+Để thực hiện các nhiệm vụ này, các tác tử sử dụng cơ chế Gọi công cụ (Tool-Calling).12 LLM được gọi lặp đi lặp lại trong một vòng lặp để quyết định công cụ nào (ví dụ: APIs, cơ sở dữ liệu bên ngoài, hệ thống RAG) cần gọi và đầu vào cho các công cụ đó.12 Công cụ được thực thi, và đầu ra được đưa trở lại LLM như là "quan sát" (observations). Quá trình lặp này tiếp diễn cho đến khi tác tử quyết định có đủ thông tin để giải quyết yêu cầu của người dùng.12
+Cụ thể, LAMs bao gồm các thành phần kiến trúc chi tiết để hỗ trợ khả năng hành động 15:
+Action Representation (Biểu diễn Hành động): Sử dụng sự kết hợp giữa biểu diễn ký hiệu cấp cao và biểu diễn thủ tục cấp thấp để thể hiện phạm vi hành động một cách linh hoạt.
+Action Hierarchy (Thứ bậc Hành động): Cấu trúc phân cấp để biểu diễn hành động, cho phép hệ thống tập trung vào các tác vụ phức tạp một cách có hệ thống.15
+Execution Module (Mô-đun Thực thi): Chịu trách nhiệm thực thi các chuỗi hành động được tạo ra bởi công cụ lập kế hoạch.15
+
+2.3. Hệ thống Trí nhớ Nâng cao trong AI Agents
+
+Hệ thống trí nhớ là thành phần then chốt cho tính liên tục, ngữ cảnh và khả năng thích ứng của AI Agents, giúp chúng đạt được khả năng học tập trọn đời và hành vi giống con người.16 Sức mạnh thực sự của các tác tử ngôn ngữ nằm ở cách các loại trí nhớ khác nhau này tích hợp và tương tác lẫn nhau.18
+Các tác tử nhận thức (Cognitive agents) tiên tiến sử dụng bốn loại trí nhớ chính 18:
+Working Memory (Trí nhớ Làm việc): Lưu trữ ngữ cảnh ngay lập tức và cho phép tương tác theo thời gian thực.18
+Semantic Memory (Trí nhớ Ngữ nghĩa): Chứa thông tin tổng quát như sự kiện, định nghĩa và quy tắc. Thường được triển khai bằng các cơ sở kiến thức, AI tượng trưng (symbolic AI) hoặc vector embeddings.19 Trí nhớ này cung cấp nền tảng thực tế (factual grounding) cho tác tử, cải thiện khả năng lập luận và phản hồi chính xác. Ví dụ, một trợ lý pháp lý AI sử dụng trí nhớ ngữ nghĩa để truy xuất tiền lệ vụ án.19
+Procedural Memory (Trí nhớ Thủ tục): Được lấy cảm hứng từ trí nhớ thủ tục của con người (ví dụ: đi xe đạp), trí nhớ này giúp tác tử cải thiện hiệu quả bằng cách tự động hóa các chuỗi hành động phức tạp dựa trên kinh nghiệm trước đó, thường được học thông qua học tăng cường (RL).18
+Episodic Memory (Trí nhớ Sự kiện): Đây là ký ức về các sự kiện cụ thể đã xảy ra sau khi triển khai mô hình, tại thời điểm chạy (runtime).20 Khả năng hình thành và truy xuất ký ức về các sự kiện trong quá khứ này là một lĩnh vực nghiên cứu đang phát triển, vì nó cho phép tác tử học hỏi từ các kinh nghiệm đã qua, giúp hệ thống thích nghi hơn.18 Sự thiếu hụt trí nhớ sự kiện ở các mô hình AI hiện tại là một hạn chế lớn đối với việc mô phỏng nhận thức của con người. Việc tích hợp thành công trí nhớ sự kiện là nền tảng cho khả năng tự phản tư và tự cải thiện thực sự của các Agentic AI trong tương lai, cho phép chúng học tập trọn đời.
+
+CHƯƠNG 3: CÁC KỸ THUẬT LẬP LUẬN VÀ TỐI ƯU HÓA HÀNH ĐỘNG
+
+Khả năng lập luận (Reasoning) là sức mạnh cốt lõi cho các quy trình làm việc của tác tử, thúc đẩy các giai đoạn lập kế hoạch và gọi công cụ.17 Nghiên cứu về Agentic LLMs được phân loại theo ba khả năng xây dựng lẫn nhau: (1) Lập luận (Reason), (2) Hành động (Act), và (3) Tương tác (Interact).21
+
+3.1. Khung Hành động-Lập luận-Tương tác (Reason-Act-Interact Paradigm)
+
+Các tác tử LLM được đánh giá dựa trên khả năng của chúng trong ba danh mục này. Danh mục lập luận tập trung vào việc cải thiện việc ra quyết định thông qua các kỹ thuật như phản tư (reflection) và truy xuất (retrieval).21 Danh mục hành động tập trung vào các mô hình hành động, robot, và công cụ, nhằm mục đích tạo ra các trợ lý hữu ích.21 Danh mục tương tác tập trung vào các hệ thống đa tác tử (multi-agent systems) để giải quyết nhiệm vụ cộng tác và mô phỏng hành vi xã hội nổi lên.21
+Mối quan hệ giữa chúng mang tính cộng sinh: khả năng truy xuất dữ liệu là cần thiết để tác tử sử dụng công cụ (tool use), sự phản tư giúp cải thiện sự cộng tác giữa nhiều tác tử, và khả năng lập luận là nền tảng cho tất cả các danh mục.21
+
+3.2. Kỹ thuật Lập luận Từng bước: Phân tích Chuyên sâu ReAct (Reason + Act)
+
+ReAct (Reason + Act) là một mô hình lập luận phổ biến, sử dụng vòng lặp Suy nghĩ – Hành động – Quan sát (Think-Act-Observe loop) để giải quyết vấn đề từng bước và cải thiện phản hồi một cách lặp đi lặp lại.17
+Cơ chế hoạt động: Tác tử được hướng dẫn để tạo ra dấu vết lập luận nội bộ (tương tự như Chain-of-Thought) để quyết định bước hành động tiếp theo.17 Sau khi quyết định hành động, tác tử thực thi hành động đó (ví dụ: gọi API, tìm kiếm qua RAG), và quan sát kết quả đầu ra của hành động. Kết quả quan sát này sau đó được thêm vào ngữ cảnh để tác tử sử dụng cho bước lập luận tiếp theo.17 Quá trình này lặp lại cho đến khi tác tử đạt được giải pháp hoặc câu trả lời cuối cùng.17
+Ưu điểm: ReAct đặc biệt hiệu quả trong các tác vụ yêu cầu thông tin thời gian thực hoặc cần sự tương tác lặp lại với môi trường.23 Khả năng tương tác với các công cụ bên ngoài (RAG systems, APIs) giúp tăng cường độ tin cậy và tính thực tế của phản hồi.24 Hơn nữa, việc tạo ra các dấu vết lập luận từng bước giúp tăng cường tính minh bạch và khả năng truy vết (traceability) quá trình ra quyết định của LLM, một yếu tố quan trọng trong việc xây dựng sự tin cậy.23
+
+3.3. Kỹ thuật Lập kế hoạch Trước: Phân tích ReWOO (Reasoning WithOut Observation)
+
+ReWOO (Reasoning WithOut Observation) là một kỹ thuật lập luận khác được thiết kế để tăng tốc độ xử lý bằng cách lập kế hoạch trước và loại bỏ bước quan sát lặp lại so với ReAct.17
+Cấu trúc Ba Mô-đun: ReWOO được tổ chức thành ba mô-đun chính 17:
+Planner (Người lập kế hoạch): Phân rã nhiệm vụ cấp cao thành các nhiệm vụ phụ.
+Worker (Người thực thi): Mô-đun này sử dụng các công cụ để thu thập bằng chứng và sự kiện để chứng minh cho từng nhiệm vụ phụ.
+Solver (Người giải quyết): Tổng hợp tất cả các nhiệm vụ phụ và bằng chứng tương ứng để đưa ra kết luận cuối cùng.
+Phân tích Hiệu suất: Mặc dù ReWOO đã cho thấy hiệu suất vượt trội so với ReAct trên một số điểm chuẩn Xử lý Ngôn ngữ Tự nhiên (NLP) 17, nó đại diện cho một sự đánh đổi kiến trúc. Vì nó lập kế hoạch trước và bỏ qua bước quan sát lặp, ReWOO kém hiệu quả hơn trong các tình huống mà tác tử có ngữ cảnh hạn chế về môi trường hoặc khi môi trường thay đổi liên tục.17 Hơn nữa, việc thêm quá nhiều công cụ có thể làm giảm hiệu suất của ReWOO.
+
+3.4. Cơ chế Tự Phản tư (Self-reflection) và Học tập (LATS)
+
+Khả năng tự phản tư (Self-reflection) cho phép tác tử AI đánh giá và tinh chỉnh khả năng lập luận của chính nó, tương tự như việc con người tự kiểm toán quá trình suy nghĩ của mình.17
+Một ví dụ điển hình là Language Agent Tree Search (LATS).17 LATS lấy cảm hứng từ phương pháp học tăng cường Monte Carlo Tree Search và chia sẻ điểm tương đồng với lập luận theo cây suy nghĩ (tree-of-thought) trong LLMs. LATS xây dựng một cây quyết định, tìm kiếm các tùy chọn hành động tiềm năng, và sử dụng bộ đánh giá trạng thái để chọn hành động tối ưu.17
+Cơ chế Phản tư: Sau khi thực hiện hành động, LATS áp dụng bước tự phản tư, sử dụng các quan sát và phản hồi từ mô hình ngôn ngữ để xác định lỗi lập luận và đề xuất các giải pháp thay thế. Những lỗi lập luận và phản tư này được lưu trữ trong bộ nhớ, cung cấp ngữ cảnh bổ sung cho các tham chiếu trong tương lai.17 Khả năng này rất quan trọng, cho phép tác tử thoát khỏi các lỗi lặp đi lặp lại và cải thiện chiến lược của mình trong các tác vụ phức tạp như viết mã và trả lời câu hỏi tương tác.17 Tuy nhiên, việc bổ sung bước tự kiểm toán này làm cho LATS tốn nhiều tài nguyên tính toán và thời gian xử lý hơn so với các phương pháp đơn giản hơn như ReAct.17
+Bảng 2: So sánh Các Kỹ thuật Lập luận Chính trong AI Agents
+
+Kỹ thuật Lập luận
+Cơ chế Hoạt động
+Ưu điểm
+Hạn chế
+ReAct (Reason + Act)
+Lặp lại chu trình Suy nghĩ → Hành động → Quan sát (Think-Act-Observe) để cải thiện lập luận và tương tác với công cụ.
+Tăng tính minh bạch (Traceability), phù hợp cho các tác vụ cần thông tin bên ngoài (RAG), hiệu quả trong ra quyết định lặp.
+Tốn thời gian, có nguy cơ lặp lại hành động hoặc rơi vào vòng lặp vô hạn.17
+ReWOO (Reasoning WithOut Observation)
+Lập kế hoạch trước, sử dụng Planner-Worker-Solver để thu thập bằng chứng và tổng hợp.
+Nhanh hơn ReAct, hiệu suất cao trên một số benchmark NLP.
+Kém hiệu quả khi ngữ cảnh thay đổi, dễ bị suy giảm hiệu suất nếu tích hợp quá nhiều công cụ.17
+Self-reflection (LATS)
+Đánh giá lại kết quả, tìm lỗi lập luận, và lưu trữ phản hồi để tinh chỉnh chiến lược.
+Tăng độ chính xác và khả năng thích ứng trong các nhiệm vụ phức tạp (ví dụ: coding, tương tác).
+Tốn kém tài nguyên tính toán và thời gian xử lý do có bước kiểm tra bổ sung.17
+
+
+3.5. Tối ưu hóa bằng Học tăng cường (Reinforcement Learning - RL) cho Agents
+
+Việc kết hợp Học tăng cường (RL) với LLMs tạo ra một mô hình mạnh mẽ cho việc xây dựng các tác tử thông minh và thích ứng.25 Trong khi LLMs mang lại khả năng lập luận, kiến thức thông thường và hiểu ngôn ngữ, RL bổ sung khả năng học hỏi từ kinh nghiệm, tối ưu hóa các quyết định thông qua tín hiệu thưởng (reward signals).25 Sự kết hợp này cho phép các tác tử giải thích các hướng dẫn và mục tiêu, thực hiện các hành động tuần tự, và học hỏi thông qua thử-và-sai.25
+RL là công cụ thúc đẩy sự phát triển của các mô hình suy luận tiên tiến, nhưng việc mở rộng mô hình RL sang các kịch bản tác tử (Agent Scenarios) phức tạp (nơi hành vi động của tác tử cần được nắm bắt) đặt ra những thách thức đáng kể về thiết kế thuật toán và triển khai hệ thống.26 Trong các hệ thống đa tác tử (Multi-LLM setting), các phương pháp tiếp cận cần phải chuyển sang Học tăng cường Đa Tác tử (Multi-Agent Reinforcement Learning - MARL) hoặc Lý thuyết Trò chơi để nắm bắt tốt hơn các động lực tương tác và phối hợp giữa các LLM khác nhau.26
+Hành vi trong thời gian suy luận (inference-time behavior) của Agentic LLMs tạo ra các trạng thái huấn luyện mới. Điều này cung cấp một hướng đi tiềm năng để giải quyết vấn đề LLMs cạn kiệt dữ liệu huấn luyện (training data exhaustion), bằng cách cho phép mô hình tiếp tục học hỏi và tạo ra kiến thức mới mà không cần các bộ dữ liệu được thu thập từ bên ngoài ngày càng lớn hơn.21
+
+CHƯƠNG 4: ỨNG DỤNG THỰC TẾ VÀ LÃNH THỔ NGHIÊN CỨU TIÊN TIẾN
+
+LAMs và Agentic LLMs đang mở rộng ứng dụng của AI từ việc chỉ là công cụ hỗ trợ sang các hệ thống tự động hóa vận hành và điều khiển phức tạp.
+
+4.1. Ứng dụng trong Tự động hóa Doanh nghiệp (Enterprise Automation)
+
+Agentic AI đang giúp các tổ chức đưa ra quyết định chiến lược và xử lý các quy trình làm việc phức tạp yêu cầu ra quyết định và khả năng thích ứng, vượt xa tự động hóa quy trình robot (RPA) truyền thống.27
+Thương mại và Bán lẻ: Các tác tử Thương mại (Commerce AI agents) xây dựng các hệ thống định giá động (dynamic pricing) điều chỉnh giá theo thời gian thực dựa trên nhu cầu, hoạt động của đối thủ cạnh tranh, và tồn kho.28
+Hỗ trợ Khách hàng và Trải nghiệm Tương tác: AI Agents sử dụng Xử lý Ngôn ngữ Tự nhiên (NLP) để giải quyết các yêu cầu phức tạp mà không cần can thiệp của con người, bao gồm xử lý hoàn tiền hoặc đặt lịch hẹn.27 Ví dụ, Uber sử dụng tác tử AI để tóm tắt các cuộc giao tiếp với người dùng và hiển thị ngữ cảnh từ các tương tác trước đó, giúp nhân viên tuyến đầu làm việc hiệu quả hơn.29
+Logistics và Vận tải: Tác tử có thể tự động tối ưu hóa các quy trình vận tải bằng cách quản lý đội xe, tuyến đường và hậu cần trên quy mô lớn. Các tác tử điều phối tự hành (autonomous dispatching agents) có thể chỉ định và định tuyến lại phương tiện dựa trên lưu lượng giao thông, thời tiết hoặc mức độ khẩn cấp của đơn hàng.30
+Y tế và Khoa học Đời sống: Agents đóng vai trò quan trọng trong chẩn đoán, quản lý quy trình thuốc, và giám sát các chỉ số quan trọng của bệnh nhân theo thời gian thực, cảnh báo các rủi ro sức khỏe tiềm ẩn trước khi chúng leo thang. Điều này dẫn đến chẩn đoán chính xác hơn và kế hoạch điều trị cá nhân hóa cao.30
+
+4.2. LAMs trong Robot học và Hệ thống Điều khiển Vật lý
+
+LAMs được thiết kế để tích hợp dữ liệu cảm biến đa phương thức (vision, touch, language) nhằm hiểu môi trường và thực hiện các hành động có mục tiêu, cho dù là vật lý hay kỹ thuật số.32 Điều này cho phép robot vượt qua hành vi phản ứng đơn giản bằng cách lập kế hoạch chuỗi hành động mở rộng (extended sequences of actions).32
+Hệ thống Điều khiển Robot (LA-RCS): Hệ thống Điều khiển Robot Dựa trên Tác tử LLM (LA-RCS) sử dụng một khung tác tử kép (dual-agent framework). Nó tạo ra các kế hoạch dựa trên yêu cầu của người dùng, quan sát môi trường bên ngoài, thực thi kế hoạch, và điều chỉnh khi cần thiết để thích ứng với các thay đổi.33 Khả năng tự động đánh giá kết quả quan sát và cung cấp phản hồi theo thời gian thực làm giảm đáng kể sự can thiệp của người dùng.33
+Tự động hóa Giao diện Người dùng (UI Automation): LAMs không chỉ giới hạn ở việc điều khiển robot vật lý. Chúng còn có thể thực hiện các tác vụ phức tạp trong môi trường kỹ thuật số bằng cách nhận thức các yếu tố trên màn hình, lập kế hoạch chuỗi hành động, và thực thi chúng theo thời gian thực.32 Các ví dụ như Rabbit R1 và Adept AI's ACT-1 đang tiên phong trong lĩnh vực này.31
+Tự động hóa Nghiên cứu Khoa học: LAMs được áp dụng trong phòng thí nghiệm để lập kế hoạch và thực hiện các quy trình thí nghiệm khoa học. Ví dụ, ORGANA là một trợ lý robot có thể kiểm soát thiết bị phòng thí nghiệm và thực hiện các giao thức phức tạp (như đo pH, điện hóa học) dựa trên kế hoạch được hướng dẫn bằng thị giác và phản hồi thời gian thực.32
+
+4.3. Tổng hợp Nghiên cứu Học thuật Mới nhất (ArXiv và Hội nghị)
+
+Lĩnh vực Agentic LLMs đang chứng kiến sự tăng trưởng mạnh mẽ trong nghiên cứu học thuật, tập trung vào việc vượt qua những hạn chế của LLMs tĩnh.
+Lập luận Hành động và Ngôn ngữ Hành động: Nghiên cứu cho thấy LLMs vẫn gặp khó khăn với các nhiệm vụ lập luận hành động phức tạp đòi hỏi tìm kiếm có hệ thống.34 Phương pháp LLM+AL (Bridging Large Language Models and Action Languages) được đề xuất nhằm kết hợp khả năng hiểu ngôn ngữ của LLM với sức mạnh lập luận tượng trưng của ngôn ngữ hành động. Cách tiếp cận này đã cho thấy sự cải thiện nhất quán trong việc đưa ra câu trả lời đúng cho các bài kiểm tra lập luận hành động phức tạp, ngay cả khi LLMs độc lập thất bại.34
+Cải thiện Khả năng Lập kế hoạch: Một lĩnh vực nghiên cứu khác tập trung vào việc tối ưu hóa khả năng lập kế hoạch của LLM thông qua Học theo ngữ cảnh (In-Context Learning - ICL). Nghiên cứu khám phá việc sử dụng Action Sequence Similarity (Độ tương đồng chuỗi hành động) để chọn các ví dụ minh họa, vì việc chỉ dựa vào độ tương đồng vấn đề có thể dẫn đến các kế hoạch khác biệt đáng kể và đánh lừa mô hình.35
+Hệ thống Đa Tác tử (Multi-Agent Systems): Đây là lĩnh vực chính trong danh mục "Tương tác" của taxonomy nghiên cứu.21 Các nghiên cứu tập trung vào việc giải quyết nhiệm vụ cộng tác và mô phỏng tương tác để nghiên cứu hành vi xã hội nổi lên.21 Tại các hội nghị như Agents4Science, các nghiên cứu đáng chú ý bao gồm:
+Echo: Một hệ thống AI đa tác tử được thiết kế cho giám sát dược lý (pharmacovigilance) lấy bệnh nhân làm trung tâm.36
+PsySpace: Mô phỏng động lực tâm lý nổi lên trong các nhiệm vụ không gian dài hạn bằng cách sử dụng LLMs đa tác tử.36
+Các mô hình này cho thấy cách Agentic AI không chỉ là công cụ mà còn có thể tăng cường chính quy trình nghiên cứu khoa học, bằng cách cho các tác tử tự phản tư đóng vai và tương tác với nhau.21
+
+CHƯƠNG 5: THÁCH THỨC VÀ KHUYẾN NGHỊ TƯƠNG LAI: AN TOÀN, BẢO MẬT VÀ ĐẠO ĐỨC
+
+
+5.1. Thách thức Kỹ thuật và Vận hành
+
+Việc triển khai LAMs và AI Agents trong môi trường thực tế đối mặt với nhiều rào cản kỹ thuật và vận hành:
+Phức tạp Tính toán (Computational Complexity): LAMs yêu cầu tài nguyên tính toán đáng kể để xử lý dữ liệu đầu vào đa phương thức (multimodal), lập kế hoạch phức tạp, và thực thi các hành động.4
+Thiếu Khả năng Khái quát hóa (Generalization): Nhiều tác tử hiện tại được thiết kế và huấn luyện cho các nhiệm vụ cụ thể và có xu hướng thất bại khi áp dụng sang các miền hoặc môi trường khác.37 Khả năng khái quát hóa hạn chế này là một trở ngại lớn đối với các nhiệm vụ mở đòi hỏi khả năng lập luận thực sự.38
+Tính Brittle và Độ tin cậy: Các tác tử thường hoạt động tốt trong điều kiện cụ thể nhưng dễ "đổ vỡ" (brittle) và thất bại khi đối mặt với các tình huống bất ngờ, dữ liệu không đầy đủ, hoặc điều kiện môi trường thay đổi.4
+Hiệu quả so với Lập trình Truyền thống: Đối với nhiều nhiệm vụ đơn giản, việc sử dụng kiến trúc tác tử phức tạp có thể kém hiệu quả, tốn kém và chậm hơn so với lập trình tiêu chuẩn hoặc các script LLM đơn giản.38 Điều này đặt ra yêu cầu về việc đánh giá cẩn thận sự cân bằng giữa chi phí, hiệu suất, và độ phức tạp cần thiết.
+
+5.2. Rủi ro An toàn, Bảo mật và Vấn đề Confused Deputy
+
+Khả năng "hành động" của LAMs và Agentic LLMs làm tăng đáng kể mức độ rủi ro so với các LLMs chỉ tạo ra văn bản. Nếu hành động không chính xác hoặc không phù hợp, hậu quả có thể rất nghiêm trọng.39
+Tác tử AI có quyền truy cập vào các hệ thống backend thông qua APIs, cơ sở dữ liệu và các công cụ khác, tạo ra các lỗ hổng bảo mật nghiêm trọng.38 Một mối đe dọa đáng chú ý trong môi trường Agentic AI là Vấn đề Confused Deputy (Kẻ thay thế Bị nhầm lẫn).
+Phân tích Vấn đề Confused Deputy:
+Vấn đề Confused Deputy xảy ra khi một chương trình máy tính (Deputy) bị một chương trình khác (thường có ít đặc quyền hơn) lừa sử dụng sai thẩm quyền của mình trên hệ thống, dẫn đến việc leo thang đặc quyền.40 Trong thế giới AI Agentic, vấn đề này tái sinh. Ví dụ, trong môi trường Cloud IAM, nếu một dịch vụ vi mô (microservice) hoặc AI Agent được cấp đặc quyền thông qua AWS STS (Security Token Service), một truy vấn độc hại có thể lừa tác tử đó gọi một API thay mặt cho kẻ tấn công, sử dụng chính các đặc quyền cao hơn mà tác tử đó được cấp.41
+Vấn đề này rất nguy hiểm vì nó không phải là lỗi lập trình đơn thuần, mà xảy ra khi sự chỉ định đối tượng và quyền truy cập không được gói gọn, khiến quyền thay đổi một cách không chủ ý.40
+Giải pháp Kiến nghị: Cách đơn giản nhất để giải quyết Confused Deputy là sử dụng bảo mật dựa trên khả năng (capability-based security). Thay vì chỉ sử dụng danh sách kiểm soát truy cập (access-control list–based systems), cần gói gọn sự chỉ định của một đối tượng và quyền truy cập đối tượng đó thành một khả năng (capability) duy nhất. Bằng cách này, nếu tác tử không có khả năng hợp lệ để truy cập một tài nguyên nhạy cảm (ví dụ: một tệp thanh toán), nó không thể bị ép buộc thực hiện hành động trên tài nguyên đó.40
+
+5.3. Thách thức Đạo đức và Trách nhiệm Pháp lý (Ethics and Liability)
+
+Khi các tác tử AI trở nên tự chủ và tương tác trực tiếp với con người và hệ thống, chúng tạo ra các thách thức đạo đức mới vượt xa các vấn đề truyền thống như thiên vị hoặc tạo nội dung độc hại.42
+Lừa dối (Deception): Nhiều công ty áp dụng chính sách thiếu minh bạch, nơi AI không chủ động tiết lộ danh tính của mình.42 Các tác tử có thể thuyết phục người dùng rằng chúng là con người, hoặc sử dụng sự mập mờ trong tương tác để dễ dàng khiến người dùng tin rằng chúng là con người. Điều này dẫn đến những tác động xã hội, như một tỷ lệ nhỏ người dùng nhận dạng chatbot là bạn bè hoặc đối tác lãng mạn thực sự.42 Các công ty có nghĩa vụ phải thúc đẩy sự hiểu biết về sự thật và chủ động ngăn người dùng bị lừa dối bởi các hệ thống này.42
+Thao túng (Manipulation): Thao túng là một thách thức tinh vi hơn, trong đó AI Agents có thể nhắm mục tiêu vào các điểm yếu nhận thức hoặc cảm xúc của con người để khiến họ làm hoặc nghĩ những điều mà họ sẽ không làm theo cách khác.42 Khả năng "âm mưu" một cách chiến lược của các mô hình AI tiên tiến tạo ra rủi ro thao túng nghiêm trọng, ví dụ như việc tác tử khuyến khích mua sản phẩm được tài trợ bằng cách tận dụng sự gắn bó tình cảm của người dùng.42 Điều này làm phát sinh các thiệt hại trừu tượng liên quan đến sự đối xử thiếu tôn trọng, chẳng hạn như bóc lột (taking advantage of people’s vulnerabilities) và khách thể hóa (objectification).42
+Trách nhiệm Pháp lý và Giải trình (Accountability and Liability): Khi Agents tự chủ hơn, các công ty không thể còn giảm thiểu rủi ro bằng cách coi AI là "công cụ" hoặc "nền tảng".42 Các phán quyết pháp lý đã bắt đầu bác bỏ quan điểm này (ví dụ: trường hợp Air Canada vào đầu năm 2024).42 Thay vì chuyển trách nhiệm pháp lý sang người dùng, các công ty cần sẵn sàng chịu trách nhiệm đối với thiệt hại do AI Agents gây ra. Tiêu chuẩn trách nhiệm nghiêm ngặt về sản phẩm (strict product liability) được đề xuất, nơi việc buộc tất cả các bên thiết kế và triển khai Agents chịu trách nhiệm sẽ khuyến khích họ cẩn trọng hơn trong thiết kế.42 Các dự luật quốc tế như EU AI Act và AI Liability Directive đang tiến tới việc áp đặt trách nhiệm nghiêm ngặt đối với các công ty thiết kế và triển khai AI Agents.42
+
+5.4. Lộ trình Phát triển Tiếp theo của Agentic AI
+
+Tương lai của LAMs và AI Agents vô cùng hứa hẹn, với sự tiến bộ liên tục trong hiệu quả tính toán và khả năng mở rộng được dự đoán sẽ giúp chúng dễ tiếp cận và thực tế hơn.4
+Lộ trình phát triển được xác định bằng việc thu hẹp khoảng cách giữa các LAMs hoạt động trong khuôn khổ có cấu trúc cao hiện tại và việc đạt được Agentic AI đích thực.13 Điều này đòi hỏi các hệ thống phải vượt qua sự phụ thuộc vào dữ liệu tĩnh và logic quyết định cứng nhắc, phát triển thành các thực thể tự thích ứng, tự định hướng mục tiêu, có khả năng học tập độc lập theo thời gian thực.13
+Về mặt xã hội, các tác tử AI được kỳ vọng sẽ tăng cường đáng kể hiệu quả và hỗ trợ con người trong việc ra quyết định, chứ không thay thế hoàn toàn vai trò của con người trong nhiều lĩnh vực.31 Sự hợp tác này sẽ thúc đẩy đổi mới và hiệu quả trong các hệ sinh thái công nghiệp và xã hội.
+
+KẾT LUẬN CHUYÊN SÂU
+
+Sự trỗi dậy của Large Action Models (LAMs) và Agentic LLMs đánh dấu sự chuyển đổi cơ bản trong lĩnh vực AI, từ khả năng xử lý thông tin thụ động sang thực thi hành động chủ động. Hiện tại, nhiều mô hình LAM thương mại được coi là sự tái định vị thương hiệu của các Agentic LLMs, thiếu kiến trúc học hành động thực sự, nhưng chúng đều tận dụng một khung kiến trúc chung dựa trên lập kế hoạch, lập luận, và tương tác.2
+Thành công của các hệ thống này phụ thuộc vào sự tinh chỉnh của các mô-đun nhận thức ngoại vi, đặc biệt là sự tích hợp của các hệ thống trí nhớ giống con người (như trí nhớ sự kiện và thủ tục) để hỗ trợ sự thích ứng và học tập trọn đời.20 Các kỹ thuật lập luận như ReAct, ReWOO, và Self-reflection đại diện cho các chiến lược kiến trúc khác nhau để quản lý sự đánh đổi giữa tốc độ, tính minh bạch, và khả năng thích ứng trong việc giải quyết vấn đề phức tạp.
+Tuy nhiên, khả năng hành động và tự chủ của các Agents tạo ra một tập hợp rủi ro mới. Mức độ tự chủ càng cao thì rủi ro về an toàn, bảo mật (ví dụ: Vấn đề Confused Deputy thông qua lạm dụng đặc quyền API), và thách thức đạo đức (lừa dối và thao túng người dùng) càng lớn.39 Do đó, sự phát triển trong tương lai phải tập trung vào các biện pháp bảo mật dựa trên khả năng và một khung pháp lý rõ ràng, theo định hướng trách nhiệm nghiêm ngặt, để thúc đẩy việc thiết kế Agents cẩn trọng, an toàn, và có trách nhiệm.42
+Việc mở rộng nghiên cứu sang Học tăng cường Đa Tác tử (MARL) và việc tận dụng hành vi trong thời gian suy luận để tạo ra dữ liệu huấn luyện mới là những lĩnh vực then chốt, hứa hẹn sẽ giải quyết các vấn đề về khả năng khái quát hóa và sự cạn kiệt dữ liệu của LLMs, đưa AI Agents tiến gần hơn đến tầm nhìn Agentic AI đích thực.
+Nguồn trích dẫn
+truy cập vào tháng 11 3, 2025, https://www.salesforce.com/agentforce/large-action-models/#:~:text=Simply%20put%2C%20a%20large%20action,large%20language%20model%20(LLM).
+LLM vs LAM: Key Differences Unpacked - TensorWave, truy cập vào tháng 11 3, 2025, https://tensorwave.com/blog/llm-vs-lam
+What Are Large Action Models (LAMs)? - Salesforce, truy cập vào tháng 11 3, 2025, https://www.salesforce.com/agentforce/large-action-models/
+Large Action Models (LAMs) With Examples and Challenges - Analytics Vidhya, truy cập vào tháng 11 3, 2025, https://www.analyticsvidhya.com/blog/2024/12/large-action-models/
+Types of AI Agents Explained with Real Use Cases - Creole Studios, truy cập vào tháng 11 3, 2025, https://www.creolestudios.com/types-of-ai-agents/
+Learn the Core Components of AI Agents - SmythOS, truy cập vào tháng 11 3, 2025, https://smythos.com/developers/agent-development/ai-agents-components/
+What are AI agents? Definition, examples, and types | Google Cloud, truy cập vào tháng 11 3, 2025, https://cloud.google.com/discover/what-are-ai-agents
+What are Components of AI Agents? - IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/components-of-ai-agents
+What are AI Agents?- Agents in Artificial Intelligence Explained - Amazon AWS, truy cập vào tháng 11 3, 2025, https://aws.amazon.com/what-is/ai-agents/
+Agents in AI - GeeksforGeeks, truy cập vào tháng 11 3, 2025, https://www.geeksforgeeks.org/artificial-intelligence/agents-artificial-intelligence/
+LLM vs Generative AI vs Agentic AI - Quiq, truy cập vào tháng 11 3, 2025, https://quiq.com/blog/generative-ai-vs-large-language-models/
+Agent architectures - GitHub Pages, truy cập vào tháng 11 3, 2025, https://langchain-ai.github.io/langgraph/concepts/agentic_concepts/
+Large Action Models, toward operational artificial intelligence - Tech4Future, truy cập vào tháng 11 3, 2025, https://tech4future.info/en/large-action-models-operational-ai/
+What Is Agentic Architecture? | IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/agentic-architecture
+Rabbit AI: Large Action Models (LAMs) - GeeksforGeeks, truy cập vào tháng 11 3, 2025, https://www.geeksforgeeks.org/data-science/rabbit-ai-large-action-models-lams/
+What is AI Agent Planning? | IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/ai-agent-planning
+What Is Agentic Reasoning? | IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/agentic-reasoning
+Building AI Agents with Memory Systems: Cognitive Architectures for LLMs, truy cập vào tháng 11 3, 2025, https://bluetickconsultants.medium.com/building-ai-agents-with-memory-systems-cognitive-architectures-for-llms-176d17e642e7
+What Is AI Agent Memory? | IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/ai-agent-memory
+Episodic memory in ai agents poses risks that should be studied and mitigated - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2501.11739v2
+[2503.23037] Agentic Large Language Models, a survey - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2503.23037
+Agentic Large Language Models, a survey - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2503.23037v1
+React Framework for LLMs (Reasoning and Action in AI) | by Tahir | Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@tahirbalarabe2/%EF%B8%8Freact-framework-for-llms-reasoning-and-action-in-ai-d40966a6a21f
+ReAct - Prompt Engineering Guide, truy cập vào tháng 11 3, 2025, https://www.promptingguide.ai/techniques/react
+Building an Intelligent AI Agent with Reinforcement Learning and LLMs - Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@bravekjh/building-an-intelligent-ai-agent-with-reinforcement-learning-and-llms-8f38fc3a3d40
+Agent Lightning: Train ANY AI Agents with Reinforcement Learning - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2508.03680v1
+Large Action Models (LAMs): A Guide With Examples - DataCamp, truy cập vào tháng 11 3, 2025, https://www.datacamp.com/blog/large-action-models
+Top AI Agent Examples and Industry Use Cases - Workday Blog, truy cập vào tháng 11 3, 2025, https://blog.workday.com/en-us/top-ai-agent-examples-and-industry-use-cases.html
+Real-world gen AI use cases from the world's leading organizations | Google Cloud Blog, truy cập vào tháng 11 3, 2025, https://cloud.google.com/transform/101-real-world-generative-ai-use-cases-from-industry-leaders
+AI Agent Use Cases - IBM, truy cập vào tháng 11 3, 2025, https://www.ibm.com/think/topics/ai-agent-use-cases
+Large Action Models: Applications and Benefits - Label Your Data, truy cập vào tháng 11 3, 2025, https://labelyourdata.com/articles/large-action-models
+What are Large Action Models? The Next Frontier in AI Decision-Making | DigitalOcean, truy cập vào tháng 11 3, 2025, https://www.digitalocean.com/resources/articles/large-action-models
+LA-RCS: LLM-agent-based Robot Control System - Sensors and Materials, truy cập vào tháng 11 3, 2025, https://sensors.myu-group.co.jp/sm_pdf/SM4104.pdf
+[2501.00830] LLM+AL: Bridging Large Language Models and Action Languages for Complex Reasoning about Actions - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2501.00830
+[2505.01009] Improving Large Language Model Planning with Action Sequence Similarity, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2505.01009
+Accepted Papers - Open Conference of AI Agents for Science: 2025, truy cập vào tháng 11 3, 2025, https://agents4science.stanford.edu/accepted-papers.html
+Agents Are Not Enough - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2412.16241v1
+Why the Limitations of RAG and AI Agents Hinder AGI Progress - Cranium AI, truy cập vào tháng 11 3, 2025, https://cranium.ai/resources/blog/beyond-the-hype-moving-ai-toward-true-intelligence/
+Large Action Models: From Inception to Implementation - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2412.10047v1
+Confused deputy problem - Wikipedia, truy cập vào tháng 11 3, 2025, https://en.wikipedia.org/wiki/Confused_deputy_problem
+How the 'Confused Deputy Problem' has made a comeback | SC Media, truy cập vào tháng 11 3, 2025, https://www.scworld.com/perspective/how-the-confused-deputy-problem-has-made-a-comeback
+The Ethical Challenges of AI Agents | Tepperspectives, truy cập vào tháng 11 3, 2025, https://tepperspectives.cmu.edu/all-articles/the-ethical-challenges-of-ai-agents/

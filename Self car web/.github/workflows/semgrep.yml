@@ -1,0 +1,37 @@
+name: Semgrep SAST
+
+on:
+  pull_request:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: returntocorp/semgrep-action@v1
+        with:
+          config: ".semgrep/semgrep.yaml"
+          generateSarif: true
+          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+          auditOn: pull_request
+          sarifFile: semgrep.sarif
+          baselineRef: origin/main
+      - name: Enforce High/Critical findings
+        run: |
+          jq -r '.runs[].results[] | select(.level=="error" or .properties.severity=="ERROR" or .properties.severity=="HIGH" or .properties.severity=="CRITICAL") | 1' semgrep.sarif | grep -q 1 && {
+            echo "High/Critical findings detected"; exit 1; } || echo "No high/critical findings"
+      - name: Upload SARIF
+        if: ${{ always() }}
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
+

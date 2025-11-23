@@ -1,0 +1,429 @@
+---
+alwaysApply: true
+---
+
+# 🔧 Microservices Documentation
+
+## 🎯 Overview
+
+Folder này chứa tài liệu về tất cả các microservices trong hệ thống. Mỗi service là một ứng dụng độc lập với database riêng, giao tiếp qua gRPC và Event Bus.
+
+## 📁 Structure
+
+```
+services/
+├── README.mdc (this file)              # Overview & Navigation
+├── 04-2-services-overview.md           # Services Overview
+├── 05-users-service.md                 # Users Service
+├── 06-stories-service.md               # Stories Service
+├── 07-comments-service.md              # Comments Service
+├── 08-search-service.md                # Search Service
+├── 09-ai-service.md                    # AI Service
+├── 10-notification-service.md          # Notification Service
+├── 11-websocket-service.md             # WebSocket Service
+├── 12-social-service.md                # Social Service
+├── 13-community-service.md              # Community Service
+└── 14-monetization-service.md           # Monetization Service
+```
+
+## 🏗️ Standard Service Code Structure
+
+Tất cả services tuân theo cấu trúc NestJS module-based pattern:
+
+```
+packages/2-services/{service-name}/
+├── src/
+│   ├── main.ts                         # Service entry point (gRPC server)
+│   ├── app.module.ts                   # Root module (imports all feature modules)
+│   │
+│   ├── 📁 modules/                     # Feature modules (domain-driven)
+│   │   ├── 📁 {feature-name}/         # Each feature = one module
+│   │   │   ├── {feature}.module.ts    # Module definition
+│   │   │   ├── {feature}.service.ts   # Business logic
+│   │   │   ├── {feature}.controller.ts # gRPC controller (optional, location varies)
+│   │   │   └── dto/                   # Data Transfer Objects (optional)
+│   │   │       └── *.dto.ts           # DTOs (import from 7-shared, not hard-coded)
+│   │   │
+│   │   └── ...                        # Other feature modules
+│   │
+│   ├── 📁 controllers/                 # gRPC Controllers (optional, some services)
+│   │   └── {service}.controller.ts    # Main gRPC controller (community, monetization)
+│   │
+│   ├── 📁 grpc/                       # gRPC Controllers (optional, some services)
+│   │   └── {service}.controller.ts    # gRPC controller (search-service)
+│   │
+│   ├── 📁 common/                     # Shared utilities
+│   │   ├── database/                  # Database module (most services)
+│   │   │   ├── database.module.ts
+│   │   │   └── database.service.ts
+│   │   ├── queue/                     # Event Bus queue (services with async communication)
+│   │   │   ├── queue.module.ts
+│   │   │   └── {service}-events.service.ts
+│   │   └── cache/                     # Redis cache (services with caching)
+│   │       └── cache.module.ts
+│   │
+│   ├── 📁 workers/                    # Event Bus workers (optional, some services)
+│   │   ├── {feature}.worker.ts        # Worker processes
+│   │   └── {feature}.consumer.ts      # Event consumers
+│   │
+│   ├── 📁 gateways/                   # WebSocket gateways (websocket-service only)
+│   │   └── websocket.gateway.ts
+│   │
+│   ├── 📁 meilisearch/                # MeiliSearch client (search-service only)
+│   │   └── meilisearch.service.ts
+│   │
+│   └── 📁 config/                     # Configuration
+│       └── configuration.ts           # App, database, gRPC configs
+│
+├── database/                           # Prisma database layer (optional, some services)
+│   ├── schema.prisma                  # Prisma schema (all entities)
+│   └── migrations/                    # Database migrations
+│
+├── package.json
+├── tsconfig.json
+├── nest-cli.json
+└── README.md
+```
+
+**Note:** Prisma schema location varies:
+- Some services: `database/schema.prisma` (at root)
+- Some services: `src/database/schema.prisma` (in src)
+- Database access is always through `src/common/database/database.service.ts` (PrismaService)
+
+### Controller Location Patterns
+
+Controllers can be located in different places depending on the service:
+
+- **In modules**: `src/modules/{feature}/{feature}.controller.ts` (users-service, stories-service, ai-service)
+- **In controllers folder**: `src/controllers/{service}.controller.ts` (community-service, monetization-service)
+- **In grpc folder**: `src/grpc/{service}.controller.ts` (search-service)
+
+### Common Folder Patterns
+
+- **`common/database/`**: Database module with Prisma (most services)
+- **`common/queue/`**: Event Bus queue module (stories, search, websocket, notification services)
+- **`common/cache/`**: Redis cache module (stories-service)
+
+### Workers Folder
+
+Services that consume events from Event Bus have a `workers/` folder:
+- **search-service**: `workers/stories.consumer.ts`, `workers/social.consumer.ts`
+- **websocket-service**: `workers/events.consumer.ts`, `workers/websocket.worker.ts`
+- **notification-service**: `workers/comment-notification.worker.ts`, `workers/notification.worker.ts`
+
+## 📋 Services Overview
+
+### Core Services
+
+- **[04-2-services-overview.md](./04-2-services-overview.md)** - Services Overview
+  - Goal và Key Tech của tất cả services
+  - Communication patterns (gRPC + Event Bus)
+  - Services overview chung
+
+- **[05-users-service.md](./05-users-service.md)** - Users Service (Port 3001) ⭐
+  - **Modules:**
+    - `auth/` - Authentication (JWT)
+    - `users/` - Users CRUD
+    - `reading-preferences/` - Reading Preferences
+    - `desktop-preferences/` - Desktop UI preferences (tab state, layout, focus mode)
+    - `library/` - Library Management (CRUD, Sync, Download, Storage)
+    - `bookshelf/` - Bookshelf Organization
+    - `library-auto-organization/` - Auto-organization by author/series
+    - `library-advanced-organization/` - Tags, Filtered Views
+    - `wishlist/` - Wishlist
+    - `reading-progress/` - Reading Progress Tracking & Sync
+    - `user-behavior/` - User Behavior Tracking (for recommendations)
+    - `bookmarks/` - Bookmarks
+    - `annotations/` - Annotations (Enhanced - Annotation Suite)
+    - **⭐ `gamification/` - F2P Gamification System (Prominent Feature #4)**
+      - Daily Missions (check-in, reading, voting, ads)
+      - Power Stones (daily free votes)
+      - Fast Passes (unlock 1 chapter, expires in 7 days)
+      - Points (soft currency)
+  - **Database:** PostgreSQL (User, Profile, Library, Bookshelf, Tag, ReadingProgress, Bookmark, Annotation, **DailyMission, PowerStone, FastPass, GamificationReward**)
+  - **gRPC Controller:** `users.controller.ts` (implements `users.proto`)
+
+- **[06-stories-service.md](./06-stories-service.md)** - Stories Service (Port 3002)
+  - Stories, Chapters, Genres
+  - Content storage (S3 + CloudFront CDN)
+  - Story events (story.created, story.updated)
+  - **Discovery & Engagement:**
+    - Ranking Charts (Monthly Votes, Sales, Recommendations, Popularity)
+    - Editor's Picks (Manually curated content)
+    - Genre Browsing (Fantasy, Wuxia, Urban, Historical, Game, etc.)
+    - Hybrid Discovery Model (Pull, Push, Social Proof)
+
+- **[07-comments-service.md](./07-comments-service.md)** - Comments Service (Port 3003)
+  - **Hierarchical Community Interaction System:**
+    - **Micro Level:** Paragraph Comments (Duanping) - Immediate reactions
+    - **Meso Level:** Chapter-End Comments (本章说) - Analysis & predictions
+    - **Macro Level:** Book Reviews & Discussion Forums - Overall critiques
+    - **Platform Interactions:** Polls & Quizzes - Engagement tools
+  - Comments, Ratings, Reviews
+  - Comment events (comment.created, comment.replied, review.created, poll.created)
+
+- **[08-search-service.md](./08-search-service.md)** - Search Service (Port 3004)
+  - MeiliSearch integration
+  - Story indexing
+  - Post indexing
+  - Search queries
+  - **Note:** No PostgreSQL, uses MeiliSearch only
+
+- **[09-ai-service.md](./09-ai-service.md)** - AI Service (Port 3005) ⭐
+  - **⭐ Emotional AI Narration (Prominent Feature #5):**
+    - High-quality AI voices with emotional intelligence
+    - Emotion control, voice styles, contextual awareness
+    - Sync with text highlighting during playback
+    - Market disruption: Transforms entire library into audiobooks overnight
+  - Text-to-Speech (TTS) - Google Cloud TTS, Azure, AWS Polly, ElevenLabs
+  - Translation - Google Translate, DeepL (sentence-level, parallel translation)
+  - Dictionary - Word lookup, definitions, pinyin (with ABBYY integration)
+  - Summarization - Story/chapter summaries, annotation summaries (Gemini)
+  - Recommendations - AI-powered story recommendations (mood-based, natural language search)
+  - **Note:** No database, stateless service
+
+- **[10-notification-service.md](./10-notification-service.md)** - Notification Service (Port 3006)
+  - Email (Nodemailer)
+  - Push (Firebase Admin)
+  - SMS (Twilio)
+  - Event listeners (user.registered, comment.replied, user.followed, etc.)
+  - **Note:** No database, listens to Event Bus only
+
+- **[11-websocket-service.md](./11-websocket-service.md)** - WebSocket Service (Port 3007)
+  - Live comments
+  - Real-time notifications
+  - Social feed updates
+  - Socket.IO integration
+  - **Note:** No database, real-time communication only
+
+- **[12-social-service.md](./12-social-service.md)** - Social Service (Port 3008)
+  - Posts, Groups, Follows
+  - Feed aggregation
+  - Social events (post.created, user.followed, post.liked)
+
+- **[13-community-service.md](./13-community-service.md)** ⭐ - Community Service (Port 3009)
+  - **⭐ Community Interactions (Hierarchical System):**
+    - **⭐ Micro Level: Paragraph Comments (Duanping) - Prominent Feature #3**
+      - Comments anchored to specific paragraphs
+      - Real-time bubble indicators
+      - Quick reactions, author interaction
+      - Transforms solitary reading into real-time social experience
+    - Meso Level: Chapter-End Comments (本章说)
+    - Macro Level: Book Reviews & Discussion Forums
+    - Platform Interactions: Polls & Quizzes
+  - **Fan Economy:**
+    - Tipping System (打赏)
+    - Fan Rankings (粉丝榜)
+    - Gamification System
+    - Monthly Votes System
+    - Author-Fan Interactions
+
+- **[14-monetization-service.md](./14-monetization-service.md)** ⭐ - Monetization Service (Port 3010)
+  - **⭐ Pay-Per-Chapter (PPC) Business Model (Prominent Feature #2):**
+    - Free chapters (80-130) → Paywall → Paid chapters
+    - Character-based pricing (3-5 points per 1000 characters)
+    - Virtual currency (1 point = 1/100 CNY)
+    - Psychological pricing - reduces "pain of paying"
+  - **⭐ Privilege Model (Prominent Feature #1):**
+    - Book-specific fee (NOT platform-wide)
+    - Resets monthly (1st of month)
+    - Grants RIGHT to purchase advanced chapters (double monetization)
+    - Targets whales (top 1-5% of fans)
+  - **Core Modules:**
+    - Virtual Currency System
+    - Pricing Engine
+    - Paywall System
+    - Payment Processing (idempotent - Rule #12)
+    - Membership (Coin Packages)
+    - Privilege (Advanced Chapters)
+    - Subscriptions (All-You-Can-Read)
+    - VIP Levels (Loyalty Program)
+
+## 🔑 Key Features
+
+### Communication
+- **gRPC**: Synchronous communication (Gateway → Services)
+  - Controllers implement proto files from `7-shared`
+  - Type-safe contracts
+- **Event Bus (BullMQ)**: Asynchronous communication (Service → Service)
+  - Services emit events, other services listen
+  - Decoupled architecture
+
+### Database
+- **Rule #1**: Mỗi service có database riêng (PostgreSQL)
+- Services KHÔNG BAO GIỜ truy cập database của service khác
+- Prisma ORM cho database access
+- **Prisma schema location** (varies by service):
+  - `database/schema.prisma` (at service root level) - common pattern
+  - `src/database/schema.prisma` (in src folder) - some services
+- **Migrations**: `database/migrations/` or `src/database/migrations/`
+- **Database module**: `src/common/database/` (provides PrismaService/DatabaseService)
+  - All services access database through this common module
+  - Provides type-safe Prisma client access
+
+### Code Organization Patterns
+
+**Module Pattern:**
+```typescript
+// src/modules/library/library.module.ts
+// Each feature = one module
+@Module({
+  imports: [DatabaseModule], // Common database module
+  providers: [LibraryService],
+  controllers: [LibraryController], // Optional: gRPC controller in module
+  exports: [LibraryService],
+})
+export class LibraryModule {}
+```
+
+**Service Pattern:**
+```typescript
+// src/modules/library/library.service.ts
+@Injectable()
+export class LibraryService {
+  constructor(private databaseService: DatabaseService) {}
+  
+  // Business logic here
+  async addToLibrary(dto: AddToLibraryDto) {
+    // Import DTO from 7-shared, not hard-code
+    // Use database service (Prisma) for data access
+    return this.databaseService.library.create({ data: dto });
+  }
+}
+```
+
+**gRPC Controller Pattern (in module):**
+```typescript
+// src/modules/users/users.controller.ts
+@Controller()
+export class UsersController implements UsersServiceController {
+  constructor(private libraryService: LibraryService) {}
+  
+  @GrpcMethod('UsersService', 'AddToLibrary')
+  async addToLibrary(data: AddToLibraryDto) {
+    // Call service, not direct DB access
+    return this.libraryService.addToLibrary(data);
+  }
+}
+```
+
+**gRPC Controller Pattern (separate folder):**
+```typescript
+// src/controllers/community.controller.ts
+@Controller()
+export class CommunityController implements CommunityServiceController {
+  constructor(
+    private paragraphCommentsService: ParagraphCommentsService,
+    private fanEconomyService: FanEconomyService,
+  ) {}
+  
+  @GrpcMethod('CommunityService', 'CreateParagraphComment')
+  async createParagraphComment(data: CreateParagraphCommentDto) {
+    return this.paragraphCommentsService.create(data);
+  }
+}
+```
+
+**App Module Pattern:**
+```typescript
+// src/app.module.ts
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env', '.env.local'],
+      load: [appConfig, databaseConfig],
+    }),
+    DatabaseModule, // Common database module
+    QueueModule, // Event Bus (if needed)
+    CacheModule, // Redis cache (if needed)
+    // Feature modules
+    LibraryModule,
+    BookshelfModule,
+    // ... other modules
+  ],
+  controllers: [UsersController], // Root-level controllers (if any)
+  providers: [UsersService], // Root-level services (if any)
+})
+export class AppModule {}
+```
+
+### Technology Stack
+- **Framework**: NestJS
+- **ORM**: Prisma (PostgreSQL)
+- **Job Queue**: BullMQ (for Event Bus)
+- **Search**: MeiliSearch (search-service only)
+- **Storage**: S3 + CloudFront (stories-service only)
+
+## ⭐ Prominent Features (Strategic Impact)
+
+These five features have disproportionate impact on revenue, engagement, and technological advantage:
+
+1. **Privilege Model** ([Monetization Service](./14-monetization-service.md)) - Revenue Engine
+   - Dual monetization targeting top 1-5% of fans
+   - Book-specific advanced chapters with monthly reset
+
+2. **Pay-Per-Chapter (PPC)** ([Monetization Service](./14-monetization-service.md)) - Core Revenue Engine
+   - Psychological pricing through virtual currency
+   - Micropayments reduce "pain of paying"
+
+3. **Paragraph-Level Comments** ([Community Service](./13-community-service.md)) - Engagement Engine
+   - "Twitch Chat for books" - real-time social experience
+   - Transforms solitary reading into community experience
+
+4. **Gamified Missions** ([Users Service](./05-users-service.md)) - F2P Retention Engine
+   - Keeps 99% of free users engaged
+   - Daily missions, Power Stones, Fast Passes
+
+5. **AI Narration** ([AI Service](./09-ai-service.md)) - Technology Disruptor
+   - Emotional AI voices with contextual awareness
+   - Transforms entire library into audiobooks overnight
+
+See [Overview - Prominent Features](../overview/01-overview.mdc#-prominent-features-strategic-impact) for detailed analysis.
+
+## 🗺️ Quick Navigation
+
+### By Service Type
+- **Core Services**: Users ⭐, Stories, Comments, Search, AI ⭐, Notification, WebSocket, Social
+- **Feature Services**: Community ⭐ (13), Monetization ⭐ (14)
+
+### By Feature
+- **Content & Reading**: [Users Service](./05-users-service.md) ⭐, [Stories Service](./06-stories-service.md)
+- **Discovery**: [Stories Service](./06-stories-service.md), [Search Service](./08-search-service.md)
+- **Community**: [Comments Service](./07-comments-service.md), [Community Service](./13-community-service.md) ⭐
+- **Monetization**: [Monetization Service](./14-monetization-service.md) ⭐
+- **AI & Intelligence**: [AI Service](./09-ai-service.md) ⭐
+- **Communication**: [Notification Service](./10-notification-service.md), [WebSocket Service](./11-websocket-service.md)
+
+## ⚠️ Important Rules
+
+1. **Rule #1**: Services NEVER touch each other's databases
+   - ❌ DON'T: `users-service` SELECT from `stories` table
+   - ✅ DO: `users-service` calls `stories-service` via gRPC
+
+2. **Rule #2**: Use the right communication channel
+   - **Sync (immediate)**: gRPC
+   - **Async (decoupled)**: Event Bus
+
+3. **Rule #3**: ALL contracts defined in 7-shared first
+   - ❌ DON'T: Hard-code DTOs in services
+   - ✅ DO: Define in 7-shared, import everywhere
+
+4. **DTOs from Shared**: All DTOs must be imported from `@shared/validation`, never hard-coded in services
+
+5. **Proto Files**: All proto files defined in `7-shared/src/proto/`, services implement them
+
+## 🔗 Related Documentation
+
+- [Overview](../overview/README.mdc) - Architecture overview
+- [Gateway](../gateway/README.mdc) - Gateway gọi các services này
+- [Clients](../clients/README.mdc) - Client applications sử dụng services
+- [Shared](../shared/README.mdc) - Shared contracts (proto files, DTOs)
+- [Feature Sync Map](../FEATURE_SYNC_MAP.md) - ⭐ Feature synchronization across all layers
+- [Main README](../README.md) - Main structure documentation
+
+---
+
+**💡 Tip**: Mỗi service là một ứng dụng độc lập. Nếu bạn cần data từ service khác, gọi qua gRPC hoặc Event Bus, KHÔNG truy cập database trực tiếp!
+
+**🔄 Synchronization**: Xem [Feature Sync Map](../FEATURE_SYNC_MAP.md) để đảm bảo features được đồng bộ giữa Services, Shared, Gateway, và Clients.

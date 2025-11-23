@@ -1,0 +1,48 @@
+name: DAST - ZAP Automation (Staging)
+
+on:
+  schedule:
+    - cron: '0 4 * * 1' # weekly, Mondays 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zap-automation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run ZAP Automation Plan
+        uses: zaproxy/action-automation@v0.7.0
+        with:
+          plan: security/dast/zap.yaml
+        env:
+          TARGET_BASE_URL: ${{ secrets.DAST_TARGET_BASE_URL }}
+          OPENAPI_URL: ${{ secrets.DAST_OPENAPI_URL }}
+          DAST_JWT: ${{ secrets.DAST_JWT }}
+
+      - name: Upload ZAP Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: |
+            security/dast/reports/**
+          if-no-files-found: ignore
+
+      - name: Slack notify on High/Critical (optional)
+        if: ${{ env.SLACK_WEBHOOK_URL != '' }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.DAST_SLACK_WEBHOOK_URL }}
+        run: |
+          set -e
+          FILE=security/dast/reports/zap-report.json
+          if [ -f "$FILE" ]; then
+            COUNT=$(jq '[.site[].alerts[] | select(.risk | IN("High","Informational","Low","Medium","High","Critical")) | select(.risk=="High" or .risk=="Critical")] | length' "$FILE")
+            if [ "$COUNT" -gt 0 ]; then
+              curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"ZAP DAST found $COUNT High/Critical alerts on staging. See artifacts.\"}" "$SLACK_WEBHOOK_URL"
+            fi
+          fi
+

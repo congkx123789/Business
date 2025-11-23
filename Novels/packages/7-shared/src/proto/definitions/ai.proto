@@ -1,0 +1,296 @@
+syntax = "proto3";
+
+package ai;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service AIService {
+  // TTS & Narration
+  rpc SynthesizeSpeech(SynthesizeSpeechRequest) returns (SynthesizeSpeechResponse);
+  rpc SynthesizeEmotionalSpeech(SynthesizeEmotionalSpeechRequest) returns (SynthesizeSpeechResponse);
+  rpc GetTTSWithSync(GetTTSWithSyncRequest) returns (TTSSyncData);
+  rpc GetHumanNarration(GetHumanNarrationRequest) returns (NarrationResponse);
+  rpc GetNarrationOptions(GetNarrationOptionsRequest) returns (NarrationOptionsResponse);
+
+  // Translation & Dictionary
+  rpc TranslateText(TranslateTextRequest) returns (TranslateTextResponse);
+  rpc TranslateChapter(TranslateChapterRequest) returns (TranslateTextResponse);
+  rpc TranslateSentence(TranslateSentenceRequest) returns (TranslateTextResponse);
+  rpc GetParallelTranslation(GetParallelTranslationRequest) returns (ParallelTranslation);
+  rpc LookupWord(LookupWordRequest) returns (DictionaryEntry);
+  rpc TouchTranslate(TouchTranslateRequest) returns (DictionaryEntry);
+  rpc GetPronunciation(GetPronunciationRequest) returns (PronunciationResponse);
+
+  // Summaries & Annotation Intelligence
+  rpc SummarizeAnnotations(SummarizeAnnotationsRequest) returns (AnnotationSummary);
+  rpc GetAnnotationSummary(GetAnnotationSummaryRequest) returns (AnnotationSummary);
+
+  // Recommendations
+  rpc GetRecommendations(GetRecommendationsRequest) returns (GetRecommendationsResponse);
+  rpc GetMoodBasedRecommendations(GetMoodBasedRecommendationsRequest) returns (GetRecommendationsResponse);
+  rpc SearchByNaturalLanguage(SearchByNaturalLanguageRequest) returns (GetRecommendationsResponse);
+  rpc ExploreNewTerritories(ExploreNewTerritoriesRequest) returns (GetRecommendationsResponse);
+  rpc GetSimilarStories(GetSimilarStoriesRequest) returns (GetSimilarStoriesResponse);
+  rpc GetTrendingStories(GetTrendingStoriesRequest) returns (GetTrendingStoriesResponse);
+  rpc ExplainRecommendation(ExplainRecommendationRequest) returns (ExplainRecommendationResponse);
+}
+
+// ===== TTS =====
+message SynthesizeSpeechRequest {
+  string text = 1;
+  string language = 2;
+  optional string voice = 3;
+  optional double speed = 4;
+  optional string emotion = 5;
+  optional string voiceStyle = 6;
+  optional string context = 7;
+}
+
+message SynthesizeSpeechResponse {
+  string audioUrl = 1;
+  int32 durationSeconds = 2;
+  optional NarrationMetadata metadata = 3;
+}
+
+message SynthesizeEmotionalSpeechRequest {
+  string text = 1;
+  string language = 2;
+  string emotion = 3;
+  optional string voiceStyle = 4;
+  optional double speed = 5;
+}
+
+message GetTTSWithSyncRequest {
+  string text = 1;
+  string language = 2;
+  optional string voice = 3;
+  optional string syncMode = 4;
+}
+
+message TTSSyncData {
+  string audioUrl = 1;
+  repeated SyncTimestamp timestamps = 2;
+}
+
+message SyncTimestamp {
+  int32 startOffset = 1;
+  int32 endOffset = 2;
+  double timestamp = 3;
+}
+
+message NarrationMetadata {
+  optional string emotion = 1;
+  optional string voiceStyle = 2;
+  optional string narrationType = 3; // ai | human
+}
+
+message GetHumanNarrationRequest {
+  string storyId = 1;
+  string chapterId = 2;
+}
+
+message NarrationResponse {
+  string audioUrl = 1;
+  int32 durationSeconds = 2;
+  optional NarrationMetadata metadata = 3;
+}
+
+message GetNarrationOptionsRequest {
+  string storyId = 1;
+  string chapterId = 2;
+}
+
+message NarrationOptionsResponse {
+  repeated string availableTypes = 1; // ai, human
+  repeated string availableVoices = 2;
+  bool hasHumanNarration = 3;
+}
+
+// ===== Translation & Dictionary =====
+message TranslateTextRequest {
+  string text = 1;
+  string fromLang = 2;
+  string toLang = 3;
+  optional string context = 4;
+}
+
+message TranslateTextResponse {
+  string translatedText = 1;
+}
+
+message TranslateChapterRequest {
+  string chapterId = 1;
+  string fromLang = 2;
+  string toLang = 3;
+}
+
+message TranslateSentenceRequest {
+  string sentence = 1;
+  string fromLang = 2;
+  string toLang = 3;
+  optional string context = 4;
+}
+
+message GetParallelTranslationRequest {
+  string text = 1;
+  string fromLang = 2;
+  string toLang = 3;
+  optional string displayMode = 4;
+}
+
+message ParallelTranslation {
+  repeated TranslationPair pairs = 1;
+  optional string displayMode = 2;
+}
+
+message TranslationPair {
+  string original = 1;
+  string translated = 2;
+}
+
+message LookupWordRequest {
+  string word = 1;
+  string fromLang = 2;
+  string toLang = 3;
+  optional string dictionarySource = 4;
+}
+
+message DictionaryEntry {
+  string word = 1;
+  repeated DictionaryDefinition definitions = 2;
+  optional Pronunciation pronunciation = 3;
+  repeated ExampleSentence examples = 4;
+  repeated RelatedWord relatedWords = 5;
+}
+
+message DictionaryDefinition {
+  string partOfSpeech = 1;
+  string definition = 2;
+}
+
+message Pronunciation {
+  string audioUrl = 1;
+  optional string ipa = 2;
+  optional string pinyin = 3;
+}
+
+message ExampleSentence {
+  string text = 1;
+  optional string translation = 2;
+}
+
+message RelatedWord {
+  string word = 1;
+  string relation = 2;
+}
+
+message TouchTranslateRequest {
+  string word = 1;
+  string fromLang = 2;
+  string toLang = 3;
+  optional Position position = 4;
+}
+
+message Position {
+  double x = 1;
+  double y = 2;
+}
+
+message GetPronunciationRequest {
+  string word = 1;
+  string language = 2;
+}
+
+message PronunciationResponse {
+  string audioUrl = 1;
+  optional string ipa = 2;
+}
+
+// ===== Annotation Intelligence =====
+message SummarizeAnnotationsRequest {
+  repeated string annotationIds = 1;
+  repeated string highlights = 2;
+  optional string context = 3;
+}
+
+message GetAnnotationSummaryRequest {
+  string selectedText = 1;
+  optional string surroundingText = 2;
+  optional string context = 3;
+}
+
+message AnnotationSummary {
+  string summary = 1;
+  repeated string keyPoints = 2;
+  repeated string insights = 3;
+}
+
+// ===== Recommendations =====
+message GetRecommendationsRequest {
+  string userId = 1;
+  optional int32 limit = 2;
+  optional string context = 3;
+}
+
+message GetRecommendationsResponse {
+  repeated Recommendation recommendations = 1;
+}
+
+message Recommendation {
+  StoryReference story = 1;
+  double score = 2;
+  string explanation = 3;
+  string source = 4;
+}
+
+message StoryReference {
+  string id = 1;
+  string title = 2;
+  optional string coverUrl = 3;
+  optional string author = 4;
+}
+
+message GetMoodBasedRecommendationsRequest {
+  string userId = 1;
+  string mood = 2;
+  optional int32 limit = 3;
+}
+
+message SearchByNaturalLanguageRequest {
+  string userId = 1;
+  string query = 2;
+  optional int32 limit = 3;
+}
+
+message ExploreNewTerritoriesRequest {
+  string userId = 1;
+  optional int32 limit = 2;
+}
+
+message GetSimilarStoriesRequest {
+  string storyId = 1;
+  optional int32 limit = 2;
+}
+
+message GetSimilarStoriesResponse {
+  repeated Recommendation similarStories = 1;
+}
+
+message GetTrendingStoriesRequest {
+  optional string genre = 1;
+  optional string timeRange = 2;
+}
+
+message GetTrendingStoriesResponse {
+  repeated Recommendation trendingStories = 1;
+}
+
+message ExplainRecommendationRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+message ExplainRecommendationResponse {
+  string explanation = 1;
+}

@@ -1,0 +1,874 @@
+syntax = "proto3";
+
+package users;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service UsersService {
+  // Reading Preferences
+  rpc GetReadingPreferences(GetReadingPreferencesRequest) returns (ReadingPreferences);
+  rpc UpdateReadingPreferences(UpdateReadingPreferencesRequest) returns (ReadingPreferences);
+
+  // Bookmarks
+  rpc GetBookmarks(GetBookmarksRequest) returns (GetBookmarksResponse);
+  rpc CreateBookmark(CreateBookmarkRequest) returns (Bookmark);
+  rpc DeleteBookmark(DeleteBookmarkRequest) returns (google.protobuf.Empty);
+
+  // Annotations
+  rpc GetAnnotations(GetAnnotationsRequest) returns (GetAnnotationsResponse);
+  rpc CreateAnnotation(CreateAnnotationRequest) returns (Annotation);
+  rpc UpdateAnnotation(UpdateAnnotationRequest) returns (Annotation);
+  rpc DeleteAnnotation(DeleteAnnotationRequest) returns (google.protobuf.Empty);
+  rpc GenerateAnnotationSummary(GenerateAnnotationSummaryRequest) returns (AnnotationSummary);
+  rpc ExportAnnotations(ExportAnnotationsRequest) returns (ExportAnnotationsResponse);
+  rpc UnifyAnnotations(UnifyAnnotationsRequest) returns (UnifyAnnotationsResponse);
+  rpc GetRevisitationQueue(GetRevisitationQueueRequest) returns (GetRevisitationQueueResponse);
+
+  // Library & Bookshelves
+  rpc GetLibrary(GetLibraryRequest) returns (GetLibraryResponse);
+  rpc AddToLibrary(AddToLibraryRequest) returns (Library);
+  rpc RemoveFromLibrary(RemoveFromLibraryRequest) returns (google.protobuf.Empty);
+  rpc UpdateLibraryItem(UpdateLibraryItemRequest) returns (Library);
+  rpc SyncLibrary(SyncLibraryRequest) returns (GetLibraryResponse);
+  rpc GetBookshelves(GetBookshelvesRequest) returns (GetBookshelvesResponse);
+  rpc CreateBookshelf(CreateBookshelfRequest) returns (Bookshelf);
+  rpc UpdateBookshelf(UpdateBookshelfRequest) returns (Bookshelf);
+  rpc DeleteBookshelf(DeleteBookshelfRequest) returns (google.protobuf.Empty);
+  rpc AddToBookshelf(AddToBookshelfRequest) returns (BookshelfItem);
+  rpc RemoveFromBookshelf(RemoveFromBookshelfRequest) returns (google.protobuf.Empty);
+  rpc ReorderBookshelf(ReorderBookshelfRequest) returns (google.protobuf.Empty);
+
+  // Wishlist & Reading Progress
+  rpc GetWishlist(GetWishlistRequest) returns (GetWishlistResponse);
+  rpc AddToWishlist(AddToWishlistRequest) returns (Wishlist);
+  rpc RemoveFromWishlist(RemoveFromWishlistRequest) returns (google.protobuf.Empty);
+  rpc MoveToLibrary(MoveToLibraryRequest) returns (Library);
+  rpc GetReadingProgress(GetReadingProgressRequest) returns (GetReadingProgressResponse);
+  rpc UpdateReadingProgress(UpdateReadingProgressRequest) returns (ReadingProgress);
+  rpc SyncReadingProgress(SyncReadingProgressRequest) returns (GetReadingProgressResponse);
+  rpc MarkStoryCompleted(MarkStoryCompletedRequest) returns (google.protobuf.Empty);
+
+  // Tags & Filtering
+  rpc CreateTag(CreateTagRequest) returns (Tag);
+  rpc UpdateTag(UpdateTagRequest) returns (Tag);
+  rpc DeleteTag(DeleteTagRequest) returns (google.protobuf.Empty);
+  rpc GetTags(GetTagsRequest) returns (GetTagsResponse);
+  rpc ApplyTagToLibrary(ApplyTagToLibraryRequest) returns (google.protobuf.Empty);
+  rpc RemoveTagFromLibrary(RemoveTagFromLibraryRequest) returns (google.protobuf.Empty);
+  rpc CreateFilteredView(CreateFilteredViewRequest) returns (FilteredView);
+  rpc UpdateFilteredView(UpdateFilteredViewRequest) returns (FilteredView);
+  rpc DeleteFilteredView(DeleteFilteredViewRequest) returns (google.protobuf.Empty);
+  rpc GetFilteredViews(GetFilteredViewsRequest) returns (GetFilteredViewsResponse);
+  rpc ExecuteFilter(ExecuteFilterRequest) returns (ExecuteFilterResponse);
+
+  // System Lists
+  rpc GetSystemLists(GetSystemListsRequest) returns (GetSystemListsResponse);
+  rpc UpdateSystemList(UpdateSystemListRequest) returns (google.protobuf.Empty);
+
+  // Download Management
+  rpc DownloadStory(DownloadStoryRequest) returns (Library);
+  rpc BatchDownload(BatchDownloadRequest) returns (GetDownloadQueueResponse);
+  rpc GetDownloadQueue(GetDownloadQueueRequest) returns (GetDownloadQueueResponse);
+  rpc GetStorageUsage(GetStorageUsageRequest) returns (GetStorageUsageResponse);
+
+  // Sync Operations
+  rpc SyncBookmarks(SyncBookmarksRequest) returns (SyncBookmarksResponse);
+  rpc SyncAnnotations(SyncAnnotationsRequest) returns (SyncAnnotationsResponse);
+  rpc GetPendingSyncQueue(GetPendingSyncQueueRequest) returns (GetPendingSyncQueueResponse);
+  rpc ProcessSyncQueue(ProcessSyncQueueRequest) returns (ProcessSyncQueueResponse);
+
+  // Desktop Preferences
+  rpc UpdateTabState(UpdateTabStateRequest) returns (TabState);
+  rpc UpdateLayoutPreferences(UpdateLayoutPreferencesRequest) returns (LayoutPreferences);
+  rpc UpdateFocusMode(UpdateFocusModeRequest) returns (FocusModeSettings);
+  rpc UpdateKeyboardShortcuts(UpdateKeyboardShortcutsRequest) returns (KeyboardShortcuts);
+}
+
+// ===== Reading Preferences =====
+message GetReadingPreferencesRequest {
+  string userId = 1;
+}
+
+message ReadingPreferences {
+  string userId = 1;
+  int32 fontSize = 2;
+  string fontFamily = 3;
+  optional string customFontUrl = 4;
+  optional string customFontName = 5;
+  optional string customFontData = 6;
+  double lineHeight = 7;
+  double letterSpacing = 8;
+  double paragraphSpacing = 9;
+  double wordSpacing = 10;
+  string backgroundColor = 11;
+  optional string textColor = 12;
+  optional string customBackgroundColor = 13;
+  int32 brightness = 14;
+  bool blueLightFilterEnabled = 15;
+  int32 blueLightFilterStrength = 16;
+  bool blueLightFilterAdaptive = 17;
+  optional BlueLightFilterSchedule blueLightFilterSchedule = 18;
+  string readingMode = 19;
+  bool pageTurnAnimation = 20;
+  string pageTurnDirection = 21;
+  string scrollBehavior = 22;
+  repeated string preferredFormats = 23;
+  FormatProcessing formatProcessing = 24;
+  bool autoHideControls = 25;
+  bool tapToToggleControls = 26;
+  string textAlign = 27;
+  int32 marginHorizontal = 28;
+  int32 marginVertical = 29;
+  int32 controlsTimeout = 30;
+  bool syncAcrossDevices = 31;
+  google.protobuf.Timestamp createdAt = 32;
+  google.protobuf.Timestamp updatedAt = 33;
+}
+
+message BlueLightFilterSchedule {
+  string startTime = 1;
+  string endTime = 2;
+}
+
+message FormatProcessing {
+  optional PDFProcessing pdf = 1;
+  optional DOCXProcessing docx = 2;
+  optional ArchiveProcessing archive = 3;
+}
+
+message PDFProcessing {
+  bool autoCropMargins = 1;
+  bool autoGenerateTOC = 2;
+}
+
+message DOCXProcessing {
+  bool autoGenerateTOC = 1;
+}
+
+message ArchiveProcessing {
+  bool readFromZip = 1;
+  bool readFromRar = 2;
+}
+
+message UpdateReadingPreferencesRequest {
+  string userId = 1;
+  optional int32 fontSize = 2;
+  optional string fontFamily = 3;
+  optional string customFontUrl = 4;
+  optional string customFontName = 5;
+  optional string customFontData = 6;
+  optional double lineHeight = 7;
+  optional double letterSpacing = 8;
+  optional double paragraphSpacing = 9;
+  optional double wordSpacing = 10;
+  optional string backgroundColor = 11;
+  optional string textColor = 12;
+  optional string customBackgroundColor = 13;
+  optional int32 brightness = 14;
+  optional bool blueLightFilterEnabled = 15;
+  optional int32 blueLightFilterStrength = 16;
+  optional bool blueLightFilterAdaptive = 17;
+  optional BlueLightFilterSchedule blueLightFilterSchedule = 18;
+  optional string readingMode = 19;
+  optional bool pageTurnAnimation = 20;
+  optional string pageTurnDirection = 21;
+  optional string scrollBehavior = 22;
+  repeated string preferredFormats = 23;
+  optional FormatProcessing formatProcessing = 24;
+  optional bool autoHideControls = 25;
+  optional bool tapToToggleControls = 26;
+  optional string textAlign = 27;
+  optional int32 marginHorizontal = 28;
+  optional int32 marginVertical = 29;
+  optional int32 controlsTimeout = 30;
+  optional bool syncAcrossDevices = 31;
+}
+
+// ===== Bookmarks =====
+message GetBookmarksRequest {
+  string userId = 1;
+  optional string storyId = 2;
+}
+
+message GetBookmarksResponse {
+  repeated Bookmark bookmarks = 1;
+}
+
+message Bookmark {
+  string id = 1;
+  string userId = 2;
+  string storyId = 3;
+  string chapterId = 4;
+  double position = 5;
+  optional string note = 6;
+  google.protobuf.Timestamp createdAt = 7;
+}
+
+message CreateBookmarkRequest {
+  string userId = 1;
+  string storyId = 2;
+  string chapterId = 3;
+  double position = 4;
+  optional string note = 5;
+}
+
+message DeleteBookmarkRequest {
+  string bookmarkId = 1;
+}
+
+// ===== Annotations =====
+message GetAnnotationsRequest {
+  string userId = 1;
+  optional string storyId = 2;
+  optional string chapterId = 3;
+  optional string sourceType = 4;
+}
+
+message GetAnnotationsResponse {
+  repeated Annotation annotations = 1;
+}
+
+message Annotation {
+  string id = 1;
+  string userId = 2;
+  optional string storyId = 3;
+  optional string chapterId = 4;
+  string selectedText = 5;
+  int32 startOffset = 6;
+  int32 endOffset = 7;
+  string note = 8;
+  optional string color = 9;
+  optional string sourceType = 10;
+  optional string sourceId = 11;
+  optional string sourceUrl = 12;
+  optional google.protobuf.Timestamp unifiedAt = 13;
+  optional google.protobuf.Timestamp lastReviewedAt = 14;
+  int32 reviewCount = 15;
+  optional google.protobuf.Timestamp nextReviewDate = 16;
+  bool isArchived = 17;
+  google.protobuf.Timestamp createdAt = 18;
+  google.protobuf.Timestamp updatedAt = 19;
+}
+
+message CreateAnnotationRequest {
+  string userId = 1;
+  optional string storyId = 2;
+  optional string chapterId = 3;
+  string selectedText = 4;
+  int32 startOffset = 5;
+  int32 endOffset = 6;
+  string note = 7;
+  optional string color = 8;
+  optional string sourceType = 9;
+  optional string sourceId = 10;
+  optional string sourceUrl = 11;
+}
+
+message UpdateAnnotationRequest {
+  string annotationId = 1;
+  optional string note = 2;
+  optional string color = 3;
+  optional bool isArchived = 4;
+}
+
+message DeleteAnnotationRequest {
+  string annotationId = 1;
+}
+
+message GenerateAnnotationSummaryRequest {
+  string userId = 1;
+  repeated string annotationIds = 2;
+  repeated string highlights = 3;
+  optional string context = 4;
+}
+
+message AnnotationSummary {
+  string summary = 1;
+  repeated string keyPoints = 2;
+  repeated string insights = 3;
+}
+
+message ExportAnnotationsRequest {
+  string userId = 1;
+  repeated string annotationIds = 2;
+  optional string sourceType = 3;
+  string format = 4;
+  optional string targetId = 5;
+}
+
+message ExportAnnotationsResponse {
+  string format = 1;
+  string content = 2;
+  optional string url = 3;
+  int32 exportedCount = 4;
+}
+
+message UnifyAnnotationsRequest {
+  string userId = 1;
+  string sourceType = 2;
+  string sourceId = 3;
+  repeated Annotation annotations = 4;
+  optional string sourceUrl = 5;
+}
+
+message UnifyAnnotationsResponse {
+  int32 importedCount = 1;
+  int32 duplicateCount = 2;
+  repeated string annotationIds = 3;
+}
+
+message GetRevisitationQueueRequest {
+  string userId = 1;
+  optional int32 limit = 2;
+}
+
+message GetRevisitationQueueResponse {
+  repeated Annotation annotations = 1;
+  int32 totalDue = 2;
+  int32 reviewStreak = 3;
+}
+
+// ===== Library =====
+message Library {
+  string id = 1;
+  string userId = 2;
+  string storyId = 3;
+  StoryReference story = 4;
+  google.protobuf.Timestamp addedAt = 5;
+  optional google.protobuf.Timestamp lastReadAt = 6;
+  optional string lastChapterId = 7;
+  bool isDownloaded = 8;
+  int32 downloadProgress = 9;
+  repeated string customTags = 10;
+  optional string notes = 11;
+  google.protobuf.Timestamp createdAt = 12;
+  google.protobuf.Timestamp updatedAt = 13;
+}
+
+message StoryReference {
+  string id = 1;
+  string title = 2;
+  optional string coverUrl = 3;
+  optional string author = 4;
+}
+
+message GetLibraryRequest {
+  string userId = 1;
+  optional string bookshelfId = 2;
+  repeated string tags = 3;
+  optional string layout = 4;
+  optional string sort = 5;
+}
+
+message GetLibraryResponse {
+  repeated Library items = 1;
+}
+
+message AddToLibraryRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+message RemoveFromLibraryRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+message UpdateLibraryItemRequest {
+  string userId = 1;
+  string libraryId = 2;
+  repeated string customTags = 3;
+  optional string notes = 4;
+}
+
+message SyncLibraryRequest {
+  string userId = 1;
+  string deviceId = 2;
+}
+
+// ===== Bookshelves =====
+message Bookshelf {
+  string id = 1;
+  string userId = 2;
+  string name = 3;
+  optional string description = 4;
+  optional string color = 5;
+  optional string icon = 6;
+  int32 displayOrder = 7;
+  bool isDefault = 8;
+  repeated BookshelfItem items = 9;
+  google.protobuf.Timestamp createdAt = 10;
+  google.protobuf.Timestamp updatedAt = 11;
+}
+
+message BookshelfItem {
+  string id = 1;
+  string bookshelfId = 2;
+  string libraryId = 3;
+  Library library = 4;
+  int32 displayOrder = 5;
+  google.protobuf.Timestamp addedAt = 6;
+}
+
+message GetBookshelvesRequest {
+  string userId = 1;
+}
+
+message GetBookshelvesResponse {
+  repeated Bookshelf bookshelves = 1;
+}
+
+message CreateBookshelfRequest {
+  string userId = 1;
+  string name = 2;
+  optional string description = 3;
+}
+
+message UpdateBookshelfRequest {
+  string userId = 1;
+  string bookshelfId = 2;
+  optional string name = 3;
+  optional string description = 4;
+  optional string color = 5;
+  optional string icon = 6;
+  optional int32 displayOrder = 7;
+}
+
+message DeleteBookshelfRequest {
+  string userId = 1;
+  string bookshelfId = 2;
+}
+
+message AddToBookshelfRequest {
+  string userId = 1;
+  string bookshelfId = 2;
+  string libraryId = 3;
+}
+
+message RemoveFromBookshelfRequest {
+  string userId = 1;
+  string bookshelfId = 2;
+  string libraryId = 3;
+}
+
+message ReorderBookshelfRequest {
+  string userId = 1;
+  string bookshelfId = 2;
+  repeated BookshelfOrderItem items = 3;
+}
+
+message BookshelfOrderItem {
+  string libraryId = 1;
+  int32 displayOrder = 2;
+}
+
+// ===== Wishlist =====
+message Wishlist {
+  string id = 1;
+  string userId = 2;
+  string storyId = 3;
+  StoryReference story = 4;
+  optional int32 priority = 5;
+  optional string notes = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  google.protobuf.Timestamp updatedAt = 8;
+}
+
+message GetWishlistRequest {
+  string userId = 1;
+}
+
+message GetWishlistResponse {
+  repeated Wishlist items = 1;
+}
+
+message AddToWishlistRequest {
+  string userId = 1;
+  string storyId = 2;
+  optional int32 priority = 3;
+  optional string notes = 4;
+}
+
+message RemoveFromWishlistRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+message MoveToLibraryRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+// ===== Reading Progress =====
+message ReadingProgress {
+  string id = 1;
+  string userId = 2;
+  string storyId = 3;
+  string chapterId = 4;
+  double position = 5;
+  double progressPercentage = 6;
+  google.protobuf.Timestamp lastReadAt = 7;
+  bool isCompleted = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  google.protobuf.Timestamp updatedAt = 10;
+}
+
+message GetReadingProgressRequest {
+  string userId = 1;
+  optional string storyId = 2;
+}
+
+message GetReadingProgressResponse {
+  repeated ReadingProgress progress = 1;
+}
+
+message UpdateReadingProgressRequest {
+  string userId = 1;
+  string storyId = 2;
+  string chapterId = 3;
+  double position = 4;
+  double progressPercentage = 5;
+}
+
+message SyncReadingProgressRequest {
+  string userId = 1;
+  string deviceId = 2;
+}
+
+message MarkStoryCompletedRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+// ===== Tags & Filtering =====
+message Tag {
+  string id = 1;
+  string userId = 2;
+  string name = 3;
+  optional string color = 4;
+  optional string icon = 5;
+  optional string parentTagId = 6;
+  google.protobuf.Timestamp createdAt = 7;
+  google.protobuf.Timestamp updatedAt = 8;
+}
+
+message CreateTagRequest {
+  string userId = 1;
+  string name = 2;
+  optional string color = 3;
+  optional string icon = 4;
+  optional string parentTagId = 5;
+}
+
+message UpdateTagRequest {
+  string userId = 1;
+  string tagId = 2;
+  optional string name = 3;
+  optional string color = 4;
+  optional string icon = 5;
+  optional string parentTagId = 6;
+}
+
+message DeleteTagRequest {
+  string userId = 1;
+  string tagId = 2;
+}
+
+message GetTagsRequest {
+  string userId = 1;
+}
+
+message GetTagsResponse {
+  repeated Tag tags = 1;
+}
+
+message ApplyTagToLibraryRequest {
+  string userId = 1;
+  string libraryId = 2;
+  string tagId = 3;
+}
+
+message RemoveTagFromLibraryRequest {
+  string userId = 1;
+  string libraryId = 2;
+  string tagId = 3;
+}
+
+message FilteredView {
+  string id = 1;
+  string userId = 2;
+  string name = 3;
+  optional string description = 4;
+  FilterQuery query = 5;
+  bool isAutoUpdating = 6;
+  int32 displayOrder = 7;
+  google.protobuf.Timestamp createdAt = 8;
+  google.protobuf.Timestamp updatedAt = 9;
+}
+
+message FilterQuery {
+  optional TagFilter tags = 1;
+  optional string authorId = 2;
+  optional string seriesId = 3;
+  optional string completionStatus = 4;
+  optional ProgressRange progressRange = 5;
+  optional DateRange dateRange = 6;
+  optional bool hasHighlights = 7;
+  optional bool hasBookmarks = 8;
+}
+
+message TagFilter {
+  string operator = 1;
+  repeated string values = 2;
+}
+
+message ProgressRange {
+  double min = 1;
+  double max = 2;
+}
+
+message DateRange {
+  string field = 1;
+  google.protobuf.Timestamp start = 2;
+  google.protobuf.Timestamp end = 3;
+}
+
+message CreateFilteredViewRequest {
+  string userId = 1;
+  string name = 2;
+  optional string description = 3;
+  FilterQuery query = 4;
+  optional bool isAutoUpdating = 5;
+}
+
+message UpdateFilteredViewRequest {
+  string userId = 1;
+  string viewId = 2;
+  optional string name = 3;
+  optional string description = 4;
+  optional FilterQuery query = 5;
+  optional bool isAutoUpdating = 6;
+}
+
+message DeleteFilteredViewRequest {
+  string userId = 1;
+  string viewId = 2;
+}
+
+message GetFilteredViewsRequest {
+  string userId = 1;
+}
+
+message GetFilteredViewsResponse {
+  repeated FilteredView views = 1;
+}
+
+message ExecuteFilterRequest {
+  string userId = 1;
+  FilterQuery query = 2;
+}
+
+message ExecuteFilterResponse {
+  repeated Library items = 1;
+}
+
+// ===== System Lists =====
+message SystemList {
+  string id = 1;
+  string userId = 2;
+  string listType = 3;
+  repeated LibrarySystemListItem libraryItems = 4;
+  google.protobuf.Timestamp createdAt = 5;
+  google.protobuf.Timestamp updatedAt = 6;
+}
+
+message LibrarySystemListItem {
+  string id = 1;
+  string libraryId = 2;
+  string systemListId = 3;
+  google.protobuf.Timestamp createdAt = 4;
+}
+
+message GetSystemListsRequest {
+  string userId = 1;
+}
+
+message GetSystemListsResponse {
+  repeated SystemList lists = 1;
+}
+
+message UpdateSystemListRequest {
+  string userId = 1;
+  string listType = 2;
+  repeated string libraryIds = 3;
+}
+
+// ===== Download Management =====
+message DownloadStoryRequest {
+  string userId = 1;
+  string storyId = 2;
+  optional bool includePremium = 3;
+}
+
+message BatchDownloadRequest {
+  string userId = 1;
+  repeated string storyIds = 2;
+  optional bool includePremium = 3;
+}
+
+message GetDownloadQueueRequest {
+  string userId = 1;
+  optional string status = 2;
+  optional string storyId = 3;
+}
+
+message DownloadQueueItem {
+  string storyId = 1;
+  string status = 2;
+  optional string error = 3;
+  int32 progress = 4;
+  google.protobuf.Timestamp updatedAt = 5;
+}
+
+message GetDownloadQueueResponse {
+  repeated DownloadQueueItem items = 1;
+}
+
+message GetStorageUsageRequest {
+  string userId = 1;
+  optional bool includeBreakdown = 2;
+}
+
+message StorageBreakdown {
+  string category = 1;
+  int64 bytes = 2;
+}
+
+message GetStorageUsageResponse {
+  int64 totalBytes = 1;
+  int64 usedBytes = 2;
+  double percentage = 3;
+  int32 itemCount = 4;
+  repeated StorageBreakdown breakdown = 5;
+}
+
+// ===== Sync =====
+message SyncBookmarksRequest {
+  string userId = 1;
+  string deviceId = 2;
+  optional google.protobuf.Timestamp lastSyncedAt = 3;
+}
+
+message SyncBookmarksResponse {
+  repeated Bookmark bookmarks = 1;
+  google.protobuf.Timestamp lastSyncedAt = 2;
+  int32 conflictCount = 3;
+}
+
+message SyncAnnotationsRequest {
+  string userId = 1;
+  string deviceId = 2;
+  optional google.protobuf.Timestamp lastSyncedAt = 3;
+}
+
+message SyncAnnotationsResponse {
+  repeated Annotation annotations = 1;
+  google.protobuf.Timestamp lastSyncedAt = 2;
+  int32 conflictCount = 3;
+}
+
+message GetPendingSyncQueueRequest {
+  string userId = 1;
+  string deviceId = 2;
+}
+
+message SyncOperation {
+  string operationType = 1;
+  string entity = 2;
+  string payloadJson = 3;
+}
+
+message GetPendingSyncQueueResponse {
+  repeated SyncOperation operations = 1;
+}
+
+message ProcessSyncQueueRequest {
+  string userId = 1;
+  string deviceId = 2;
+  repeated SyncOperation operations = 3;
+}
+
+message ProcessSyncQueueResponse {
+  int32 processedCount = 1;
+  int32 failedCount = 2;
+}
+
+// ===== Desktop Preferences =====
+message TabState {
+  repeated ReaderTab tabs = 1;
+  optional string activeTabId = 2;
+  repeated TabGroup groups = 3;
+}
+
+message ReaderTab {
+  string id = 1;
+  optional string storyId = 2;
+  optional string chapterId = 3;
+  optional double scrollPosition = 4;
+}
+
+message TabGroup {
+  string id = 1;
+  string name = 2;
+  repeated string tabIds = 3;
+}
+
+message UpdateTabStateRequest {
+  string userId = 1;
+  repeated ReaderTab tabs = 2;
+  optional string activeTabId = 3;
+  repeated TabGroup groups = 4;
+}
+
+message LayoutPreferences {
+  optional string layoutPresetId = 1;
+  bool splitViewEnabled = 2;
+  double splitPosition = 3;
+  bool multiWindowEnabled = 4;
+}
+
+message UpdateLayoutPreferencesRequest {
+  string userId = 1;
+  optional string layoutPresetId = 2;
+  optional bool splitViewEnabled = 3;
+  optional double splitPosition = 4;
+  optional bool multiWindowEnabled = 5;
+}
+
+message FocusModeSettings {
+  optional int32 maxWidth = 1;
+  optional string alignment = 2;
+  optional bool readingLineGuide = 3;
+}
+
+message UpdateFocusModeRequest {
+  string userId = 1;
+  optional int32 maxWidth = 2;
+  optional string alignment = 3;
+  optional bool readingLineGuide = 4;
+}
+
+message KeyboardShortcuts {
+  repeated KeyboardShortcut shortcuts = 1;
+}
+
+message KeyboardShortcut {
+  string action = 1;
+  string key = 2;
+}
+
+message UpdateKeyboardShortcutsRequest {
+  string userId = 1;
+  repeated KeyboardShortcut shortcuts = 2;
+}

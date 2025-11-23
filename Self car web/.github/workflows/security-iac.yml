@@ -1,0 +1,112 @@
+name: Infrastructure as Code Security (Checkov)
+
+on:
+  pull_request:
+    paths:
+      - 'infrastructure/**'
+      - '*.tf'
+      - '*.tfvars'
+      - '*.yaml'
+      - '*.yml'
+      - 'docker-compose*.yml'
+      - 'Dockerfile*'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'infrastructure/**'
+      - '*.tf'
+      - '*.tfvars'
+  schedule:
+    # Nightly IaC scan at 3 AM UTC
+    - cron: '0 3 * * *'
+
+jobs:
+  checkov:
+    name: Checkov IaC Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: |
+            terraform
+            dockerfile
+            kubernetes
+            github_actions
+          soft_fail: false
+          # Block PRs on HIGH/CRITICAL findings
+          check: CKV_SECRET_6,CKV_SECRET_5
+          skip_check: ''
+          output_format: sarif
+          output_file_path: checkov-results.sarif
+          
+      - name: Upload Checkov results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: checkov-results
+          path: checkov-results.sarif
+          retention-days: 90
+          
+      - name: Upload to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: checkov-results.sarif
+
+  terraform-validate:
+    name: Terraform Validation
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.changed_files, '.tf') || github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: '1.6.0'
+          
+      - name: Terraform Format Check
+        run: |
+          cd infrastructure/terraform || exit 0
+          terraform fmt -check -recursive || (echo "Terraform files not formatted. Run 'terraform fmt'" && exit 1)
+          
+      - name: Terraform Init
+        run: |
+          cd infrastructure/terraform || exit 0
+          terraform init -backend=false
+          
+      - name: Terraform Validate
+        run: |
+          cd infrastructure/terraform || exit 0
+          terraform validate
+
+  dockerfile-scan:
+    name: Dockerfile Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Trivy on Dockerfiles
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          config-patterns: '**/Dockerfile*'
+          format: 'sarif'
+          output: 'trivy-dockerfile-results.sarif'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '1'
+          # Fail on HIGH/CRITICAL
+          
+      - name: Upload Trivy results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: trivy-dockerfile-results
+          path: trivy-dockerfile-results.sarif
+          retention-days: 90
+

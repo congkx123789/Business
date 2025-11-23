@@ -1,0 +1,25 @@
+---
+alwaysApply: true
+---
+
+├── 📦 2-services/                    # 🔧 MICROSERVICES (Internal gRPC & Event Bus)
+    │   │
+    │   ├── 📋 Services Overview
+    │   │   ├── **Goal:** Decouple business logic. Each service owns its database (Rule #1).
+    │   │   ├── **Key Tech:** 
+    │   │   │   - `@nestjs/microservices` (gRPC Server)
+    │   │   │   - `@nestjs/prisma` (PostgreSQL ORM)
+    │   │   │   - `@nestjs/bull` (Job Queue Manager - BullMQ)
+    │   │   │   - `meilisearch` (Search client)
+    │   │   │   - `aws-sdk` (S3 client)
+    │   │   ├── **Communication:** gRPC (sync) + Event Bus/BullMQ (async)
+    │   │   └── **Stories-service snapshot (Port 3002):**
+    │   │       - Modules: `stories/`, `reading-progress/`, `chapters/`, `genres/`, `discovery/`, `author/`, `drm/`, `storage/`, `search/`
+    │   │       - Integrations: `clients/` (users, monetization, community gRPC bridges), `controllers/` (stories.proto), `workers/` (story events, ranking calc)
+    │   │       - Shared layers: `common/cache`, `common/database`, `common/queue`, `prisma/` schema + migrations
+    │   │
+    │
+
+---
+
+**Xem thêm:** [README](./README.md) | [Overview](./01-overview.md)

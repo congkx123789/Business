@@ -1,0 +1,264 @@
+---
+alwaysApply: true
+---
+
+# 🌐 Gateway Service Documentation
+
+## 🎯 Overview
+
+Folder này chứa tài liệu chi tiết về API Gateway (BFF Layer) - điểm vào duy nhất của hệ thống, xử lý authentication, routing, rate limiting, và client-specific optimizations.
+
+## 📁 Structure
+
+```
+gateway/
+├── README.mdc (this file)              # Overview & Navigation
+└── 03-1-gateway.md                     # API Gateway Details
+```
+
+## 📋 Files
+
+- **[03-1-gateway.md](./03-1-gateway.md)** - API Gateway (BFF Layer)
+  - Package Info (Goal, Key Tech, Rules)
+  - Source Code Structure (Auth, Config, Common, Clients, Modules)
+  - Configuration Files
+  - Development Steps chi tiết
+
+## 🏗️ Code Structure
+
+### Source Code Organization
+
+```
+packages/1-gateway/
+├── src/
+│   ├── main.ts                         # Application entry point (Express/Fastify)
+│   ├── app.module.ts                   # Root module
+│   │
+│   ├── 📁 auth/                        # Authentication Module
+│   │   ├── auth.module.ts
+│   │   ├── jwt.strategy.ts             # JWT passport strategy
+│   │   └── guards/
+│   │       └── jwt-auth.guard.ts       # JWT authentication guard
+│   │
+│   ├── 📁 config/                      # Configuration
+│   │   └── app.config.ts               # App configuration (ports, env vars)
+│   │
+│   ├── 📁 common/                      # Shared utilities
+│   │   ├── decorators/                 # Custom decorators
+│   │   │   ├── current-user.decorator.ts
+│   │   │   └── roles.decorator.ts
+│   │   ├── filters/                    # Exception filters
+│   │   │   └── http-exception.filter.ts
+│   │   ├── interceptors/               # Interceptors
+│   │   │   ├── logging.interceptor.ts
+│   │   │   └── transform.interceptor.ts
+│   │   └── pipes/                      # Validation pipes
+│   │       └── validation.pipe.ts
+│   │
+│   ├── 📁 clients/                     # gRPC Clients (to call 2-services)
+│   │   ├── users-client.ts             # Users service gRPC client
+│   │   ├── stories-client.ts           # Stories service gRPC client
+│   │   ├── comments-client.ts          # Comments service gRPC client
+│   │   ├── search-client.ts           # Search service gRPC client
+│   │   ├── ai-client.ts               # AI service gRPC client ⭐
+│   │   ├── notification-client.ts     # Notification service gRPC client
+│   │   ├── websocket-client.ts      # WebSocket service gRPC client
+│   │   ├── social-client.ts           # Social service gRPC client
+│   │   ├── community-client.ts       # Community service gRPC client ⭐
+│   │   └── monetization-client.ts    # Monetization service gRPC client ⭐
+│   │
+│   ├── 📁 grpc-clients/                # gRPC client configuration
+│   │   ├── users.grpc-client.ts
+│   │   ├── stories.grpc-client.ts
+│   │   └── ...
+│   │
+│   └── 📁 modules/                     # Feature Modules (REST Controllers & GraphQL Resolvers)
+│       │
+│       ├── 📁 stories/                 # Stories API Module
+│       │   ├── stories.controller.ts  # REST: GET /api/stories, GET /api/stories/:id
+│       │   ├── stories.resolver.ts    # GraphQL: story(id), stories()
+│       │   └── stories.module.ts
+│       │
+│       ├── 📁 discovery/              # Discovery & Storefront API Module
+│       │   ├── discovery.controller.ts  # REST: Rankings, Editor Picks, Genre Browsing, Search
+│       │   ├── discovery.resolver.ts    # GraphQL: rankings(), editorPicks(), genres(), search()
+│       │   └── discovery.module.ts
+│       │
+│       ├── 📁 recommendations/        # Recommendations API Module
+│       │   ├── recommendations.controller.ts  # REST: Personalized Recommendations
+│       │   ├── recommendations.resolver.ts    # GraphQL: recommendations(), similarStories(), trending()
+│       │   └── recommendations.module.ts
+│       │
+│       ├── 📁 users/                  # Users API Module
+│       │   ├── users.controller.ts    # REST: GET /api/users/:id
+│       │   ├── users.resolver.ts      # GraphQL: user(id)
+│       │   └── users.module.ts
+│       │
+│       ├── 📁 reading-preferences/    # Reading Preferences API
+│       │   ├── reading-preferences.controller.ts  # REST: GET/PUT /api/reading-preferences
+│       │   ├── reading-preferences.resolver.ts    # GraphQL: readingPreferences(), updateReadingPreferences()
+│       │   └── reading-preferences.module.ts
+│       │
+│       ├── 📁 bookmarks/              # Bookmarks API
+│       │   ├── bookmarks.controller.ts  # REST: GET/POST/DELETE /api/bookmarks
+│       │   ├── bookmarks.resolver.ts    # GraphQL: bookmarks(storyId)
+│       │   └── bookmarks.module.ts
+│       │
+│       ├── 📁 annotations/          # Annotations API
+│       │   ├── annotations.controller.ts  # REST: GET/POST/PUT/DELETE /api/annotations
+│       │   ├── annotations.resolver.ts    # GraphQL: annotations(chapterId)
+│       │   └── annotations.module.ts
+│       │
+│       ├── 📁 library/                # Library & Bookshelf API
+│       │   ├── library.controller.ts     # REST: GET/POST/DELETE /api/library
+│       │   ├── library.resolver.ts       # GraphQL: library(), addToLibrary()
+│       │   ├── bookshelves.controller.ts # REST: GET/POST/PUT/DELETE /api/bookshelves
+│       │   ├── bookshelves.resolver.ts   # GraphQL: bookshelves(), createBookshelf()
+│       │   ├── wishlist.controller.ts   # REST: GET/POST/DELETE /api/wishlist
+│       │   ├── wishlist.resolver.ts      # GraphQL: wishlist(), addToWishlist()
+│       │   ├── reading-progress.controller.ts  # REST: GET/PUT /api/reading-progress
+│       │   ├── reading-progress.resolver.ts     # GraphQL: readingProgress(), updateReadingProgress()
+│       │   └── library.module.ts
+│       │
+│       ├── 📁 social/                 # Social Features API
+│       │   ├── feed.controller.ts       # REST: GET /api/feed
+│       │   ├── feed.resolver.ts        # GraphQL: feed()
+│       │   ├── posts.controller.ts     # REST: POST /api/posts
+│       │   ├── posts.resolver.ts       # GraphQL: createPost()
+│       │   ├── groups.controller.ts    # REST: GET/POST /api/groups
+│       │   ├── groups.resolver.ts      # GraphQL: group(id), joinGroup()
+│       │   └── social.module.ts
+│       │
+│       ├── 📁 tts/                    # TTS & Language Tools API
+│       │   ├── tts.controller.ts       # REST: POST /api/tts/synthesize
+│       │   ├── tts.resolver.ts        # GraphQL: synthesizeSpeech()
+│       │   ├── translation.controller.ts  # REST: POST /api/translate
+│       │   ├── translation.resolver.ts  # GraphQL: translateText()
+│       │   ├── dictionary.controller.ts  # REST: GET /api/dictionary/lookup
+│       │   ├── dictionary.resolver.ts    # GraphQL: lookupWord()
+│       │   └── tts.module.ts
+│       │
+│       ├── 📁 community/              # Community API ⭐
+│       │   ├── paragraph-comments.controller.ts  # REST: Paragraph Comments (Duanping)
+│       │   ├── paragraph-comments.resolver.ts  # GraphQL: createParagraphComment()
+│       │   ├── fan-economy.controller.ts  # REST: Tipping, Rankings, Monthly Votes
+│       │   └── community.module.ts
+│       │
+│       ├── 📁 monetization/            # Monetization API ⭐
+│       │   ├── wallet.controller.ts   # REST: Virtual Currency
+│       │   ├── membership.controller.ts  # REST: Membership (Coin Packages)
+│       │   ├── privilege.controller.ts  # REST: Privilege (Advanced Chapters)
+│       │   ├── payments.controller.ts  # REST: PPC Purchases
+│       │   └── monetization.module.ts
+│       │
+│       └── 📁 comments/                # Comments API (Chapter, Reviews, Forums)
+│           ├── comments.controller.ts   # REST: GET/POST /api/comments
+│           ├── comments.resolver.ts    # GraphQL: comments(storyId)
+│           └── comments.module.ts
+│
+├── package.json
+├── tsconfig.json
+├── nest-cli.json
+└── README.md
+```
+
+## 🔑 Key Features
+
+### Authentication & Authorization
+- JWT strategy với `@nestjs/passport`
+- Token signing/verification với `@nestjs/jwt`
+- Auth guards và decorators
+- `@CurrentUser()` decorator để extract user từ JWT
+
+### API Endpoints
+- **REST API** cho web frontend (3-web)
+  - Controllers trong `modules/{feature}/{feature}.controller.ts`
+  - Routes: `/api/{resource}`
+- **GraphQL API** cho mobile apps (5-mobile-ios, 6-mobile-android)
+  - Resolvers trong `modules/{feature}/{feature}.resolver.ts`
+  - Schema auto-generated từ resolvers
+- **WebSocket** cho real-time communication
+  - Socket.IO integration (via websocket-service)
+
+### gRPC Clients
+Gateway gọi các microservices thông qua gRPC:
+- `users-client.ts` → users-service (port 3001) - ⭐ Gamification (F2P)
+- `stories-client.ts` → stories-service (port 3002)
+- `comments-client.ts` → comments-service (port 3003)
+- `search-client.ts` → search-service (port 3004)
+- `ai-client.ts` → ai-service (port 3005) - ⭐ Emotional AI Narration
+- `notification-client.ts` → notification-service (port 3006)
+- `websocket-client.ts` → websocket-service (port 3007)
+- `social-client.ts` → social-service (port 3008)
+- `community-client.ts` → community-service (port 3009) - ⭐ Paragraph Comments (Duanping)
+- `monetization-client.ts` → monetization-service (port 3010) - ⭐ PPC & Privilege Models
+
+### Modules Organization
+Mỗi feature có một module riêng với:
+- **Controller**: REST endpoints (cho web)
+- **Resolver**: GraphQL resolvers (cho mobile)
+- **Service**: Aggregates data from multiple gRPC calls (nếu cần)
+- **Module**: NestJS module definition
+
+### Caching Strategy
+- **Gateway Cache (Redis)**: Caches frequently accessed data
+  - Rankings: 1-hour TTL
+  - Editor Picks: 30-min TTL
+  - Genres: 24-hour TTL
+  - Search results: 5-min TTL
+  - Recommendations: 1-hour TTL
+
+## ⚠️ Important Rules
+
+**Rule #4:** Gateway is a "Bouncer", NOT the "Brain" - NO business logic!
+
+Gateway chỉ có nhiệm vụ:
+- ✅ **Authentication (AuthN)**: Validates JWT, extracts user info
+- ✅ **Routing**: Directs traffic to correct internal service (via gRPC)
+- ✅ **Rate Limiting**: Protects services from abuse (`@nestjs/throttler`)
+- ✅ **Caching**: Caches responses to reduce load on services
+- ✅ **WAF Integration**: Sits behind Cloudflare for security
+- ❌ **KHÔNG có business logic**: All business logic in services
+
+### Code Patterns
+
+**REST Controller Example:**
+```typescript
+@Controller('api/stories')
+export class StoriesController {
+  @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  async getStory(@Param('id') id: string, @CurrentUser() user: User) {
+    // Call gRPC client, NO business logic
+    return this.storiesClient.getStory({ id, userId: user.id });
+  }
+}
+```
+
+**GraphQL Resolver Example:**
+```typescript
+@Resolver(() => Story)
+export class StoriesResolver {
+  @Query(() => Story)
+  @UseGuards(JwtAuthGuard)
+  async story(@Args('id') id: string, @CurrentUser() user: User) {
+    // Call gRPC client, NO business logic
+    return this.storiesClient.getStory({ id, userId: user.id });
+  }
+}
+```
+
+## 🔗 Related Documentation
+
+- [Overview](../overview/README.mdc) - Architecture overview
+- [Services](../services/README.mdc) - Các microservices mà gateway gọi
+- [Clients](../clients/README.mdc) - Client applications sử dụng gateway
+- [Shared](../shared/README.mdc) - Shared contracts (proto files)
+- [Feature Sync Map](../FEATURE_SYNC_MAP.md) - ⭐ Feature synchronization across all layers
+- [Main README](../README.md) - Main structure documentation
+
+---
+
+**💡 Tip**: Gateway chỉ là một proxy layer. Nếu bạn thấy business logic trong gateway, đó là bug - move it to the appropriate service!
+
+**🔄 Synchronization**: Xem [Feature Sync Map](../FEATURE_SYNC_MAP.md) để đảm bảo features được đồng bộ giữa Services, Shared, Gateway, và Clients.

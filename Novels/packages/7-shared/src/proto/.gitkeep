@@ -1,0 +1,17 @@
+# gRPC Proto Files Directory
+
+This directory contains all `.proto` files for gRPC contracts.
+
+## Structure
+
+- `users.proto` - User service gRPC contract
+- `stories.proto` - Story service gRPC contract
+- `search.proto` - Search service gRPC contract
+- `comments.proto` - Comment service gRPC contract
+- `ai.proto` - AI service gRPC contract
+- `notification.proto` - Notification service gRPC contract
+
+## Usage
+
+Use `ts-proto` to auto-compile `.proto` files to TypeScript code.
+

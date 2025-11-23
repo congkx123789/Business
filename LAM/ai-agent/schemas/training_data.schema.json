@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Training Data Session Schema",
+  "description": "Schema for comprehensive input/output training data for AI agents",
+  "required": ["session_id", "start_time", "snapshots"],
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unique identifier for the training session"
+    },
+    "start_time": {
+      "type": "number",
+      "description": "Unix timestamp when collection started"
+    },
+    "end_time": {
+      "type": ["number", "null"],
+      "description": "Unix timestamp when collection ended"
+    },
+    "goal": {
+      "type": ["string", "null"],
+      "description": "Optional goal or task description for this session"
+    },
+    "snapshots": {
+      "type": "array",
+      "description": "Array of input/output snapshots",
+      "items": {
+        "type": "object",
+        "required": ["snapshot_id", "timestamp"],
+        "properties": {
+          "snapshot_id": {
+            "type": "string",
+            "description": "Unique identifier for this snapshot"
+          },
+          "timestamp": {
+            "type": "number",
+            "description": "Unix timestamp for this snapshot"
+          },
+          "keyboard_events": {
+            "type": "array",
+            "description": "Keyboard input events in this snapshot",
+            "items": {
+              "type": "object",
+              "required": ["timestamp", "event_type", "key"],
+              "properties": {
+                "timestamp": {
+                  "type": "number",
+                  "description": "Event timestamp"
+                },
+                "event_type": {
+                  "type": "string",
+                  "enum": ["press", "release", "combination"],
+                  "description": "Type of keyboard event"
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Key name or character"
+                },
+                "key_code": {
+                  "type": ["integer", "null"],
+                  "description": "Key code if available"
+                },
+                "modifiers": {
+                  "type": "array",
+                  "items": {"type": "string"},
+                  "description": "Active modifier keys (ctrl, shift, alt, etc.)"
+                },
+                "is_special": {
+                  "type": "boolean",
+                  "description": "Whether this is a special key"
+                },
+                "text": {
+                  "type": ["string", "null"],
+                  "description": "Text character if applicable"
+                }
+              }
+            }
+          },
+          "mouse_events": {
+            "type": "array",
+            "description": "Mouse input events in this snapshot",
+            "items": {
+              "type": "object",
+              "required": ["timestamp", "event_type", "x", "y"],
+              "properties": {
+                "timestamp": {
+                  "type": "number",
+                  "description": "Event timestamp"
+                },
+                "event_type": {
+                  "type": "string",
+                  "enum": ["move", "click", "scroll", "drag_start", "drag_end", "drag"],
+                  "description": "Type of mouse event"
+                },
+                "x": {
+                  "type": "integer",
+                  "description": "X coordinate"
+                },
+                "y": {
+                  "type": "integer",
+                  "description": "Y coordinate"
+                },
+                "button": {
+                  "type": ["string", "null"],
+                  "enum": ["left", "right", "middle", null],
+                  "description": "Mouse button if applicable"
+                },
+                "scroll_dx": {
+                  "type": ["number", "null"],
+                  "description": "Horizontal scroll delta"
+                },
+                "scroll_dy": {
+                  "type": ["number", "null"],
+                  "description": "Vertical scroll delta"
+                },
+                "pressed": {
+                  "type": "boolean",
+                  "description": "Whether button is currently pressed"
+                }
+              }
+            }
+          },
+          "screen_state": {
+            "type": ["object", "null"],
+            "description": "Screen state at this snapshot",
+            "properties": {
+              "timestamp": {
+                "type": "number",
+                "description": "Screenshot timestamp"
+              },
+              "screenshot_path": {
+                "type": ["string", "null"],
+                "description": "Path to screenshot file"
+              },
+              "screenshot_data": {
+                "type": ["string", "null"],
+                "description": "Base64 encoded screenshot data"
+              },
+              "resolution": {
+                "type": "object",
+                "properties": {
+                  "width": {"type": "integer"},
+                  "height": {"type": "integer"}
+                }
+              },
+              "cursor_position": {
+                "type": "object",
+                "properties": {
+                  "x": {"type": "integer"},
+                  "y": {"type": "integer"}
+                }
+              }
+            }
+          },
+          "system_state": {
+            "type": ["object", "null"],
+            "description": "System state at this snapshot",
+            "properties": {
+              "timestamp": {
+                "type": "number",
+                "description": "System state timestamp"
+              },
+              "active_window": {
+                "type": ["object", "null"],
+                "properties": {
+                  "title": {"type": "string"},
+                  "rect": {
+                    "type": "array",
+                    "items": {"type": "integer"},
+                    "minItems": 4,
+                    "maxItems": 4
+                  }
+                }
+              },
+              "clipboard": {
+                "type": ["string", "null"],
+                "description": "Current clipboard content"
+              },
+              "cpu_percent": {
+                "type": ["number", "null"],
+                "description": "CPU usage percentage"
+              },
+              "memory_percent": {
+                "type": ["number", "null"],
+                "description": "Memory usage percentage"
+              },
+              "running_processes": {
+                "type": ["array", "null"],
+                "items": {"type": "string"},
+                "description": "List of running processes"
+              },
+              "network_activity": {
+                "type": ["object", "null"],
+                "description": "Network activity information"
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata for this snapshot"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata for the session"
+    }
+  }
+}
+

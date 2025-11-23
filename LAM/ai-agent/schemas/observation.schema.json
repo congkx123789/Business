@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["action_id", "status", "evidence"],
+  "properties": {
+    "action_id": { "type": "string" },
+    "status": { "enum": ["ok", "retryable_error", "fatal"] },
+    "evidence": { "type": "object" }
+  }
+}
+
+

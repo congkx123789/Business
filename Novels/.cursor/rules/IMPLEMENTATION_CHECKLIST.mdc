@@ -1,0 +1,241 @@
+---
+alwaysApply: true
+---
+
+# ✅ Implementation Checklist
+
+## 🎯 Overview
+
+Checklist chi tiết để theo dõi tiến độ triển khai các tính năng theo roadmap 3 giai đoạn.
+
+## 📊 Status Legend
+
+| Symbol | Status | Description |
+|--------|--------|-------------|
+| ⬜ | Not Started | Chưa bắt đầu |
+| 🔄 | In Progress | Đang triển khai |
+| ✅ | Completed | Đã hoàn thành |
+| 🚧 | Blocked | Bị chặn/đang chờ |
+| ⚠️ | Needs Review | Cần review |
+
+---
+
+## 📦 Phase 1: MVP
+
+### Backend Services
+
+#### Stories Service
+- ⬜ Chapter content retrieval
+- ⬜ Chapter navigation
+- ⬜ S3 storage integration
+
+#### Users Service
+- ⬜ Library module
+- ⬜ Reading progress tracking
+- ⬜ Reading preferences
+- ⬜ Cross-device sync
+
+#### Monetization Service
+- ⬜ Virtual Currency System
+- ⬜ Pricing Engine
+- ⬜ Paywall System
+- ⬜ Payment Processing
+
+#### Comments Service
+- ⬜ Chapter Comments (Meso Level)
+- ⬜ Comment replies
+- ⬜ Comment voting
+
+### Frontend (Web)
+
+#### Reader Interface
+- ⬜ Basic reader view
+- ⬜ Font options
+- ⬜ Theme (Light/Dark)
+- ⬜ Scroll mode
+- ⬜ Page-turn mode
+- ⬜ Chapter navigation
+
+#### Library
+- ⬜ Library view
+- ⬜ Bookshelf management
+- ⬜ Reading progress display
+- ⬜ Sync status indicator
+
+#### Monetization
+- ⬜ Purchase flow
+- ⬜ Wallet display
+- ⬜ Paywall prompts
+- ⬜ Transaction history
+
+#### Community
+- ⬜ Chapter comments panel
+- ⬜ Comment input
+- ⬜ Reply threads
+
+### Frontend (Mobile)
+
+#### iOS
+- ⬜ Reader interface
+- ⬜ Library view
+- ⬜ Purchase flow
+- ⬜ Chapter comments
+- ⬜ Offline-first sync
+
+#### Android
+- ⬜ Reader interface
+- ⬜ Library view
+- ⬜ Purchase flow
+- ⬜ Chapter comments
+- ⬜ Offline-first sync
+
+### Infrastructure
+- ⬜ Database schemas (Prisma)
+- ⬜ gRPC contracts (7-shared)
+- ⬜ Event Bus setup
+- ⬜ Sync mechanism
+
+---
+
+## 🏰 Phase 2: The Moat
+
+### Backend Services
+
+#### Comments Service
+- ⬜ Paragraph Comments (Micro Level)
+- ⬜ Real-time comment updates
+- ⬜ Comment density calculation
+
+#### Community Service
+- ⬜ Tipping System
+- ⬜ Monthly Votes
+- ⬜ Fan Rankings
+- ⬜ Author-Fan Interactions
+- ⬜ Gamification System
+
+#### Stories Service
+- ⬜ Discovery Module
+- ⬜ Ranking Charts
+- ⬜ Genre Browsing
+- ⬜ Editor's Picks
+
+#### Search Service
+- ⬜ Full-text search (Stories)
+- ⬜ Full-text search (Posts)
+- ⬜ MeiliSearch integration
+
+### Frontend (Web)
+
+#### Community
+- ⬜ Paragraph comments overlay
+- ⬜ Tipping UI
+- ⬜ Votes UI
+- ⬜ Rankings display
+- ⬜ Author dashboard
+
+#### Discovery
+- ⬜ Home page
+- ⬜ Browse pages
+- ⬜ Rankings pages
+- ⬜ Search interface
+
+### Frontend (Mobile)
+
+#### iOS
+- ⬜ Paragraph comments
+- ⬜ Tipping flow
+- ⬜ Votes UI
+- ⬜ Rankings
+- ⬜ Storefront
+
+#### Android
+- ⬜ Paragraph comments
+- ⬜ Tipping flow
+- ⬜ Votes UI
+- ⬜ Rankings
+- ⬜ Storefront
+
+### Infrastructure
+- ⬜ WebSocket integration
+- ⬜ Ranking calculation jobs
+- ⬜ Search indexing
+- ⬜ Event Bus for rankings
+
+---
+
+## ⚡ Phase 3: Optimization
+
+### Backend Services
+
+#### AI Service
+- ⬜ Recommendation Engine
+- ⬜ TTS Service
+- ⬜ Translation Service
+- ⬜ Dictionary Service
+
+#### Users Service
+- ⬜ Behavior Tracking
+- ⬜ Analytics events
+
+#### WebSocket Service
+- ⬜ Real-time features
+- ⬜ Live updates
+
+### Frontend (Web)
+
+#### Desktop Features
+- ⬜ Multi-tab reader
+- ⬜ Keyboard shortcuts
+- ⬜ Split-view reading
+- ⬜ Bulk operations
+- ⬜ Advanced search
+
+#### AI Features
+- ⬜ Recommendation UI
+- ⬜ TTS player
+- ⬜ Translation popup
+- ⬜ Dictionary popup
+
+### Frontend (Mobile)
+
+#### iOS
+- ⬜ Recommendations
+- ⬜ TTS player
+- ⬜ Translation
+- ⬜ Dictionary
+
+#### Android
+- ⬜ Recommendations
+- ⬜ TTS player
+- ⬜ Translation
+- ⬜ Dictionary
+
+### Infrastructure
+- ⬜ ML pipeline
+- ⬜ BigQuery integration
+- ⬜ A/B testing framework
+- ⬜ TTS service integration
+
+---
+
+## 📊 Overall Progress
+
+### Phase 1: MVP
+**Progress**: 0% (0/XX tasks completed)
+
+### Phase 2: The Moat
+**Progress**: 0% (0/XX tasks completed)
+
+### Phase 3: Optimization
+**Progress**: 0% (0/XX tasks completed)
+
+---
+
+## 🔗 Related Documentation
+
+- [Phase 1: MVP](./PHASE_1_MVP.md) - MVP details
+- [Phase 2: The Moat](./PHASE_2_MOAT.md) - Moat details
+- [Phase 3: Optimization](./PHASE_3_OPTIMIZATION.md) - Optimization details
+- [Ecosystem Flywheel](./ECOSYSTEM_FLYWHEEL.md) - Flywheel analysis
+- [Feature Sync Map](../features/FEATURE_SYNC_MAP.md) - Backend ↔ Client mapping
+

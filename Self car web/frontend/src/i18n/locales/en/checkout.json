@@ -1,0 +1,19 @@
+{
+  "title": "Complete Payment",
+  "subtitle": "Secure payment processing with PCI-compliant hosted checkout",
+  "cancel": "Cancel",
+  "bookingSummary": "Booking Summary",
+  "car": "Car:",
+  "dates": "Dates:",
+  "processing": "Processing Payment",
+  "processingMessage": "Please wait while we process your payment...",
+  "success": "Payment Successful!",
+  "successMessage": "Your booking has been confirmed. Redirecting...",
+  "securePayment": "Secure Payment",
+  "securePaymentMessage": "Your payment is processed securely through our PCI-compliant payment gateway. We never store your full card details.",
+  "continueToSecure": "Continue to Secure Payment",
+  "useCardForm": "Use Card Form Instead",
+  "redirecting": "Redirecting...",
+  "pay": "Pay"
+}
+

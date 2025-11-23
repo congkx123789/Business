@@ -1,0 +1,32 @@
+{
+  "name": "4-desktop",
+  "version": "0.1.0",
+  "description": "StorySphere Desktop Application - Electron wrapper for the web app",
+  "author": "StorySphere Team",
+  "private": true,
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development ELECTRON_START_URL=http://localhost:3000 electron .",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc && node -e \"require('fs').copyFileSync('src/renderer/index.html', 'dist/renderer/index.html')\"",
+    "build:package": "pnpm build && electron-builder --config electron-builder.yml",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "electron": "^28.2.0",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.1.7",
+    "electron-context-menu": "^3.6.1",
+    "electron-window-state": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "cross-env": "^7.0.3",
+    "electron-builder": "^24.9.1",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  },
+  "optionalDependencies": {
+    "electron-window-state": "^5.0.3"
+  }
+}

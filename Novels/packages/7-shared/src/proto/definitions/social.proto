@@ -1,0 +1,354 @@
+syntax = "proto3";
+
+package social;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+service SocialService {
+  // Posts & Feed
+  rpc CreatePost(CreatePostRequest) returns (Post);
+  rpc DeletePost(DeletePostRequest) returns (google.protobuf.Empty);
+  rpc LikePost(LikePostRequest) returns (Post);
+  rpc GetFeed(GetFeedRequest) returns (FeedResponse);
+  rpc GetUserPosts(GetUserPostsRequest) returns (PostList);
+  rpc GetGroupPosts(GetGroupPostsRequest) returns (PostList);
+
+  // Groups & Book Clubs
+  rpc CreateGroup(CreateGroupRequest) returns (Group);
+  rpc GetGroup(GetGroupRequest) returns (Group);
+  rpc JoinGroup(JoinGroupRequest) returns (GroupMembership);
+  rpc LeaveGroup(LeaveGroupRequest) returns (google.protobuf.Empty);
+  rpc CreateBookClub(CreateBookClubRequest) returns (Group);
+  rpc ScheduleReading(ScheduleReadingRequest) returns (BookClubSchedule);
+  rpc GetSchedule(GetScheduleRequest) returns (BookClubScheduleList);
+
+  // Follow & Connections
+  rpc FollowUser(FollowUserRequest) returns (Follow);
+  rpc UnfollowUser(UnfollowUserRequest) returns (google.protobuf.Empty);
+  rpc GetFollowers(GetFollowersRequest) returns (FollowList);
+  rpc GetFollowing(GetFollowingRequest) returns (FollowList);
+
+  // Reading Challenges
+  rpc CreateReadingChallenge(CreateReadingChallengeRequest) returns (ReadingChallenge);
+  rpc JoinReadingChallenge(JoinReadingChallengeRequest) returns (ChallengeParticipant);
+  rpc UpdateChallengeProgress(UpdateChallengeProgressRequest) returns (ChallengeParticipant);
+  rpc GetReadingChallenge(GetReadingChallengeRequest) returns (ReadingChallengeDetail);
+  rpc GetChallengeParticipants(GetChallengeParticipantsRequest) returns (ChallengeParticipantList);
+
+  // Activity & Goals
+  rpc SetReadingGoal(SetReadingGoalRequest) returns (ReadingGoal);
+  rpc GetReadingGoals(GetReadingGoalsRequest) returns (ReadingGoalList);
+  rpc GetActivityFeed(GetActivityFeedRequest) returns (ActivityFeed);
+  rpc GetReadingStatistics(GetReadingStatisticsRequest) returns (ReadingStatistics);
+}
+
+// ===== Posts =====
+message CreatePostRequest {
+  string userId = 1;
+  string content = 2;
+  optional string storyId = 3;
+  optional string groupId = 4;
+  repeated string mediaUrls = 5;
+}
+
+message DeletePostRequest {
+  string postId = 1;
+  string userId = 2;
+}
+
+message LikePostRequest {
+  string postId = 1;
+  string userId = 2;
+}
+
+message GetFeedRequest {
+  string userId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message GetUserPostsRequest {
+  string userId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message GetGroupPostsRequest {
+  string groupId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message Post {
+  string id = 1;
+  string userId = 2;
+  string content = 3;
+  optional string storyId = 4;
+  optional string groupId = 5;
+  repeated string mediaUrls = 6;
+  int32 likeCount = 7;
+  int32 replyCount = 8;
+  google.protobuf.Timestamp createdAt = 9;
+  google.protobuf.Timestamp updatedAt = 10;
+}
+
+message PostList {
+  repeated Post posts = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message FeedResponse {
+  repeated FeedItem items = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message FeedItem {
+  string id = 1;
+  string type = 2; // post | challenge | activity
+  Post post = 3;
+  ReadingChallenge challenge = 4;
+  ActivityEvent activity = 5;
+  google.protobuf.Timestamp createdAt = 6;
+}
+
+// ===== Groups & Book Clubs =====
+message CreateGroupRequest {
+  string ownerId = 1;
+  string name = 2;
+  string description = 3;
+  optional string coverUrl = 4;
+  optional string category = 5;
+}
+
+message GetGroupRequest {
+  string groupId = 1;
+}
+
+message JoinGroupRequest {
+  string groupId = 1;
+  string userId = 2;
+}
+
+message LeaveGroupRequest {
+  string groupId = 1;
+  string userId = 2;
+}
+
+message CreateBookClubRequest {
+  string ownerId = 1;
+  string name = 2;
+  string description = 3;
+  string storyId = 4;
+}
+
+message ScheduleReadingRequest {
+  string groupId = 1;
+  string storyId = 2;
+  int32 chapterNumber = 3;
+  google.protobuf.Timestamp deadline = 4;
+  google.protobuf.Timestamp discussionDate = 5;
+}
+
+message GetScheduleRequest {
+  string groupId = 1;
+}
+
+message Group {
+  string id = 1;
+  string ownerId = 2;
+  string name = 3;
+  string description = 4;
+  optional string storyId = 5;
+  string type = 6; // group | book-club
+  int32 memberCount = 7;
+  google.protobuf.Timestamp createdAt = 8;
+  google.protobuf.Timestamp updatedAt = 9;
+}
+
+message GroupMembership {
+  string groupId = 1;
+  string userId = 2;
+  string role = 3; // owner | moderator | member
+  google.protobuf.Timestamp joinedAt = 4;
+}
+
+message BookClubSchedule {
+  string id = 1;
+  string groupId = 2;
+  string storyId = 3;
+  int32 chapterNumber = 4;
+  google.protobuf.Timestamp deadline = 5;
+  google.protobuf.Timestamp discussionDate = 6;
+}
+
+message BookClubScheduleList {
+  repeated BookClubSchedule items = 1;
+}
+
+// ===== Follow =====
+message FollowUserRequest {
+  string followerId = 1;
+  string followingId = 2;
+}
+
+message UnfollowUserRequest {
+  string followerId = 1;
+  string followingId = 2;
+}
+
+message GetFollowersRequest {
+  string userId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message GetFollowingRequest {
+  string userId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message Follow {
+  string followerId = 1;
+  string followingId = 2;
+  google.protobuf.Timestamp createdAt = 3;
+}
+
+message FollowList {
+  repeated Follow items = 1;
+  int32 total = 2;
+}
+
+// ===== Reading Challenges =====
+message CreateReadingChallengeRequest {
+  string creatorId = 1;
+  string name = 2;
+  string description = 3;
+  string challengeType = 4;
+  int32 goal = 5;
+  string goalType = 6;
+  string timeRange = 7;
+  google.protobuf.Timestamp startDate = 8;
+  google.protobuf.Timestamp endDate = 9;
+  bool isPublic = 10;
+}
+
+message JoinReadingChallengeRequest {
+  string challengeId = 1;
+  string userId = 2;
+}
+
+message UpdateChallengeProgressRequest {
+  string challengeId = 1;
+  string userId = 2;
+  int32 progress = 3;
+}
+
+message GetReadingChallengeRequest {
+  string challengeId = 1;
+}
+
+message GetChallengeParticipantsRequest {
+  string challengeId = 1;
+}
+
+message ReadingChallenge {
+  string id = 1;
+  string creatorId = 2;
+  string name = 3;
+  string description = 4;
+  string challengeType = 5;
+  int32 goal = 6;
+  string goalType = 7;
+  string timeRange = 8;
+  google.protobuf.Timestamp startDate = 9;
+  google.protobuf.Timestamp endDate = 10;
+  bool isPublic = 11;
+  string status = 12; // active | completed | upcoming
+}
+
+message ReadingChallengeDetail {
+  ReadingChallenge challenge = 1;
+  repeated ChallengeParticipant participants = 2;
+}
+
+message ChallengeParticipant {
+  string userId = 1;
+  int32 progress = 2;
+  google.protobuf.Timestamp joinedAt = 3;
+  google.protobuf.Timestamp updatedAt = 4;
+}
+
+message ChallengeParticipantList {
+  repeated ChallengeParticipant participants = 1;
+}
+
+// ===== Activity & Goals =====
+message SetReadingGoalRequest {
+  string userId = 1;
+  string goalType = 2;
+  int32 target = 3;
+  string timeRange = 4;
+  google.protobuf.Timestamp startDate = 5;
+  google.protobuf.Timestamp endDate = 6;
+}
+
+message GetReadingGoalsRequest {
+  string userId = 1;
+}
+
+message ReadingGoal {
+  string id = 1;
+  string userId = 2;
+  string goalType = 3;
+  int32 target = 4;
+  int32 current = 5;
+  string timeRange = 6;
+  google.protobuf.Timestamp startDate = 7;
+  google.protobuf.Timestamp endDate = 8;
+  string status = 9;
+}
+
+message ReadingGoalList {
+  repeated ReadingGoal goals = 1;
+}
+
+message GetActivityFeedRequest {
+  string userId = 1;
+  optional int32 page = 2;
+  optional int32 limit = 3;
+}
+
+message ActivityFeed {
+  repeated ActivityEvent events = 1;
+  int32 total = 2;
+}
+
+message ActivityEvent {
+  string id = 1;
+  string userId = 2;
+  string activityType = 3;
+  optional string storyId = 4;
+  optional string chapterId = 5;
+  map<string, string> metadata = 6;
+  google.protobuf.Timestamp timestamp = 7;
+}
+
+message GetReadingStatisticsRequest {
+  string userId = 1;
+}
+
+message ReadingStatistics {
+  repeated ActivityMetric metrics = 1;
+  repeated ReadingGoal activeGoals = 2;
+}
+
+message ActivityMetric {
+  string activityType = 1;
+  int32 count = 2;
+}

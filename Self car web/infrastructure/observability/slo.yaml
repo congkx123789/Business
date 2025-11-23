@@ -1,0 +1,78 @@
+version: 1
+window: monthly
+timezone: UTC
+
+slos:
+  - name: payments_success_rate
+    description: Successful payment completion rate
+    owner: payments-team
+    target: 99.99
+    sli:
+      type: ratio
+      good_event: successful_payment
+      total_event: payment_attempt
+      source: events/payment_stream
+      notes: Success only when order transitions to paid; deduplicate by orderId
+    alerting:
+      fast_burn:
+        one_hour_percent_budget: 5
+        six_hour_percent_budget: 10
+      slow_burn:
+        three_day_percent_budget: 20
+
+  - name: search_availability
+    description: Search API availability
+    owner: search-api-team
+    target: 99.9
+    sli:
+      type: availability
+      good_condition: http_status < 500 and not timeout
+      total_condition: any_request
+      source: metrics/api_gateway
+    alerting:
+      fast_burn:
+        project_exhaust_hours: 24
+      slow_burn:
+        three_day_percent_budget: 20
+
+  - name: search_p99_latency
+    description: P99 latency under 500ms
+    owner: search-api-team
+    target: p99<500ms
+    sli:
+      type: latency_threshold
+      threshold_ms: 500
+      percentile: 99
+      source: metrics/application
+    alerting:
+      fast_burn:
+        sustained_minutes_over_threshold: 30
+        project_exhaust_hours: 24
+      slow_burn:
+        three_day_percent_budget: 20
+
+  - name: inventory_consistency
+    description: VIN reconciliation failures below 0.001%
+    owner: inventory-platform
+    target: 99.999
+    sli:
+      type: ratio
+      good_event: reconciliation_success
+      total_event: reconciliation_attempt
+      source: jobs/reconciler
+      failure_window_minutes: 5
+    alerting:
+      fast_burn:
+        one_hour_percent_budget: 2
+      slow_burn:
+        three_day_percent_budget: 10
+
+policy:
+  freeze_on_budget_exhaustion: true
+  unfreeze_requirements:
+    - postmortem_completed
+    - action_items_assigned
+    - seven_days_low_burn
+    - mitigations_verified
+
+

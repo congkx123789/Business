@@ -1,0 +1,31 @@
+groups:
+  - name: perf-and-cache
+    interval: 30s
+    rules:
+      # API p95 latency (seconds)
+      - record: sli:api_p95_latency:seconds
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le) (rate(http_server_duration_seconds_bucket[5m]))
+          )
+
+      # Cache hit ratio per namespace over 5m
+      - record: cache:hit_ratio:5m
+        expr: |
+          sum(rate(cache.hits[5m])) by (namespace)
+          /
+          (sum(rate(cache.hits[5m])) by (namespace) + sum(rate(cache.misses[5m])) by (namespace))
+
+      # Overall cache hit ratio
+      - record: cache:hit_ratio_overall:5m
+        expr: |
+          sum(rate(cache.hits[5m]))
+          /
+          (sum(rate(cache.hits[5m])) + sum(rate(cache.misses[5m])))
+
+      # DB read rate (per second)
+      - record: db:reads_per_sec
+        expr: rate(db.reads[5m])
+
+

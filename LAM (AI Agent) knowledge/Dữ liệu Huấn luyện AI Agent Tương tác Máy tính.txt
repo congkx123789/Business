@@ -1,0 +1,298 @@
+
+BÁO CÁO CHUYÊN SÂU: DỮ LIỆU VÀ CƠ CHẾ HUẤN LUYỆN TÁC NHÂN AI DUYỆT WEB TỰ CHỦ
+
+
+Chương I. Tổng quan về Agentic AI và Tác vụ Tương tác Giao diện Người dùng (UI)
+
+
+1.1. Khái niệm và Kiến trúc cốt lõi của AI Agent tự chủ
+
+Tác nhân AI (AI Agent) là một thực thể tự động có khả năng nhận biết môi trường, phân tích thông tin và thực hiện các hành động để đạt được mục tiêu cụ thể.1 Khác biệt cơ bản giữa AI Agent và các công cụ AI truyền thống như chatbot hay trợ lý ảo là ở Tính Tự chủ (Autonomy) và Khả năng Lập kế hoạch (Planning).3
+Các Agent tiên tiến có khả năng tự suy nghĩ, lập kế hoạch và hành động độc lập, không cần sự can thiệp liên tục từ con người.3 Quá trình hoạt động của một Agent AI Agent hoàn chỉnh tuân theo một vòng lặp chặt chẽ, bao gồm:
+Thu thập dữ liệu (Sensing): Agent truy xuất thông tin từ môi trường (ví dụ: dữ liệu từ website, API, hoặc ảnh chụp màn hình UI).2
+Ra quyết định (Decision Making): Agent phân tích dữ liệu, suy luận, và lập kế hoạch chiến lược nhiều bước để giải quyết nhiệm vụ được giao.3
+Thực thi hành động (Execution): Agent triển khai các bước hành động đã định, sử dụng các công cụ đã chọn (ví dụ: click chuột, nhập văn bản).5
+Phản hồi và Tự điều chỉnh (Feedback and Self-Correction): Agent liên tục đánh giá hiệu quả hành động và điều chỉnh kế hoạch nếu gặp vấn đề hoặc nếu môi trường thay đổi.5
+Khả năng tự chủ này là yếu tố cốt lõi giúp Web Agent thực hiện các tác vụ phức tạp như mua sắm trực tuyến, đặt lịch hẹn, hoặc xử lý công việc văn phòng, thay thế hoàn toàn các thao tác thủ công.9
+
+1.2. Phân loại AI Agent theo Mục tiêu và Mức độ Tự chủ
+
+Trong lĩnh vực nghiên cứu AI, Agent được phân loại dựa trên mức độ thông minh và khả năng tương tác với môi trường.1 Sự phân loại này giúp xác định kiến trúc phù hợp cho từng bài toán:
+Tác nhân phản xạ đơn giản (Simple Reflex Agents): Hoạt động dựa trên các quy tắc đã thiết lập sẵn mà không có bộ nhớ về trạng thái trước đó. Chúng chỉ phù hợp với môi trường ổn định và dễ dự đoán.1
+Tác nhân phản xạ dựa trên mô hình (Model-Based Reflex Agents): Lưu trữ thông tin về trạng thái trước đó, cho phép chúng hoạt động tốt hơn trong môi trường quan sát không đầy đủ (partially observable).1
+Tác nhân dựa trên mục tiêu (Goal-Based Agents): Không chỉ phản ứng với môi trường mà còn lập kế hoạch hành động để đạt được mục tiêu dài hạn.
+Tác nhân học tập (Learning Agents): Có khả năng cải thiện hiệu suất thông qua việc tương tác với môi trường, xử lý dữ liệu mới và nhận phản hồi từ kết quả hành động.7
+Các Agent web tự chủ hiện đại, như OpenAI Operator hay Agent Gemini, phải thuộc nhóm Tác nhân dựa trên Mục tiêu hoặc Tác nhân Học tập. Điều này là bắt buộc vì các tác vụ duyệt web thực tế (ví dụ: tìm kiếm và so sánh giá của nhiều mặt hàng trên nhiều trang) đòi hỏi khả năng lập kế hoạch nhiều bước phức tạp và khả năng thích ứng linh hoạt với các giao diện người dùng thường xuyên thay đổi.9
+
+1.3. Web Agent và Cơ chế Tương tác với Môi trường Kỹ thuật số
+
+Web Agent, hay còn gọi là các trình duyệt tích hợp AI Agent (agentic browsers) 11, đại diện cho kỷ nguyên mới nơi máy móc tự động hóa các công việc trên Internet.9 Chúng có thể duyệt web, điền biểu mẫu, và thực hiện giao dịch mà không cần con người can thiệp.9
+Một sự phát triển quan trọng trong lĩnh vực này là sự dịch chuyển từ tương tác dựa trên API sang tương tác dựa trên Giao diện Người dùng (GUI-based Interaction). Việc sử dụng các API truyền thống giới hạn phạm vi tự động hóa của AI trong các hệ thống đã được lập trình để kết nối. Ngược lại, các mô hình Agent tiên phong, như OpenAI Operator, được thiết kế để tương tác trực tiếp với giao diện máy tính giống như con người—thông qua hình ảnh, click chuột, và nhập liệu.8 Phương pháp GUI-based này cho phép Agent đạt được tính phổ quát, mở rộng khả năng tự động hóa ra toàn bộ các trang web, ngay cả những trang không cung cấp API.8 Điều này định hình lại cách con người sử dụng Internet, biến AI từ một công cụ hỗ trợ thụ động thành một tác nhân thực hiện nhiệm vụ một cách chủ động và độc lập.12
+
+Chương II. Phân tích Các Bộ Dữ liệu Huấn luyện Mô phỏng Hành vi Người dùng
+
+Để xây dựng các Agent web tổng quát (generalist web agents) có khả năng tương tác tự chủ trên Internet, yêu cầu về dữ liệu huấn luyện đã thay đổi đáng kể. Các bộ dữ liệu cũ chỉ sử dụng các trang web mô phỏng hoặc có phạm vi tác vụ giới hạn, không còn phù hợp.13 Sự phát triển đòi hỏi dữ liệu phải mô phỏng hành vi người dùng thực tế trên các trang web phức tạp, đa dạng.
+
+2.1. Yêu cầu dữ liệu cho Agent Tổng quát: Đa dạng Miền, Tác vụ và Hành động
+
+Nghiên cứu về học bắt chước (Imitation Learning - IL) chỉ ra rằng việc thiếu dữ liệu quy mô Internet, vốn là tiêu chuẩn trong các lĩnh vực như Xử lý ngôn ngữ tự nhiên (NLP) hay Thị giác máy tính (CV), khiến chất lượng và sự quản lý dữ liệu (curation) trở nên cực kỳ quan trọng.14 Dữ liệu cần phải là dữ liệu "hướng quyết định" (decision-centric data) 15 để huấn luyện mô hình không chỉ hiểu văn bản mà còn hiểu trình tự hành động cần thiết để hoàn thành mục tiêu.
+Yêu cầu dữ liệu cho Web Agent tổng quát bao gồm ba yếu tố thiết yếu:
+Sự đa dạng về miền (domains), trang web, và tác vụ.13
+Sử dụng các trang web trong thế giới thực thay vì môi trường mô phỏng đơn giản.13
+Phổ rộng các mô hình tương tác của người dùng.13
+Ngoài ra, dữ liệu chú thích của con người (human-annotated data) là cần thiết để nắm bắt các tương tác duyệt web trong thế giới thực, giúp phát triển các hệ thống tạo sinh có khả năng truy xuất thông tin (Retrieval-Augmented Generation systems) và tương tác động với nội dung web.16
+
+2.2. Phân tích Chuyên sâu Bộ dữ liệu Mind2Web
+
+Mind2Web là một trong những bộ dữ liệu chuẩn mực nhất hiện nay cho việc huấn luyện các Agent web tự chủ.13
+
+2.2.1. Cấu trúc và Quy trình Thu thập Dữ liệu
+
+Mind2Web cung cấp một khối lượng lớn dữ liệu hành vi, bao gồm hơn 2,000 tác vụ mở (open-ended tasks) được thu thập từ 137 trang web thuộc 31 miền khác nhau.13 Dữ liệu này được thu thập thông qua quy trình crowdsourcing ba giai đoạn (Đề xuất tác vụ, Minh họa tác vụ, Xác minh tác vụ) để đảm bảo chất lượng và tính xác thực.13
+Đối với mỗi tác vụ, Mind2Web cung cấp cấu trúc dữ liệu chi tiết, bao gồm:
+Mô tả Tác vụ: Mục tiêu bằng ngôn ngữ tự nhiên.13
+Trình tự Hành động (Action Sequence): Đây là chuỗi các bước hành động được thực hiện bởi chuyên gia. Mỗi hành động là một cặp (Operation, Target Element), trong đó Operation là hành động cần thực hiện (Click, Hover, Type, Select), và Target Element là thành phần giao diện cụ thể được người dùng tương tác.13
+
+2.2.2. Biểu diễn Giao diện Đa phương thức
+
+Để huấn luyện Agent có khả năng "quét" nội dung web, Mind2Web cung cấp ảnh chụp trang web (Webpage Snapshots) dưới nhiều định dạng đa phương thức, phản ánh toàn bộ trạng thái của môi trường:
+Cấu trúc: MHTML (HTML thô) và DOM Snapshot (chứa cấu trúc DOM, thông tin layout và style).13
+Thị giác: Image (ảnh chụp màn hình).13
+Khác: HAR (lưu lượng mạng) và Trace (dấu vết tương tác hoàn chỉnh).13
+Việc cung cấp đồng thời dữ liệu cấu trúc và dữ liệu thị giác là một yêu cầu kỹ thuật quan trọng. Nó chỉ ra rằng Agent web tiên tiến phải là mô hình đa phương thức (Multimodal Agents), có khả năng đọc hiểu cả cấu trúc mã hóa (HTML) và ngữ cảnh thị giác (screenshot), giống như cách con người kết hợp cả việc nhìn giao diện và hiểu cấu trúc tiềm ẩn khi tương tác.13
+
+2.3. Phân tích Bộ dữ liệu WebArena và Các Tiêu chuẩn Đánh giá
+
+WebArena là một tiêu chuẩn đánh giá quan trọng khác, được thiết kế như một môi trường web tự host (self-hostable environment).18 Môi trường này mô phỏng các trang web thực thuộc bốn danh mục phổ biến (Social Forum, Online Shopping, Content Management, Collaborative Software Development).18
+Mục tiêu chính của WebArena là đánh giá khả năng suy luận và lập kế hoạch dài hạn của Agent, đòi hỏi Agent phải diễn giải các lệnh ngôn ngữ tự nhiên cấp cao thành các tương tác web cụ thể và thực hiện chúng một cách tuần tự.18 Không gian hành động của Agent trong WebArena hỗ trợ dịch ba loại hành động thành thao tác chuột và bàn phím:
+Hành động cơ bản (Basic actions): click, type.
+Thao tác tab (Tab operations): Ví dụ: tab focus.
+Thao tác trang (Page operations): Ví dụ: go back.20
+Sự ra đời của các môi trường tiêu chuẩn như WebArena và Mind2Web-Live (một phiên bản tinh chỉnh của Mind2Web cho môi trường trực tuyến, năng động) 22 cho thấy cộng đồng nghiên cứu đang tập trung vào việc tạo ra các tiêu chuẩn đánh giá hành vi Agent có tính thực tế và khả năng tái lập cao.19
+Bảng 1: So sánh Các Bộ Dữ liệu Huấn luyện Web Agent Tiêu chuẩn
+
+Bộ Dữ liệu
+Nhà Phát triển/Nghiên cứu
+Số lượng Tác vụ
+Nền tảng
+Loại Dữ liệu Giao diện Chính
+Đặc điểm Nổi bật
+Mind2Web
+OSU NLP Group
+>2,000 nhiệm vụ
+Trang web thực (Real-world) 13
+HTML/DOM, Screenshot 13
+Đa dạng miền (31 domains), Crowdsourced, tập trung vào trình tự hành động.13
+WebArena
+CMU
+>800 nhiệm vụ
+Môi trường mô phỏng (Docker) 18
+HTML/DOM, Ảnh chụp
+Tiêu chuẩn đánh giá hành động phức tạp, lập kế hoạch dài hạn.[18, 20]
+OpenAI WebGPT
+OpenAI
+Không xác định
+Web
+Văn bản, Tương tác web chú thích
+Tốt cho các hệ thống RAG và truy vấn web động.16
+
+
+Chương III. Cơ chế Quét Nội dung và Biểu diễn Hành động trên Máy tính
+
+Cơ chế Agent quét nội dung và chuyển đổi thông tin thành thao tác máy tính là cốt lõi để mô phỏng hành vi con người. Quá trình này yêu cầu Agent phải định vị chính xác thành phần giao diện (Target Element) và xác định hành động phù hợp (Operation).
+
+3.1. Phân tích Cấu trúc Dữ liệu Giao diện (Interface Data Structures)
+
+Agent cần một biểu diễn môi trường để ra quyết định. Các bộ dữ liệu huấn luyện cung cấp hai nguồn thông tin chính để "cảm nhận" trạng thái trang web:
+
+3.1.1. Biểu diễn dựa trên HTML/DOM Snapshot
+
+Dữ liệu cấu trúc là thành phần truyền thống và quan trọng. Các Agent phân tích cấu trúc cây DOM (Document Object Model) của trang web để hiểu mối quan hệ phân cấp giữa các phần tử. Mind2Web cung cấp các tệp như raw_html, DOM Snapshot (dom_content.json chứa thông tin layout và style), và các thuộc tính liên quan.13 Trong đó, một ID duy nhất (backend_node_id) được sử dụng để xác định chính xác các phần tử giao diện.13 Dữ liệu cấu trúc này giúp Agent hiểu chức năng tiềm ẩn của các thành phần, ngay cả khi chúng không hiển thị rõ ràng trên màn hình.
+
+3.1.2. Vai trò của Mô hình Thị giác Ngôn ngữ (VLM)
+
+Biểu diễn thị giác sử dụng ảnh chụp màn hình (screenshot) của trang web làm đầu vào.13 Mô hình Thị giác Ngôn ngữ (VLM) xử lý hình ảnh này để xác định bối cảnh thị giác, định vị các thành phần dựa trên tọa độ, và hiểu được giao diện người dùng theo cách mà con người nhìn nhận.17 Điều này đặc biệt quan trọng trong các giao diện web phức tạp, nơi mà cấu trúc DOM thường không rõ ràng hoặc không ổn định.
+
+3.2. So sánh Kỹ thuật Định vị Thành phần (Element Locators): DOM-based vs. Visual-based
+
+Sự lựa chọn về cách Agent định vị các phần tử là một trong những thách thức kỹ thuật lớn nhất trong việc xây dựng Web Agent.
+
+DOM-based (Cấu trúc)
+
+Kỹ thuật này sử dụng các bộ định vị cấu trúc như XPath hoặc CSS Selector để chỉ định Target Element dựa trên mã HTML.13 Các nghiên cứu cho thấy định vị dựa trên DOM thường đáng tin cậy hơn (robust) và có thời gian thực thi thấp hơn so với các phương pháp thị giác.23 Nó phù hợp cho các tác vụ tự động hóa truyền thống hoặc các trang web có cấu trúc ổn định.
+
+Visual/VLM-based (Thị giác)
+
+Kỹ thuật này dựa trên việc phân tích tọa độ màn hình hoặc hộp giới hạn (bounding box) sau khi VLM xử lý ảnh chụp màn hình.17 Phương pháp này được coi là một giải pháp thay thế hiệu quả khi phương pháp DOM không thể áp dụng.23 Nó có khả năng thích ứng cao hơn với các giao diện web thay đổi liên tục, vì nó bắt chước cách con người xử lý sự thay đổi trực quan.17
+
+Xu hướng Kết hợp Đa phương thức
+
+Việc cả hai loại dữ liệu (DOM và Image) được cung cấp trong các bộ dữ liệu huấn luyện Mind2Web cho thấy xu hướng bắt buộc đối với các Web Agent tổng quát là phải sử dụng cách tiếp cận đa phương thức (multimodal).17 Sự kết hợp này cho phép Agent tận dụng độ chính xác cấu trúc của DOM và khả năng chịu lỗi hình ảnh của VLM, đảm bảo Agent có thể hoạt động bền vững trong môi trường web năng động.23
+Bảng 2: So sánh Phương pháp Biểu diễn Giao diện (DOM vs. VLM)
+
+Đặc điểm
+DOM-based (Cấu trúc)
+Visual/VLM-based (Thị giác)
+Ý nghĩa trong Agentic AI
+Cơ chế Quét
+Phân tích cây HTML, thuộc tính, ID 13
+Phân tích pixel, VLM interpret screenshots 17
+Cần sự kết hợp (multimodal) để có cả độ chính xác cấu trúc và khả năng chịu lỗi hình ảnh.17
+Độ bền (Robustness)
+Cao với thay đổi nội dung, thấp với thay đổi cấu trúc.23
+Cao với thay đổi cấu trúc, thấp với thay đổi hiển thị lớn.
+VLM tốt hơn cho các trang web "sống" (live web) 22 vì nó bắt chước cách con người xử lý sự thay đổi.
+Tốc độ
+Nhanh hơn.23
+Chậm hơn (do tính toán mô hình thị giác).23
+Vấn đề hiệu suất cần được giải quyết cho các tác vụ dài.
+
+
+3.3. Không gian Hành động (Action Space) của Web Agent
+
+Không gian hành động xác định tập hợp các lệnh hợp lệ mà Agent có thể thực hiện.20 Để mô phỏng hành vi con người, Agent cần chuyển đổi quyết định cấp cao thành trình tự các hành động cấp thấp trên giao diện.
+Các lệnh hành động cơ bản phổ biến nhất được hỗ trợ bởi các bộ dữ liệu huấn luyện và mô phỏng bao gồm:
+Click: Thao tác kích hoạt một thành phần.13
+Type: Nhập văn bản vào một trường input, thường đi kèm với giá trị nhập liệu.13
+Select: Chọn một tùy chọn từ danh sách.13
+Các hành động khác: Bao gồm Hover (di chuột) và các thao tác điều hướng như go back hoặc tab focus.20
+Cơ chế chuyển đổi hành động đòi hỏi một hệ thống có khả năng chuyển đổi suy luận cấp cao của Mô hình Ngôn ngữ Lớn (LLM Planning) thành một lệnh kỹ thuật (ví dụ: "Click vào nút có ID X" hoặc "Type 'tên sản phẩm' vào trường văn bản Y"). Mặc dù Agent hoạt động dựa trên các hành động có độ hạt rất thấp (như tọa độ hoặc ID nút), toàn bộ quá trình phải được dẫn dắt bởi một kế hoạch chiến lược tổng thể.6 Điều này là yếu tố đảm bảo Agent không chỉ thực thi máy móc mà còn đạt được mục tiêu tổng thể của người dùng.5
+
+Chương IV. Phương Pháp Huấn Luyện và Thách Thức Kỹ Thuật Chuyên Sâu
+
+Việc huấn luyện Agent web tự chủ là một bài toán phức tạp, phần lớn dựa trên Học Bắt chước (Imitation Learning - IL) nhưng phải đối mặt với các thách thức nghiêm trọng về tính ổn định và khả năng khái quát hóa.
+
+4.1. Chi tiết về Học Bắt chước (Imitation Learning) trong Huấn luyện Web Agent
+
+Học Bắt chước (IL) là phương pháp nền tảng, nơi Agent học hàm chính sách (policy function) bằng cách trực tiếp sao chép hành vi của chuyên gia từ các cặp (trạng thái, hành động) có sẵn.24
+Trong bối cảnh Web Agent, dữ liệu huấn luyện chính là các trình tự hành động (action sequences) được thu thập từ con người (ví dụ: Mind2Web).13 Phương pháp này mang lại nhiều lợi ích:
+Hiệu quả và Nhanh chóng: Agent học nhanh bằng cách tận dụng các minh họa đã có, giảm thiểu thời gian huấn luyện kéo dài.24
+An toàn: Quá trình huấn luyện an toàn hơn, đặc biệt trong các môi trường phức tạp và rủi ro cao (ví dụ: trang web giao dịch tài chính), nơi việc khám phá ngẫu nhiên (trial-and-error) của Học Tăng cường (RL) là không thực tế hoặc nguy hiểm.24
+Tuy nhiên, hiệu suất của IL bị giới hạn nghiêm trọng bởi chất lượng dữ liệu và không thể tự cải thiện nếu gặp phải các trạng thái nằm ngoài tập huấn luyện.14
+
+4.2. Vấn đề Độ Lệch Phân Phối Trạng thái (State Distribution Shift)
+
+Thách thức kỹ thuật lớn nhất đối với các Agent được huấn luyện bằng IL là Độ Lệch Phân Phối Trạng thái (Distribution Shift).14 Vấn đề này xảy ra khi Agent mắc lỗi nhỏ trong việc dự đoán hành động, khiến nó đi chệch khỏi quỹ đạo hành động của chuyên gia (expert trajectory). Khi Agent gặp phải một trạng thái chưa từng thấy trong dữ liệu huấn luyện (unseen states), chính sách học được sẽ không thể đưa ra quyết định phục hồi, dẫn đến lỗi hành động tích lũy.14
+Vấn đề này đặc biệt gay gắt trong môi trường web, nơi giao diện liên tục thay đổi (dynamic environment).22 Nếu Agent click sai, nó có thể bị chuyển hướng đến một trang lỗi, một trạng thái mới hoàn toàn không có trong dữ liệu ban đầu.
+Các nghiên cứu cho thấy để giải quyết Distribution Shift, cần phải tập trung vào việc đánh giá và quản lý chất lượng dữ liệu 14:
+Action Divergence: Phải giảm thiểu sự không khớp giữa hành động của chuyên gia và hành động do chính sách của Agent dự đoán tại một trạng thái nhất định.
+Transition Diversity: Khả năng phục hồi của Agent phụ thuộc vào việc quản lý mức độ "nhiễu loạn" trong hệ thống.14
+Phân tích chuyên sâu trong lĩnh vực học bắt chước (đặc biệt trong robotics, vốn có cùng bản chất kỹ thuật với Web Agent) đã chỉ ra rằng việc chỉ tăng cường sự đa dạng trạng thái một cách vô độ không phải lúc nào cũng có lợi. Thay vào đó, việc ưu tiên dữ liệu hành động chất lượng cao và được quản lý chặt chẽ là cần thiết để khuyến khích chính sách Agent duy trì quỹ đạo hành động nằm trong phân phối trạng thái đã học.14 Điều này giải thích tại sao các tiêu chuẩn mới như Mind2Web-Live được phát triển để đối phó với bản chất động của môi trường web.22
+
+4.3. Tối ưu hóa Hành vi: Kết hợp IL và RL (Hybrid Methods)
+
+Để khắc phục những hạn chế cố hữu của IL và tăng cường khả năng khám phá cũng như phục hồi lỗi, các phương pháp lai (Hybrid Methods) kết hợp IL và Học Tăng cường (Reinforcement Learning - RL) được áp dụng.24
+Khởi tạo bằng IL: Agent bắt đầu bằng cách học nhanh chóng từ minh họa của chuyên gia, tạo ra một chính sách ban đầu mạnh mẽ.24
+Tinh chỉnh bằng RL: Sau đó, Agent sử dụng RL để tinh chỉnh chính sách, khám phá các chiến lược tối ưu và học cách phục hồi khi gặp các trạng thái không mong muốn (distribution shift).24 Các nỗ lực gần đây, chẳng hạn như DeepResearch của Alibaba, đã áp dụng các khung RL dựa trên chính sách để huấn luyện các Agent web, nhằm ổn định việc học trong môi trường tương tác phi tĩnh.27
+Việc tối ưu hóa hành vi này được hỗ trợ bởi các khung LLM Agent (LLM Agent Framework), nơi Agent sử dụng vòng lặp Lập kế hoạch, Thực thi và Phản hồi.6 Khả năng lập kế hoạch có phản hồi cho phép Agent học hỏi từ các hành động và quan sát trong quá khứ, liên tục đánh giá hiệu quả và tạo thêm nhiệm vụ nếu cần để đảm bảo kết quả cuối cùng đáp ứng yêu cầu.5
+
+Chương V. Các Mô hình và Công nghệ AI Agent Nổi bật Hiện nay
+
+Sự phát triển của Agentic AI được dẫn dắt bởi các công ty công nghệ lớn, tập trung vào việc tạo ra các mô hình có khả năng tự chủ và tương tác trực tiếp với giao diện người dùng.
+
+5.1. Phân tích Cơ chế Tác nhân Tự chủ của OpenAI Operator
+
+OpenAI Operator là một ví dụ điển hình về Agent tự chủ, biến AI từ một công cụ thụ động thành một "người tham gia tích cực" trong hệ sinh thái kỹ thuật số.12 Operator có thể duyệt web, điền biểu mẫu, và thực hiện giao dịch trực tuyến một cách độc lập.9
+
+Cơ chế Tương tác GUI-based
+
+Điểm đặc biệt của Operator là sự phụ thuộc vào tương tác dựa trên GUI (giao diện đồ họa) thay vì dựa vào các lệnh gọi API.8 Điều này giúp Agent có thể hoạt động trên hầu hết mọi trang web phổ thông mà không bị giới hạn bởi việc tích hợp API cụ thể. Cơ chế này đòi hỏi Agent phải sử dụng Mô hình Thị giác Ngôn ngữ (VLM) để đọc và diễn giải giao diện thông qua ảnh chụp màn hình.8
+
+Tính năng Tự chủ và An toàn
+
+Operator thể hiện khả năng tự chủ cao thông qua các cơ chế:
+Tự sửa lỗi (Self-Correction): Nếu gặp lỗi trong quá trình thực thi, Operator sử dụng khả năng suy luận của mình để tự điều chỉnh kế hoạch và tìm cách phục hồi.8
+Bảo vệ An toàn và Quyền riêng tư: Vì Agent tương tác trực tiếp với các giao dịch nhạy cảm (như mua sắm/thanh toán), OpenAI đã xây dựng các biện pháp bảo vệ bắt buộc. Operator yêu cầu xác nhận rõ ràng của người dùng trước khi hoàn tất các hành động quan trọng (ví dụ: gửi đơn hàng) và tự động chuyển giao quyền kiểm soát cho người dùng thông qua Takeover Mode khi gặp các trường nhạy cảm như thông tin tài chính hoặc mật khẩu.8
+
+5.2. Mô hình Agent Tổng quát (Generalist Agents)
+
+Mô hình Web Agent tiên tiến nhất hiện nay đang tiến hóa theo hướng Agent tổng quát, tức là một mô hình duy nhất có thể xử lý nhiều loại tác vụ và phương thức khác nhau.
+
+Gato của DeepMind
+
+Gato là một tác nhân tổng quát (generalist policy) đa phương thức, đa nhiệm vụ, đa hình thái (multi-modal, multi-task, multi-embodiment).28 Điều đặc biệt là Gato sử dụng cùng một mạng lưới thần kinh với cùng một bộ trọng số để thực hiện các nhiệm vụ đa dạng, từ chơi game Atari, chú thích hình ảnh, trò chuyện, cho đến việc điều khiển cánh tay robot và thực hiện các hành động trên giao diện (UI/discrete actions).28
+Sự thành công của Gato thể hiện rằng các hành động tương tác với giao diện máy tính, dù là click chuột hay nhập liệu, có thể được coi là các mã thông báo hành động (action tokens) được thống nhất trong cùng một khuôn khổ mô hình nền tảng. Điều này chứng minh Web Agentic AI đang hội tụ với lĩnh vực Robotics, nơi cả hai đều sử dụng Học Bắt chước trên dữ liệu trình tự hành động và trạng thái môi trường.14 Mô hình tổng quát này cung cấp bằng chứng khái niệm cho khả năng xây dựng một Agent duy nhất có thể tự động hóa tất cả các tác vụ kỹ thuật số mà con người thực hiện.
+
+5.3. Vai trò của Các API Tác nhân và Khung LLM
+
+Bên cạnh các Agent tự chủ hoàn toàn, nhiều công ty cũng đang phát triển các công cụ và API để tăng cường khả năng tương tác của LLM với môi trường máy tính:
+Anthropic Computer Use API: Đây là giao diện cho phép các mô hình AI thực hiện các thao tác trên máy tính giống như con người.9
+Google Gemini 2.0: Agent này được thiết kế để xử lý các tác vụ phức tạp trên web, đặc biệt trong các lĩnh vực yêu cầu tương tác giá trị cao như mua sắm.9
+Ngoài ra, khả năng hợp tác là một yếu tố then chốt. Trong các Hệ thống đa tác nhân (Multi-agent systems), nhiều Agent có thể tương tác và phối hợp hành động với nhau để giải quyết các vấn đề phức tạp mà một Agent đơn lẻ không thể xử lý.4 Điều này hứa hẹn khả năng tự động hóa các quy trình làm việc phức tạp trong doanh nghiệp.
+Bảng 3: Tổng hợp Công nghệ AI Agent Duyệt Web Nổi bật
+
+Mô hình/Công nghệ
+Nhà phát triển
+Cơ chế Tương tác UI
+Tính năng Tự chủ Cốt lõi
+Ghi chú/Phạm vi
+Operator
+OpenAI
+GUI-based (Ảnh chụp màn hình/VLM) 8
+Lập kế hoạch, Tự sửa lỗi (Self-correction), Bảo vệ An toàn 8
+Tương tác web phổ quát, không cần API, tập trung vào an toàn giao dịch.[8, 9]
+Gato
+DeepMind (Google)
+Đa phương thức (Multi-modal action tokens) 28
+Chính sách tổng quát (Generalist policy)
+Thể hiện khả năng thống nhất các nhiệm vụ robot và UI/text trong một mô hình duy nhất.28
+Computer Use API
+Anthropic
+API cho Tác nhân 9
+Thực hiện thao tác máy tính
+Cung cấp công cụ cho các mô hình ngôn ngữ lớn tương tác với môi trường desktop/web.
+Gemini 2.0 Agent
+Google
+Đa phương thức
+Xử lý tác vụ web phức tạp 9
+Tập trung vào các tác vụ giá trị cao như mua sắm và quản lý công việc.
+
+
+Chương VI. Kết luận và Khuyến Nghị Chiến lược
+
+
+6.1. Tóm tắt các Phát hiện Chính và Xu hướng Công nghệ
+
+Phân tích dữ liệu huấn luyện và cơ chế hoạt động của các AI Agent duyệt web tự chủ đã xác nhận một sự dịch chuyển công nghệ rõ rệt từ các công cụ tự động hóa chuyên biệt sang các hệ thống tổng quát, tự chủ.
+Chất lượng Dữ liệu là Yếu tố Quyết định: Để mô phỏng hành vi con người và đạt được tính tổng quát, việc huấn luyện phải dựa trên các bộ dữ liệu đa phương thức, định hướng hành động như Mind2Web và WebArena.13 Sự thiếu hụt dữ liệu hướng quyết định trong quá trình tiền huấn luyện là rào cản chính đối với các LLM mã nguồn mở khi chúng cố gắng trở thành Agent web chuyên nghiệp.15
+Cơ chế Tương tác Đa phương thức Bắt buộc: Agent phải sử dụng kết hợp cả thông tin cấu trúc (DOM) và thông tin thị giác (VLM/Screenshot) để định vị và tương tác với các thành phần giao diện.17 Mặc dù phương pháp DOM nhanh hơn và ổn định trong môi trường tĩnh, phương pháp VLM-based là cần thiết để đạt được độ bền và khả năng thích ứng với các giao diện web năng động, liên tục thay đổi.22
+Thách thức Kỹ thuật Nền tảng: Học Bắt chước (IL) là phương pháp huấn luyện chính, nhưng nó dễ bị ảnh hưởng bởi vấn đề Độ Lệch Phân Phối Trạng thái (Distribution Shift) do lỗi hành động tích lũy.14 Việc chỉ tăng số lượng dữ liệu không đủ; thay vào đó, cần tập trung vào việc quản lý chất lượng dữ liệu hành động chuyên gia để giữ cho Agent đi đúng quỹ đạo.14
+Xu hướng Agent Tổng quát và Tương tác GUI-based: Các mô hình tiên phong như OpenAI Operator đang chứng minh tính khả thi của tương tác dựa trên GUI, cho phép Agent tự động hóa bất kỳ tác vụ nào trên Internet mà không cần API đặc thù.8 Hơn nữa, sự tồn tại của Gato củng cố quan điểm rằng các nhiệm vụ tương tác UI và robotics có thể được hợp nhất dưới một chính sách tổng quát duy nhất.28
+
+6.2. Khuyến nghị cho Việc Ứng dụng và Nghiên cứu Phát triển Dữ liệu Agent
+
+Dựa trên các phát hiện kỹ thuật trên, các khuyến nghị chiến lược cho việc phát triển và ứng dụng Agentic AI trong tương lai là:
+Ưu tiên Thu thập Dữ liệu Hành động Chuyên gia Chất lượng cao: Các tổ chức nên đầu tư vào việc thu thập và quản lý nghiêm ngặt các trình tự hành động (expert demonstration data), sử dụng các công cụ chú thích đa phương thức để ghi lại đầy đủ cả thông tin DOM và hình ảnh.13 Điều này là cần thiết để giảm thiểu rủi ro Distribution Shift và đảm bảo độ bền của Agent trong môi trường thực tế.
+Phát triển Kiến trúc Agent Lai (Hybrid Architecture): Để Agent có khả năng phục hồi lỗi và thích nghi, cần triển khai các mô hình kết hợp phương pháp Học Bắt chước (IL) để khởi tạo chính sách ban đầu với Học Tăng cường (RL) để tinh chỉnh hành vi và xử lý các trạng thái chưa từng thấy.24 Các Agent này cần sử dụng kiến trúc mô hình đa phương thức (VLM/LLM) để xử lý hiệu quả thông tin giao diện phức tạp.17
+Tăng cường Cơ chế An toàn và Tự điều chỉnh: Khi triển khai các Agent GUI-based cho các tác vụ nhạy cảm, cần tích hợp các cơ chế an toàn bắt buộc như Takeover Mode (chuyển giao kiểm soát cho người dùng) và các vòng lặp phản hồi để Agent có thể tự đánh giá và sửa lỗi, đảm bảo tính đáng tin cậy và tuân thủ quyền riêng tư.5
+Tập trung vào Khả năng Lập kế hoạch Dài hạn: Nghiên cứu và phát triển cần tập trung vào việc cải thiện khả năng suy luận và lập kế hoạch nhiều bước của Agent, sử dụng các tiêu chuẩn đánh giá phức tạp như WebArena, để chuyển đổi hiệu quả mục tiêu cấp cao của con người thành các trình tự thao tác máy tính chính xác và logic.5
+Nguồn trích dẫn
+Các loại tác nhân AI - AI Agents - VinBigdata, truy cập vào tháng 11 3, 2025, https://vinbigdata.com/kham-pha/cac-loai-tac-nhan-ai-ai-agents.html
+AI Agent là gì? Phân loại và cách hoạt động của tác nhân AI - Tokyo Tech Lab, truy cập vào tháng 11 3, 2025, https://tokyotechlab.com/vi/blogs/what-are-ai-agents
+What are AI agents? Definition, examples, and types | Google Cloud, truy cập vào tháng 11 3, 2025, https://cloud.google.com/discover/what-are-ai-agents
+AI Agent là gì? Khái niệm, Cách hoạt động & Ứng dụng 2025 - InterData, truy cập vào tháng 11 3, 2025, https://interdata.vn/blog/ai-agent-la-gi/
+AI Agent là gì? Nguyên lý hoạt động và Ứng dụng của AI Agents - VNPT AI, truy cập vào tháng 11 3, 2025, https://vnptai.io/vi/blog/detail/ai-agent-la-gi
+LLM Agent Là Gì? | Cách Thức Hoạt động, ưu Và Nhược điểm - FPT AI, truy cập vào tháng 11 3, 2025, https://fpt.ai/vi/bai-viet/llm-agent/
+AI Agent là gì? Nguyên lý hoạt động và ứng dụng trong Marketing - Brands Vietnam, truy cập vào tháng 11 3, 2025, https://www.brandsvietnam.com/congdong/topic/ai-agent-la-gi-nguyen-ly-hoat-dong-va-ung-dung-trong-marketing
+What is OpenAI Operator? Complete Guide to OpenAI's AI Agent - Leanware, truy cập vào tháng 11 3, 2025, https://www.leanware.co/insights/openai-operator-guide
+AI Agent Thay Đổi Cách Tương Tác Trên Internet Như Thế Nào?, truy cập vào tháng 11 3, 2025, https://maytinhcdc.vn/ai-agent-thay-doi-cach-tuong-tac-tren-internet-nhu-the-nao
+Các loại AI Agent và cách chọn đúng để tối ưu hóa chức năng chăm sóc khách hàng, truy cập vào tháng 11 3, 2025, https://blog.filum.ai/phan-loai-ai-agent/
+truy cập vào tháng 11 3, 2025, https://en.wikipedia.org/wiki/Agentic_AI#:~:text=Applications-,Web%20browsing,on%20behalf%20of%20the%20user.
+Introducing Operator - OpenAI, truy cập vào tháng 11 3, 2025, https://openai.com/index/introducing-operator/
+Mind2Web - GitHub Pages, truy cập vào tháng 11 3, 2025, https://osu-nlp-group.github.io/Mind2Web/
+Data Quality in Imitation Learning, truy cập vào tháng 11 3, 2025, https://papers.neurips.cc/paper_files/paper/2023/file/fe692980c5d9732cf153ce27947653a7-Paper-Conference.pdf
+WebRL: Training LLM Web Agents via Self-Evolving Online Curriculum Reinforcement Learning - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2411.02337v1
+20 Open-Source Datasets for Generative and Agentic AI - Analytics Vidhya, truy cập vào tháng 11 3, 2025, https://www.analyticsvidhya.com/blog/2025/02/open-source-datasets-for-generative-and-agentic-ai/
+AI in Action 3 Oct 2025: AI Browser Agents: Navigating the Web with Vision and DOM, truy cập vào tháng 11 3, 2025, https://www.youtube.com/watch?v=L194fnFDmC8
+WebArena: A Realistic Web Environment for Building Autonomous Agents, truy cập vào tháng 11 3, 2025, https://webarena.dev/
+AgentLab: An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and reproducibility. - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/ServiceNow/AgentLab
+FOR LLM-BASED WEB AGENTS - Amazon Science, truy cập vào tháng 11 3, 2025, https://assets.amazon.science/e8/9b/35bdbcb9448da1083ec5710b7c75/agentoccam-a-simple-yet-strong-baseline-for-llm-based-web-agents.pdf
+AgentOccam: A Simple Yet Strong Baseline for LLM-Based Web Agents - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/html/2410.13825v1
+[2406.12373] WebCanvas: Benchmarking Web Agents in Online Environments - arXiv, truy cập vào tháng 11 3, 2025, https://arxiv.org/abs/2406.12373
+Visual vs. DOM-based Web Locators: An Empirical Study | Request PDF - ResearchGate, truy cập vào tháng 11 3, 2025, https://www.researchgate.net/publication/266205865_Visual_vs_DOM-based_Web_Locators_An_Empirical_Study
+Reinforcement Learning vs. Imitation Learning: Learning Through Trial and Error vs. Learning by Example | by Hassaan Idrees | Medium, truy cập vào tháng 11 3, 2025, https://medium.com/@hassaanidrees7/reinforcement-learning-vs-0744a860ffa7
+On Distribution Shifts and What We Can Learn From Them - Sean Kulinski, truy cập vào tháng 11 3, 2025, https://www.seankulinski.com/talk/on-distribution-shifts-and-what-we-can-learn-from-them/
+Imitation Learning on Real-World Robots - Hugging Face, truy cập vào tháng 11 3, 2025, https://huggingface.co/docs/lerobot/en/il_robots
+Alibaba-NLP/DeepResearch: Tongyi Deep Research, the Leading Open-source Deep Research Agent - GitHub, truy cập vào tháng 11 3, 2025, https://github.com/Alibaba-NLP/DeepResearch
+arXiv:2205.06175v3 [cs.AI] 11 Nov 2022, truy cập vào tháng 11 3, 2025, https://arxiv.org/pdf/2205.06175
+Multi-agent systems | The Alan Turing Institute, truy cập vào tháng 11 3, 2025, https://www.turing.ac.uk/research/interest-groups/multi-agent-systems

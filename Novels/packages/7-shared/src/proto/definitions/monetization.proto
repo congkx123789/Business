@@ -1,0 +1,571 @@
+syntax = "proto3";
+
+package monetization;
+
+// ---------------------------------------------------------------------------
+// Service Definition
+// ---------------------------------------------------------------------------
+service MonetizationService {
+  // Virtual Currency
+  rpc GetWallet(GetWalletRequest) returns (WalletResponse);
+  rpc TopUp(TopUpRequest) returns (TopUpResponse);
+  rpc DeductPoints(DeductPointsRequest) returns (WalletResponse);
+  rpc RefundPoints(RefundPointsRequest) returns (WalletResponse);
+  rpc GetTransactionHistory(GetTransactionHistoryRequest) returns (TransactionHistoryResponse);
+  rpc GetBalance(GetBalanceRequest) returns (BalanceResponse);
+
+  // Pricing
+  rpc CalculateChapterPrice(CalculateChapterPriceRequest) returns (ChapterPriceResponse);
+  rpc CalculateBulkPrice(CalculateBulkPriceRequest) returns (BulkPriceResponse);
+  rpc GetPricingRules(GetPricingRulesRequest) returns (PricingRulesResponse);
+  rpc UpdatePricingRule(UpdatePricingRuleRequest) returns (PricingRuleResponse);
+
+  // Paywall
+  rpc CheckChapterAccess(CheckChapterAccessRequest) returns (ChapterAccessResponse);
+  rpc GetPaywallConfig(GetPaywallConfigRequest) returns (PaywallConfigResponse);
+  rpc UpdatePaywallConfig(UpdatePaywallConfigRequest) returns (PaywallConfigResponse);
+
+  // Payments
+  rpc PurchaseChapter(PurchaseChapterRequest) returns (PurchaseResponse);
+  rpc PurchaseBulk(PurchaseBulkRequest) returns (PurchaseResponse);
+  rpc GetPurchaseHistory(GetPurchaseHistoryRequest) returns (PurchaseHistoryResponse);
+  rpc GetPurchaseReceipt(GetPurchaseReceiptRequest) returns (PurchaseReceiptResponse);
+  rpc RefundPurchase(RefundPurchaseRequest) returns (PurchaseResponse);
+
+  // Privilege
+  rpc GetPrivilegeStatus(GetPrivilegeStatusRequest) returns (PrivilegeStatusResponse);
+  rpc PurchasePrivilege(PurchasePrivilegeRequest) returns (PrivilegeResponse);
+  rpc GetAdvancedChapters(GetAdvancedChaptersRequest) returns (AdvancedChaptersResponse);
+  rpc PurchaseAdvancedChapter(PurchaseAdvancedChapterRequest) returns (PurchaseResponse);
+
+  // Memberships
+  rpc CreateMembership(CreateMembershipRequest) returns (MembershipResponse);
+  rpc GetMembership(GetMembershipRequest) returns (MembershipResponse);
+  rpc CancelMembership(CancelMembershipRequest) returns (CancelMembershipResponse);
+  rpc ClaimDailyBonus(ClaimDailyBonusRequest) returns (DailyBonusResponse);
+
+  // Subscriptions
+  rpc CreateSubscription(CreateSubscriptionRequest) returns (SubscriptionResponse);
+  rpc GetSubscription(GetSubscriptionRequest) returns (SubscriptionResponse);
+  rpc CancelSubscription(CancelSubscriptionRequest) returns (CancelSubscriptionResponse);
+
+  // VIP / Loyalty
+  rpc GetVIPLevel(GetVIPLevelRequest) returns (VIPLevelResponse);
+  rpc GetVIPLevels(GetVIPLevelsRequest) returns (VIPLevelsResponse);
+  rpc RecordSpending(RecordSpendingRequest) returns (RecordSpendingResponse);
+  rpc GetVIPHistory(GetVIPHistoryRequest) returns (VIPHistoryResponse);
+}
+
+// ---------------------------------------------------------------------------
+// Virtual Currency Messages
+// ---------------------------------------------------------------------------
+message GetWalletRequest {
+  string userId = 1;
+}
+
+message Wallet {
+  string userId = 1;
+  int32 balance = 2;
+  string currency = 3;
+  int64 updatedAt = 4;
+}
+
+message WalletResponse {
+  bool success = 1;
+  Wallet data = 2;
+  string message = 3;
+}
+
+message TopUpRequest {
+  string userId = 1;
+  int32 amount = 2;
+  string paymentMethod = 3;
+  optional string transactionId = 4;
+  map<string, string> metadata = 5;
+}
+
+message TopUpResponse {
+  bool success = 1;
+  string transactionId = 2;
+  int32 newBalance = 3;
+  string message = 4;
+}
+
+message DeductPointsRequest {
+  string userId = 1;
+  int32 amount = 2;
+  string referenceId = 3;
+  optional string description = 4;
+}
+
+message RefundPointsRequest {
+  string userId = 1;
+  int32 amount = 2;
+  string referenceId = 3;
+  optional string description = 4;
+}
+
+message GetTransactionHistoryRequest {
+  string userId = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  repeated string types = 4;
+}
+
+message CurrencyTransaction {
+  string id = 1;
+  string userId = 2;
+  string type = 3;
+  int32 amount = 4;
+  int32 balanceAfter = 5;
+  optional string referenceId = 6;
+  int64 createdAt = 7;
+}
+
+message TransactionHistoryResponse {
+  bool success = 1;
+  repeated CurrencyTransaction data = 2;
+  int32 total = 3;
+  string message = 4;
+}
+
+message GetBalanceRequest {
+  string userId = 1;
+}
+
+message BalanceResponse {
+  bool success = 1;
+  int32 balance = 2;
+  string currency = 3;
+  int64 updatedAt = 4;
+  bool cached = 5;
+  string message = 6;
+}
+
+// ---------------------------------------------------------------------------
+// Pricing Messages
+// ---------------------------------------------------------------------------
+message CalculateChapterPriceRequest {
+  string chapterId = 1;
+  optional string storyId = 2;
+  optional int32 characterCount = 3;
+}
+
+message CalculateBulkPriceRequest {
+  repeated string chapterIds = 1;
+  optional string storyId = 2;
+}
+
+message ChapterPrice {
+  string chapterId = 1;
+  int32 characterCount = 2;
+  int32 price = 3;
+  int32 pointsPerThousandChars = 4;
+}
+
+message ChapterPriceResponse {
+  bool success = 1;
+  ChapterPrice data = 2;
+  string message = 3;
+}
+
+message BulkPriceResponse {
+  bool success = 1;
+  int32 totalPrice = 2;
+  repeated ChapterPrice breakdown = 3;
+  string message = 4;
+}
+
+message GetPricingRulesRequest {
+  optional string storyId = 1;
+}
+
+message UpdatePricingRuleRequest {
+  optional string storyId = 1;
+  int32 pointsPerThousandChars = 2;
+  optional int32 minPrice = 3;
+  optional int32 maxPrice = 4;
+  optional int32 discountPercent = 5;
+}
+
+message PricingRule {
+  string storyId = 1;
+  int32 pointsPerThousandChars = 2;
+  int32 minPrice = 3;
+  int32 maxPrice = 4;
+  int64 updatedAt = 5;
+}
+
+message PricingRulesResponse {
+  bool success = 1;
+  repeated PricingRule data = 2;
+  string message = 3;
+}
+
+message PricingRuleResponse {
+  bool success = 1;
+  PricingRule data = 2;
+  string message = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Paywall Messages
+// ---------------------------------------------------------------------------
+message CheckChapterAccessRequest {
+  string userId = 1;
+  string chapterId = 2;
+  string storyId = 3;
+  optional int32 chapterNumber = 4;
+}
+
+message GetPaywallConfigRequest {
+  string storyId = 1;
+}
+
+message UpdatePaywallConfigRequest {
+  string storyId = 1;
+  int32 freeChapters = 2;
+  bool enabled = 3;
+  optional int32 previewLength = 4;
+}
+
+message ChapterAccess {
+  bool hasAccess = 1;
+  string reason = 2;
+  optional int32 price = 3;
+  optional string purchaseId = 4;
+  optional int64 expiresAt = 5;
+}
+
+message ChapterAccessResponse {
+  bool success = 1;
+  ChapterAccess data = 2;
+  string message = 3;
+}
+
+message PaywallConfig {
+  string storyId = 1;
+  int32 freeChapters = 2;
+  bool enabled = 3;
+  int32 previewLength = 4;
+  int64 updatedAt = 5;
+}
+
+message PaywallConfigResponse {
+  bool success = 1;
+  PaywallConfig data = 2;
+  string message = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Payments Messages
+// ---------------------------------------------------------------------------
+message PurchaseChapterRequest {
+  string userId = 1;
+  string chapterId = 2;
+  string storyId = 3;
+  optional string idempotencyKey = 4;
+}
+
+message PurchaseBulkRequest {
+  string userId = 1;
+  repeated string chapterIds = 2;
+  string storyId = 3;
+  optional string idempotencyKey = 4;
+}
+
+message GetPurchaseHistoryRequest {
+  string userId = 1;
+  optional string storyId = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message GetPurchaseReceiptRequest {
+  string purchaseId = 1;
+  optional string paymentMethod = 2;
+}
+
+message RefundPurchaseRequest {
+  string purchaseId = 1;
+  string reason = 2;
+}
+
+message Purchase {
+  string id = 1;
+  string userId = 2;
+  string storyId = 3;
+  repeated string chapterIds = 4;
+  int32 totalPrice = 5;
+  int32 balanceAfter = 6;
+  string status = 7;
+  int64 createdAt = 8;
+}
+
+message PurchaseResponse {
+  bool success = 1;
+  Purchase data = 2;
+  string message = 3;
+}
+
+message PurchaseHistoryResponse {
+  bool success = 1;
+  repeated Purchase data = 2;
+  int32 total = 3;
+  string message = 4;
+}
+
+message PurchaseReceipt {
+  string purchaseId = 1;
+  string userId = 2;
+  string storyId = 3;
+  repeated string chapterIds = 4;
+  int32 totalPrice = 5;
+  int32 balanceBefore = 6;
+  int32 balanceAfter = 7;
+  int64 createdAt = 8;
+  string receiptNumber = 9;
+  string paymentMethod = 10;
+}
+
+message PurchaseReceiptResponse {
+  bool success = 1;
+  PurchaseReceipt data = 2;
+  string message = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Membership Messages
+// ---------------------------------------------------------------------------
+message CreateMembershipRequest {
+  string userId = 1;
+  string planId = 2;
+  int32 coinsGranted = 3;
+  int32 dailyBonus = 4;
+  string billingPeriod = 5;
+  bool autoRenew = 6;
+}
+
+message GetMembershipRequest {
+  string userId = 1;
+}
+
+message CancelMembershipRequest {
+  string userId = 1;
+}
+
+message ClaimDailyBonusRequest {
+  string userId = 1;
+}
+
+message Membership {
+  string id = 1;
+  string userId = 2;
+  string planId = 3;
+  string status = 4;
+  int64 startDate = 5;
+  int64 endDate = 6;
+  bool autoRenew = 7;
+  int32 coinsGranted = 8;
+  int32 dailyBonus = 9;
+  int64 lastDailyBonusClaim = 10;
+}
+
+message MembershipResponse {
+  bool success = 1;
+  Membership data = 2;
+  string message = 3;
+}
+
+message CancelMembershipResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message DailyBonusResponse {
+  bool success = 1;
+  int32 bonusAmount = 2;
+  int32 newBalance = 3;
+  string message = 4;
+}
+
+// ---------------------------------------------------------------------------
+// Privilege Messages
+// ---------------------------------------------------------------------------
+message GetPrivilegeStatusRequest {
+  string userId = 1;
+  string storyId = 2;
+}
+
+message PurchasePrivilegeRequest {
+  string userId = 1;
+  string storyId = 2;
+  string paymentMethod = 3;
+  optional string idempotencyKey = 4;
+}
+
+message GetAdvancedChaptersRequest {
+  string storyId = 1;
+  optional string userId = 2;
+}
+
+message PurchaseAdvancedChapterRequest {
+  string userId = 1;
+  string chapterId = 2;
+  string storyId = 3;
+  optional string idempotencyKey = 4;
+}
+
+message PrivilegeStatus {
+  string userId = 1;
+  string storyId = 2;
+  bool hasPrivilege = 3;
+  int64 purchaseDate = 4;
+  int64 expiresAt = 5;
+  int32 price = 6;
+}
+
+message PrivilegeStatusResponse {
+  bool success = 1;
+  PrivilegeStatus data = 2;
+  string message = 3;
+}
+
+message Privilege {
+  string id = 1;
+  string userId = 2;
+  string storyId = 3;
+  int32 price = 4;
+  int64 purchaseDate = 5;
+  int64 expiresAt = 6;
+}
+
+message PrivilegeResponse {
+  bool success = 1;
+  Privilege data = 2;
+  string message = 3;
+}
+
+message AdvancedChapter {
+  string chapterId = 1;
+  string title = 2;
+  int32 order = 3;
+  int32 price = 4;
+  bool purchased = 5;
+  int64 releaseDate = 6;
+}
+
+message AdvancedChaptersResponse {
+  bool success = 1;
+  repeated AdvancedChapter data = 2;
+  string message = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Subscription Messages
+// ---------------------------------------------------------------------------
+message CreateSubscriptionRequest {
+  string userId = 1;
+  string planId = 2;
+  bool autoRenew = 3;
+}
+
+message GetSubscriptionRequest {
+  string userId = 1;
+}
+
+message CancelSubscriptionRequest {
+  string userId = 1;
+}
+
+message Subscription {
+  string id = 1;
+  string userId = 2;
+  string planId = 3;
+  string status = 4;
+  int64 startDate = 5;
+  int64 endDate = 6;
+  bool autoRenew = 7;
+}
+
+message SubscriptionResponse {
+  bool success = 1;
+  Subscription data = 2;
+  string message = 3;
+}
+
+message CancelSubscriptionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ---------------------------------------------------------------------------
+// VIP / Loyalty Messages
+// ---------------------------------------------------------------------------
+message GetVIPLevelRequest {
+  string userId = 1;
+}
+
+message GetVIPLevelsRequest {
+}
+
+message RecordSpendingRequest {
+  string userId = 1;
+  int32 amount = 2;
+}
+
+message GetVIPHistoryRequest {
+  string userId = 1;
+  int32 page = 2;
+  int32 limit = 3;
+}
+
+message VIPLevel {
+  int32 level = 1;
+  string name = 2;
+  int32 minSpending = 3;
+  int32 discountPercent = 4;
+  int32 monthlyVotes = 5;
+  repeated string benefits = 6;
+}
+
+message VIPLevelResponse {
+  bool success = 1;
+  VIPLevel currentLevel = 2;
+  int32 totalSpending = 3;
+  string message = 4;
+}
+
+message VIPLevelsResponse {
+  bool success = 1;
+  repeated VIPLevel data = 2;
+  string message = 3;
+}
+
+message RecordSpendingResponse {
+  bool success = 1;
+  VIPLevel newLevel = 2;
+  bool levelUp = 3;
+  int32 totalSpending = 4;
+  string message = 5;
+}
+
+message VIPHistoryEntry {
+  string id = 1;
+  string userId = 2;
+  int32 level = 3;
+  string levelName = 4;
+  int32 totalSpending = 5;
+  int64 achievedAt = 6;
+}
+
+message VIPHistoryResponse {
+  bool success = 1;
+  repeated VIPHistoryEntry data = 2;
+  int32 total = 3;
+  int32 page = 4;
+  int32 limit = 5;
+  string message = 6;
+}
+
+

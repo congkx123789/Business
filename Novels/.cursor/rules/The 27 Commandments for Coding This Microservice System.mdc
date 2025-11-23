@@ -1,0 +1,239 @@
+---
+alwaysApply: true
+---
+# **The 27 Commandments for Coding This Microservice System**
+
+This document provides the mandatory rules and guiding principles for all developers (backend, frontend, mobile) on this project. Adhering to these rules is critical for maintaining system health, scalability, and developer velocity.
+
+This guide references the architecture defined in ProjectStructure\_ReadingApp.md and Database\_Architecture\_Explanation.md.
+
+### **1\. The Golden Rule: Thou Shalt Not Touch Another Service's Database**
+
+This is the most critical rule. Never, ever violate it.
+
+* **DON'T:** The users-service is **NEVER** allowed to SELECT or JOIN directly against the stories table, which is owned by the stories-service.  
+* **DO:** If users-service needs story data, it **MUST** communicate with the stories-service via its official contract: **gRPC** (for synchronous, immediate needs) or by listening to the **Event Bus** (for asynchronous updates).
+
+### **2\. Use the Right Communication Channel**
+
+Choosing the wrong tool for communication will break the system.
+
+* **Public (Client \-\> Gateway):** Use **REST API (JSON)** for standard data retrieval and **WebSocket** for real-time, server-push communication. These are the *only* two protocols the 1-gateway should expose to the world.  
+* **Internal Sync (Service \<-\> Service):** Use **gRPC**. When you need an immediate answer (e.g., the Gateway needs to aggregate data from 3 services), use gRPC for its high-speed, low-latency binary protocol.  
+* **Internal Async (Service \-\> Service):** Use the **Event Bus (Redis/BullMQ)**. When you just need to "announce" that something happened (e.g., "a new story was created") and don't need a reply, emit an event. This decouples your services perfectly.
+
+### **3\. The 7-shared Package is Your Single Source of Truth**
+
+The 7-shared package (as defined in ProjectStructure\_ReadingApp.md) is the "Shared Kernel" or "Common Dictionary" for the entire system.
+
+* **DON'T:** Never hard-code a DTO, type, or interface in 3-web if it already exists (or *should* exist) in 7-shared.  
+* **DO:** All API contract changes (e.g., adding an email field to UserDto) **MUST** begin in the 7-shared package. This ensures the backend (NestJS) and web frontend (Next.js) are always in sync.
+
+### **4\. The Gateway is a "Bouncer", Not the "Brain"**
+
+The 1-gateway has a very specific, limited job.
+
+* **DO:** Its only responsibilities are:  
+  * **Authentication (AuthN):** Validating the user's JWT.  
+  * **Routing:** Directing traffic to the correct internal service (via gRPC).  
+  * **Rate Limiting:** Protecting services from abuse (@nestjs/throttler).  
+  * **WAF Integration:** Sitting behind Cloudflare for security.  
+* **DON'T:** **NEVER** write business logic (e.g., the logic for purchasing a story, calculating recommendations) inside the Gateway. Push that logic down to the responsible microservice.
+
+### **5\. Respect the Frontend State Management Architecture**
+
+A complex backend demands a disciplined frontend.
+
+* **Web (Next.js):**  
+  * **DON'T** use useState/useEffect for fetching API data. This leads to "spaghetti code."  
+  * **DO** use **React Query (TanStack Query)** (from store/server-state.ts) to manage all server data. It handles caching, re-fetching, and optimistic updates automatically.  
+  * **DO** use **Zustand** (from store/client-state.ts) *only* for global UI state (e.g., "is the sidebar open?", "what is the current theme?", "logged-in user profile").  
+* **Mobile (iOS/Android):**  
+  * **DO** strictly follow the **MVVM \+ Repository Pattern** (CauTrucDuAn\_AppDocTruyen.md).  
+  * The View (SwiftUI/Compose) *only* talks to the ViewModel.  
+  * The ViewModel *only* talks to the Repository.  
+  * The **Repository** is the *only* place that decides whether to fetch from the network (Retrofit/Alamofire) or the local database (Room/Core Data).
+
+### **6\. Design for Failure (Resiliency)**
+
+Your system is distributed. Services *will* fail. Code defensively.
+
+* **DO:** All network calls (gRPC, REST) **MUST** be wrapped in a resiliency pattern:  
+  * **Retries:** Automatically try again if a network call fails.  
+  * **Timeouts:** Stop waiting after a reasonable time (e.g., 2 seconds).  
+  * **Circuit Breakers:** If a service (like ai-service) is down, stop "hammering" it with requests for 5 minutes.  
+* **DO:** The frontend **MUST** gracefully handle API errors. If the ai-service dies, the page *must not* crash. It should simply hide the "Recommendations" section or show a "service unavailable" message.
+
+### **7\. PostgreSQL is Truth. Redis/MeiliSearch are Replicas.**
+
+* The **Single Source of Truth (SSOT)** for all persistent data is **PostgreSQL** (as defined in Database\_Architecture\_Explanation.md).  
+* **Redis (Cache)** and **MeiliSearch (Search)** are disposable, optimized *replicas*. They can be rebuilt from the data in PostgreSQL.  
+* **DO:** Your data flow **MUST** always be: 1\) Write to PostgreSQL first. 2\) *Then*, emit an event to update Redis and/or MeiliSearch.
+
+### **8\. Design for Offline-First (Mobile)**
+
+* Mobile users expect apps to work instantly, even on bad connections.  
+* **DO:** The **Repository Pattern \+ Local DB (Room/Core Data)** is *mandatory* (Rule \#5, \#8 in LuuY\_KhiCode.md).  
+* **DO:** The standard app flow should be: 1\) Open screen. 2\) Load data from Room/Core Data *instantly*. 3\) In the background, fetch fresh data from the API. 4\) Update the local DB, which automatically updates the UI (thanks to MVVM).
+
+### **9\. Enforce Zero Trust Security**
+
+* Assume all services and networks are hostile. Trust nothing.  
+* **DON'T:** **NEVER** hard-code secrets (API keys, DB passwords, JWT secrets) in code.  
+* **DO:** All secrets **MUST** be loaded from environment variables or a secret manager (like **HashiCorp Vault** or **AWS Secrets Manager**).  
+* **DO:** Secure service-to-service communication. comments-service should not blindly trust users-service. Implement **mTLS** (mutual TLS) or internal JWTs to ensure services authenticate each other.
+
+### **10\. Code for Observability**
+
+You cannot debug a system running on 1000 containers by "reading logs."
+
+* **Logs:** **DON'T** use console.log("error"). **DO** use **Structured Logging (JSON)**. Every log line must include context (e.g., {"userId": 123, "traceId": "abc-xyz", "message": "payment failed"}) so it can be parsed by **Loki/Grafana**.  
+* **Tracing:** Propagate the traceId (Trace ID) from the Gateway to all subsequent services. This allows **Tempo/Jaeger** to build a visual "map" of how a single request traveled through 5 different services.  
+* **Errors:** **DO** configure **Sentry** in *all* applications (backend, web, mobile) and throw meaningful errors.
+
+### **11\. Embrace Asynchronicity (Job Queues)**
+
+* The user's API request must be fast.  
+* **DON'T:** Never make a user wait for a slow task (sending email, processing an image, calling an AI to summarize a story).  
+* **DO:** For any task that takes longer than 500ms, use the **Job Queue (BullMQ)**. The API (notification-service) should: 1\) Take the request. 2\) Add a "job" to the queue. 3\) Return 202 Accepted to the user *immediately*. A separate "worker" process will pick up the job and execute it in the background.
+
+### **12\. Endpoints Must Be Idempotent**
+
+* Because of retries (Rule \#6) and event buses (Rule \#2), a service may receive the same message or request more than once.  
+* **DO:** Design your endpoints to be **idempotent**. This means calling them 5 times has the same effect as calling them once. (e.g., POST /api/stories/{storyId}/purchase should check if the story is *already* purchased before trying to charge the user again).
+
+### **13\. Database Migrations are Code**
+
+* The database schema is a core part of your application.  
+* **DON'T:** **NEVER** change a database schema (e.g., ALTER TABLE) by hand on the production server.  
+* **DO:** All schema changes **MUST** be done through migration files (Prisma Migrate). These files must be code-reviewed and applied automatically as part of your CI/CD pipeline.
+
+### **14\. CI/CD is Law**
+
+* No "cowboy coding." No deploying from your laptop.  
+* **DO:** All code **MUST** be merged and deployed via a **CI/CD Pipeline (GitHub Actions)**.  
+* **DO:** The pipeline must automatically: 1\) Detect which services/packages changed (in the monorepo). 2\) Run all tests (unit, integration). 3\) Build Docker images. 4\) Push to a registry. 5\) Deploy to Kubernetes using a safe strategy (like Canary or Blue-Green).
+
+### **15\. Code is Expensive (FinOps)**
+
+* Your code runs on real (and expensive) hardware. Be mindful of cost.  
+* **DON'T:** Write a SELECT \* query on a 1-billion-row table in **BigQuery** (you might get a $5,000 bill). Don't create an infinite loop that calls the **Gemini API**.  
+* **DO:** Actively monitor costs. Use S3 storage classes (e.g., move old stories to cheaper storage). Add alerts in your cloud provider (AWS/GCP) to notify you of spending spikes.
+
+### **16\. Guarantee Contracts with Contract Testing**
+
+* **Why:** This automatically enforces Rule \#3 (7-shared) and supports Rule \#14 (CI/CD). It prevents one service's deployment from breaking another.  
+* **DON'T:** Don't just trust that your services are compatible. Don't let stories-service merge a change that will break 3-web or the mobile apps.  
+* **DO:** Implement **Consumer-Driven Contract Testing** (e.g., using **Pact**).  
+  1. The *Consumer* (like 3-web) defines a "contract" specifying the *exact* data it needs from a *Provider* (like stories-service).  
+  2. This contract is published to a "Pact Broker".  
+  3. During its CI/CD pipeline, stories-service **MUST** fetch all its contracts from the broker and run tests to prove it satisfies them. If it breaks *any* contract, the build fails, preventing the breaking change from ever being deployed.
+
+### **17\. Separate Deployment from Release with Feature Flags**
+
+* **Why:** This is a next-level implementation of Rule \#6 (Resiliency) and Rule \#14 (CI/CD), allowing for safer rollouts and real-time debugging.  
+* **DON'T:** Don't tie a new feature's visibility directly to a code deployment. Don't require a full, stressful "rollback" deploy to fix a logical bug in new code.  
+* **DO:** Wrap all significant new features (e.g., the new ai-service recommendation logic) in a **Feature Flag** (e.g., using **Unleash** or **LaunchDarkly**).  
+  1. Deploy the new code with the flag set to **OFF**. This is 100% safe as the new code path is not running.  
+  2. From a dashboard, release the feature to 1% of users, then 10%, or *only* to internal staff.  
+  3. If Sentry/Grafana (Rule \#10) shows errors, you can **click one button** to turn the flag OFF, disabling the feature instantly *without* a new deployment.
+
+### **18\. Enforce Quality with Automated Gates**
+
+* **Why:** This automates the enforcement of many other rules (like \#9, \#10, \#15) and ensures a baseline quality standard.  
+* **DON'T:** Don't rely solely on human code reviews to catch complex issues like security flaws, memory leaks, or missing tests.  
+* **DO:** Integrate a **Static Analysis & Quality Gate** tool like **SonarQube** / SonarCloud into your CI/CD pipeline (Rule \#14). Configure this "gate" to *fail the build* if the new code:  
+  * Introduces critical security vulnerabilities (like hard-coded secrets \- Rule \#9).  
+  * Is overly complex ("Cyclomatic Complexity") and hard to debug (Rule \#10).  
+  * Has low (or no) test coverage.  
+  * Contains known anti-patterns or potential performance issues.
+
+### **19\. Offload Infrastructure Logic to a Service Mesh**
+
+* **Why:** This is the advanced, automated way to implement Rules \#6, \#9, and \#10, making your application code *much* cleaner and easier to debug.  
+* **DON'T:** Don't force every application developer to become an expert in network resiliency and security. Don't bloat your business logic code (e.g., in stories-service) with boilerplate code for retries, timeouts, and tracing.  
+* **DO:** Implement a **Service Mesh** (like **Istio** or **Linkerd**) within your Kubernetes cluster. The mesh automatically injects a "sidecar" proxy next to every one of your services. You can then *declaratively* tell the *mesh* (not the developer) to:  
+  * **Automatically** handle Retries, Timeouts, and Circuit Breakers (Rule \#6).  
+  * **Automatically** enforce Mutual TLS (mTLS) between all services (Rule \#9).  
+  * **Automatically** collect all distributed tracing and metrics (Rule \#10).  
+* This frees your developers to write *only* business logic.
+
+### **Part 2: Engineering Culture & Documentation (The "How")**
+
+The first 19 rules are the "what." These rules are the "how"—they ensure the system remains understandable and maintainable as the team grows.
+
+### **20\. Record Your "Why" with Architectural Decision Records (ADRs)**
+
+* **Why:** To prevent repeating past mistakes and to explain to future developers *why* the system is built the way it is (e.g., "Why did we choose MeiliSearch instead of Elasticsearch?" or "Why gRPC?").  
+* **DON'T:** Don't let major architectural decisions exist only in meetings or Slack chats.  
+* **DO:** Maintain a central folder (e.g., docs/adrs/) in the monorepo. For every major decision, write a short Markdown file (an **ADR**) that captures:  
+  1. **Context:** The problem we were trying to solve.  
+  2. **Decision:** The choice we made (e.g., "We will use MeiliSearch for search-service").  
+  3. **Consequences:** The pros and cons of this decision, and why we accepted the trade-offs.
+
+### **21\. Document Every Service with a Runbook**
+
+* **Why:** To empower *anyone* on the team to debug and operate a service during an outage (Rule \#10), even if they didn't write it.  
+* **DON'T:** Don't let a service's "tribal knowledge" live only in the original developer's head.  
+* **DO:** Every service in packages/2-services/ (see ProjectStructure\_ReadingApp.md) **MUST** have a README.md or wiki page that acts as its **Runbook**, answering:  
+  1. **What does this do?** (Its Single Responsibility, dependencies).  
+  2. **How does it communicate?** (What events does it emit? What events does it listen to?).  
+  3. **How do I run it?** (Local development setup commands).  
+  4. **How do I operate it? (The Runbook):** A simple checklist for "on-call" engineers: "If Sentry Alert X fires, do Y." "To manually clear this service's cache, run this command..."
+
+### **22\. Automate Developer Onboarding**
+
+* **Why:** A new developer's first week should be spent shipping a feature, not fighting a complex local setup. This is critical for scaling the team.  
+* **DON'T:** Don't have a 20-page manual on how to install 10 databases and 7 services.  
+* **DO:** Maintain a single ONBOARDING.md file in the monorepo root. This guide **MUST** be script-based. The goal for a new engineer is simple:  
+  1. Run pnpm install (or yarn).  
+  2. Run docker-compose up \-d (to automatically start local versions of PostgreSQL, Redis, MeiliSearch, etc.).  
+  3. Run pnpm dev (to automatically start all services and the web frontend).  
+  * A new developer should be able to commit their first line of code on their first day.
+
+### **23\. Maintain a Central Knowledge Base (Wiki)**
+
+* **Why:** To ensure all these rules, decisions, and runbooks are discoverable.  
+* **DON'T:** Don't let critical documentation get scattered across Google Docs, README files, and Slack messages.  
+* **DO:** Use a central **Wiki** (like **Notion**, **Confluence**, or **CoderPad's Docs**). This wiki is the "single entry point" for all team knowledge. It **MUST**:  
+  1. Pin this Coding\_Guidelines\_Microservices.md document to the front page.  
+  2. Host or link to the collection of all **ADRs** (Rule 20).  
+  3. Host or link to the **Runbooks** for every service (Rule 21).  
+  4. Store all non-technical processes (e.g., "Code Review Process," "Incident Response Plan," "How we use Feature Flags").
+
+### **Part 3: Advanced Defense, Security & Compliance**
+
+This final layer protects the system and the business from external threats, abuse, and legal risks.
+
+### **24\. Proactively Hunt for Vulnerabilities (AppSec)**
+
+* **Why:** To find and fix security flaws before malicious hackers do. This goes beyond static analysis (Rule \#18).  
+* **DON'T:** Don't assume your code is secure just because it passes SonarQube. Don't blindly trust third-party npm packages.  
+* **DO:** Implement a multi-layered Application Security (AppSec) program:  
+  1. **DAST (Dynamic Analysis):** Integrate a tool like **OWASP ZAP** into your CI/CD pipeline (Rule \#14). This tool will *actively attack* your application in a staging environment to find common vulnerabilities (XSS, SQLi).  
+  2. **SCA (Dependency Scanning):** Use **Snyk** or npm audit \--production in your CI/CD pipeline. **Fail the build** if a *Critical* 9.0+ severity vulnerability is found in a dependency.  
+  3. **Pentesting (Human):** Schedule regular (e.g., bi-annual) external **Penetration Tests** from a certified, third-party "white-hat" hacking team. Humans will find logical flaws that automated tools miss.
+
+### **25\. Defend Against Business Logic Abuse (Fraud Detection)**
+
+* **Why:** A WAF (like Cloudflare, Rule \#4) blocks *technical* attacks (DDoS), but it cannot block *business logic* abuse (e.g., spam, scraping, fake account creation).  
+* **DON'T:** Don't assume all *authenticated* traffic is "good" traffic. Don't let a bot (even with valid accounts) scrape your entire paid library. Don't let a user create 10,000 fake accounts to farm free "coins".  
+* **DO:** Build (or buy) a **Fraud/Abuse Detection Engine**. This is often an AI/ML model (part of the ai-service or Data Team) that analyzes user behavior (e.g., registration velocity, reading speed, IP reputation, device fingerprinting) to assign a "risk score." Automatically challenge (with CAPTCHA), flag, or ban high-risk users.
+
+### **26\. Engineer for Data Privacy & Compliance (GDPR/PII)**
+
+* **Why:** Legal compliance is non-negotiable. A data breach or a GDPR fine (which applies if you have *one* user in Europe) can destroy the company's reputation and finances.  
+* **DON'T:** Don't store Personal Identifiable Information (PII) like emails, real names, or phone numbers in plain text. Don't "soft delete" a user and keep their data forever when they ask to be deleted.  
+* **DO:**  
+  1. **Encrypt PII at Rest:** All PII fields **MUST** be encrypted in the database.  
+  2. **Implement "Right to be Forgotten":** You **MUST** provide a "Delete Account" button. This button **MUST** trigger an automated **Saga** (Rule \#15) that *permanently purges* that user's PII from *all* microservices and data stores (PostgreSQL, BigQuery, etc.).  
+  3. **Implement "Right to Portability":** You **MUST** provide a "Download My Data" button that exports all of the user's information (profile, comments, library) in a machine-readable format (like JSON).
+
+### **27\. Protect Your Core Asset: The Content (DRM)**
+
+* **Why:** For a reading app, the *content* is your primary asset. Preventing piracy and unauthorized sharing is essential for your business model.  
+* **DON'T:** Don't just serve plain text or unprotected images for paid chapters. Don't assume blocking screenshots on mobile is a complete solution.  
+* **DO:** Implement a **Digital Rights Management (DRM)** strategy. This is a complex field, but you must start with:  
+  1. **Mobile:** Use native flags (e.g., FLAG\_SECURE on Android) to *attempt* to block screenshots and screen recording.  
+  2. **Web:** Use CSS tricks to make content difficult to copy-paste.  
+  3. **Advanced:** Investigate **Digital Watermarking** (invisibly embedding a user's ID into the content so you can trace leaks) and/or **Content Encryption** schemes where content is encrypted, and only your app (which is harder to reverse-engineer) holds the decryption key.

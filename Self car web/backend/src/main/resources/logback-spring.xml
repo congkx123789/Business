@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <!-- Structured JSON logging for production -->
+    <springProfile name="prod">
+        <appender name="FILE_JSON" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>logs/application.json.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>logs/application-%d{yyyy-MM-dd}.json.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+            </rollingPolicy>
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <pattern>
+                        <pattern>
+                            {"level":"%level","logger":"%logger{36}","thread":"%thread","message":"%msg"}
+                        </pattern>
+                    </pattern>
+                    <mdc/>
+                    <arguments/>
+                    <stackTrace/>
+                </providers>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="FILE_JSON"/>
+        </root>
+    </springProfile>
+    
+    <!-- Structured JSON to console for dev -->
+    <springProfile name="dev">
+        <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <timestamp>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <pattern>
+                        <pattern>
+                            {"level":"%level","logger":"%logger{36}","thread":"%thread","message":"%msg"}
+                        </pattern>
+                    </pattern>
+                    <mdc/>
+                    <arguments/>
+                    <stackTrace/>
+                </providers>
+            </encoder>
+        </appender>
+
+        <root level="DEBUG">
+            <appender-ref ref="CONSOLE_JSON"/>
+        </root>
+    </springProfile>
+    
+    <!-- Default logging for any other profile (e.g., h2) -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {"level":"%level","logger":"%logger{36}","thread":"%thread","message":"%msg"}
+                    </pattern>
+                </pattern>
+                <mdc/>
+                <arguments/>
+                <stackTrace/>
+            </providers>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    
+    
+</configuration>
+

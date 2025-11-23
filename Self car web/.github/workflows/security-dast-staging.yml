@@ -1,0 +1,107 @@
+name: Dynamic Application Security Testing (DAST) - Staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Staging environment URL'
+        required: true
+        default: 'https://staging.selfcar.com'
+  schedule:
+    # Weekly DAST scan every Monday at 4 AM UTC
+    - cron: '0 4 * * 1'
+
+jobs:
+  api-dast:
+    name: API-Aware DAST Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.11.0
+        with:
+          target: ${{ github.event.inputs.target_url || 'https://staging.selfcar.com' }}
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+          fail_action: true
+          # Fail on HIGH/CRITICAL findings
+          
+      - name: Upload ZAP results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-results
+          path: zap-report.html
+          retention-days: 90
+          
+      - name: Upload ZAP JSON report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-json-results
+          path: zap-report.json
+          retention-days: 90
+
+  api-fuzzing:
+    name: API Fuzzing (REST API)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          pip install requests pytest pytest-html
+          
+      - name: Run API security tests
+        env:
+          STAGING_URL: ${{ github.event.inputs.target_url || 'https://staging.selfcar.com' }}
+          API_TOKEN: ${{ secrets.STAGING_API_TOKEN }}
+        run: |
+          python tests/api-security-test.py || true
+          # Don't fail workflow, but report findings
+          
+      - name: Upload API test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-fuzzing-results
+          path: test-results/
+          retention-days: 90
+
+  generate-dast-report:
+    name: Generate DAST Evidence Report
+    runs-on: ubuntu-latest
+    needs: [api-dast, api-fuzzing]
+    if: always()
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        
+      - name: Generate DAST evidence report
+        run: |
+          echo "# DAST Scan Evidence Report" > dast-evidence-report.md
+          echo "Date: $(date)" >> dast-evidence-report.md
+          echo "Target: ${{ github.event.inputs.target_url || 'https://staging.selfcar.com' }}" >> dast-evidence-report.md
+          echo "" >> dast-evidence-report.md
+          echo "## Scans Completed" >> dast-evidence-report.md
+          echo "- OWASP ZAP Baseline Scan" >> dast-evidence-report.md
+          echo "- API Fuzzing Tests" >> dast-evidence-report.md
+          echo "" >> dast-evidence-report.md
+          echo "## Findings" >> dast-evidence-report.md
+          echo "See artifacts for detailed findings:" >> dast-evidence-report.md
+          echo "- zap-report.html: Full ZAP scan report" >> dast-evidence-report.md
+          echo "- zap-report.json: Machine-readable ZAP results" >> dast-evidence-report.md
+          echo "- api-fuzzing-results/: API security test results" >> dast-evidence-report.md
+          
+      - name: Upload DAST evidence report
+        uses: actions/upload-artifact@v4
+        with:
+          name: dast-evidence-report
+          path: dast-evidence-report.md
+

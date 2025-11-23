@@ -1,0 +1,175 @@
+// This is your Prisma schema file for stories-service
+// Note: This service primarily uses stored procedures for database access
+// This schema is provided for reference and potential future use
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/@prisma/stories-service-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Story {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?  @db.Text
+  authorId    Int
+  coverImage  String?
+  status      String   @default("draft") // draft, publishing, completed, on_hiatus
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  chapters    Chapter[]
+  storyGenres StoryGenre[]
+  rankings    Ranking[]
+  editorPicks EditorPick[]
+  storyVotes  StoryVote[]
+  metrics     StoryMetrics?
+
+  @@index([authorId])
+  @@index([status])
+  @@map("stories")
+}
+
+model Chapter {
+  id           Int      @id @default(autoincrement())
+  storyId      Int
+  title        String
+  contentUrl   String?  // S3 URL
+  chapterNumber Int
+  isPaid       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  story        Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@index([storyId])
+  @@index([chapterNumber])
+  @@map("chapters")
+}
+
+model Genre {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  parentId    Int?
+  description String?  @db.Text
+  icon        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  parent      Genre?   @relation("GenreHierarchy", fields: [parentId], references: [id])
+  children    Genre[]  @relation("GenreHierarchy")
+  storyGenres StoryGenre[]
+  rankings    Ranking[]
+
+  @@index([parentId])
+  @@index([slug])
+  @@map("genres")
+}
+
+model StoryGenre {
+  storyId Int
+  genreId Int
+
+  story Story @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  genre Genre @relation(fields: [genreId], references: [id], onDelete: Cascade)
+
+  @@id([storyId, genreId])
+  @@map("story_genres")
+}
+
+model Ranking {
+  id           Int      @id @default(autoincrement())
+  rankingType  String   // monthly-votes, sales, recommendations, popularity
+  genreId      Int?
+  timeRange    String   // daily, weekly, monthly, all-time
+  storyId      Int
+  position     Int
+  score        Float
+  calculatedAt DateTime @default(now())
+
+  story        Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  genre        Genre?   @relation(fields: [genreId], references: [id], onDelete: SetNull)
+
+  @@index([rankingType, genreId, timeRange])
+  @@index([storyId])
+  @@map("rankings")
+}
+
+model EditorPick {
+  id            Int      @id @default(autoincrement())
+  storyId       Int
+  priority      Int      @default(5) // 1-10, higher = more prominent
+  featuredUntil DateTime?
+  bannerImage   String?
+  description   String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  story         Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@index([storyId])
+  @@index([priority])
+  @@map("editor_picks")
+}
+
+model StoryMetrics {
+  storyId        Int      @id
+  views          Int      @default(0)
+  reads          Int      @default(0)
+  votes          Int      @default(0)
+  recommendations Int     @default(0)
+  sales          Int      @default(0)
+  lastUpdated    DateTime @default(now()) @updatedAt
+
+  story          Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@map("story_metrics")
+}
+
+model StoryVote {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  storyId   Int
+  voteType  String   // 'power-stone' | 'monthly-vote'
+  votes     Int      @default(1)
+  castAt    DateTime @default(now())
+
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([storyId])
+  @@index([voteType])
+  @@map("story_votes")
+}
+
+model AuthorDashboard {
+  id         Int      @id @default(autoincrement())
+  authorId   Int
+  storyId    Int?     // null = all stories
+  metrics    Json?    // JSON metrics data
+  lastUpdated DateTime @default(now()) @updatedAt
+
+  @@unique([authorId, storyId])
+  @@index([authorId])
+  @@map("author_dashboards")
+}
+
+model AuthorAnalytics {
+  id         Int      @id @default(autoincrement())
+  authorId   Int
+  storyId    Int?
+  date       DateTime @default(now())
+  views      Int      @default(0)
+  reads      Int      @default(0)
+  revenue    Float    @default(0)
+  engagement Json?    // JSON engagement data
+  createdAt  DateTime @default(now())
+
+  @@index([authorId, storyId, date])
+  @@map("author_analytics")
+}
+

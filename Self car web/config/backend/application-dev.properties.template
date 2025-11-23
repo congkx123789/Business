@@ -1,0 +1,10 @@
+# Development Profile
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# H2 Console (Optional for development)
+# spring.h2.console.enabled=true
+# spring.h2.console.path=/h2-console
+
+logging.level.com.selfcar=DEBUG
+

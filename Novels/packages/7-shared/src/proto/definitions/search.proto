@@ -1,0 +1,138 @@
+syntax = "proto3";
+
+package search;
+
+// Search Service gRPC Contract
+service SearchService {
+  // Search stories
+  rpc SearchStories(SearchStoriesRequest) returns (SearchStoriesResponse);
+  
+  // Search posts
+  rpc SearchPosts(SearchPostsRequest) returns (SearchPostsResponse);
+  
+  // Index story (internal, called by workers)
+  rpc IndexStory(IndexStoryRequest) returns (IndexStoryResponse);
+  
+  // Update story index
+  rpc UpdateStoryIndex(UpdateStoryIndexRequest) returns (UpdateStoryIndexResponse);
+  
+  // Delete story from index
+  rpc DeleteStoryIndex(DeleteStoryIndexRequest) returns (DeleteStoryIndexResponse);
+  
+  // Index post (internal, called by workers)
+  rpc IndexPost(IndexPostRequest) returns (IndexPostResponse);
+  
+  // Delete post from index
+  rpc DeletePostIndex(DeletePostIndexRequest) returns (DeletePostIndexResponse);
+}
+
+// Search Requests
+message SearchStoriesRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  repeated string filters = 4;
+}
+
+message SearchPostsRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 limit = 3;
+  repeated string filters = 4;
+}
+
+// Search Responses
+message SearchStoriesResponse {
+  bool success = 1;
+  repeated StoryResult data = 2;
+  int32 total = 3;
+  string message = 4;
+}
+
+message SearchPostsResponse {
+  bool success = 1;
+  repeated PostResult data = 2;
+  int32 total = 3;
+  string message = 4;
+}
+
+// Result Types
+message StoryResult {
+  int32 id = 1;
+  string title = 2;
+  string author = 3;
+  string description = 4;
+  string coverImage = 5;
+  float score = 6;
+}
+
+message PostResult {
+  int32 id = 1;
+  int32 userId = 2;
+  string content = 3;
+  int32 storyId = 4;
+  int32 groupId = 5;
+  string createdAt = 6;
+  float score = 7;
+}
+
+// Index Story Requests
+message IndexStoryRequest {
+  int32 id = 1;
+  string title = 2;
+  string author = 3;
+  string description = 4;
+  string content = 5;
+}
+
+message UpdateStoryIndexRequest {
+  int32 id = 1;
+  string title = 2;
+  string author = 3;
+  string description = 4;
+}
+
+message DeleteStoryIndexRequest {
+  int32 id = 1;
+}
+
+// Index Post Requests
+message IndexPostRequest {
+  int32 id = 1;
+  int32 userId = 2;
+  string content = 3;
+  int32 storyId = 4;
+  int32 groupId = 5;
+  string createdAt = 6;
+}
+
+message DeletePostIndexRequest {
+  int32 id = 1;
+}
+
+// Index Responses
+message IndexStoryResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message UpdateStoryIndexResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message DeleteStoryIndexResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message IndexPostResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message DeletePostIndexResponse {
+  bool success = 1;
+  string message = 2;
+}
+

@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: selfcar-db
+    environment:
+      - MYSQL_DATABASE=selfcar_db
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ../database:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD","mysqladmin","ping","-h","localhost","-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: Dockerfile
+    container_name: selfcar-backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/selfcar_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  nginx:
+    image: nginx:stable
+    container_name: selfcar-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ../../frontend/dist:/usr/share/nginx/html:ro
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      backend:
+        condition: service_started
+
+

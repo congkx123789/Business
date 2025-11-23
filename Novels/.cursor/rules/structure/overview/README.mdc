@@ -1,0 +1,238 @@
+---
+alwaysApply: true
+---
+
+# 📋 Overview Documentation
+
+## 🎯 Mục đích
+
+Folder này chứa các tài liệu tổng quan về cấu trúc hệ thống microservice reading app, bao gồm:
+- **Architecture Overview**: Sơ đồ kiến trúc tổng thể và các thành phần chính
+- **Quick Reference**: Bảng tham chiếu nhanh về packages, ports, technologies
+- **Code Structure Patterns**: Cấu trúc code chi tiết cho từng loại package (Backend, Frontend, Mobile)
+- **Communication Patterns**: Các mẫu giao tiếp giữa services và clients
+- **Usage Guide**: Hướng dẫn chi tiết cách tìm kiếm và sử dụng tài liệu
+
+## 📁 Cấu trúc Files
+
+```
+overview/
+├── README.mdc (file này)                # Overview & Navigation Guide
+├── 01-overview.mdc                     # Architecture Overview & Quick Reference (với Code Structure Patterns)
+└── HOW_TO_USE.md                       # Detailed Usage Guide & Navigation
+```
+
+## 📋 Mô tả từng File
+
+### 1. **[README.mdc](./README.mdc)** - Overview & Navigation Guide
+File này cung cấp:
+- Mục đích và vai trò của folder overview
+- Cấu trúc files và mô tả từng file
+- Quick navigation guide
+- Links đến các tài liệu liên quan
+- Key concepts và architecture patterns
+
+**Khi nào sử dụng:**
+- Lần đầu tiên vào folder overview
+- Cần hiểu tổng quan về các tài liệu có sẵn
+- Tìm đường dẫn đến các tài liệu khác
+- Cần nắm các key concepts nhanh
+
+### 2. **[01-overview.mdc](./01-overview.mdc)** - Architecture Overview & Quick Reference
+File này cung cấp:
+- **Architecture Diagram**: Sơ đồ kiến trúc hệ thống với các thành phần chính
+- **Package Quick Reference**: Bảng tham chiếu nhanh tất cả packages với:
+  - Purpose (mục đích)
+  - Port (cổng mạng)
+  - Database (cơ sở dữ liệu)
+  - Key Technologies (công nghệ chính)
+  - Communication patterns
+- **Code Structure Patterns**: ⭐ **NEW - Chi tiết cấu trúc code**
+  - Backend Services (NestJS) - Module-based structure
+  - Gateway Service (BFF Pattern)
+  - Web Frontend (Next.js) - App Router pattern
+  - Mobile Apps (iOS/Android) - MVVM + Repository pattern
+  - Shared Library structure
+- **Communication Patterns**: Các mẫu giao tiếp:
+  - Client → Gateway (REST, GraphQL, WebSocket)
+  - Gateway → Services (gRPC)
+  - Service → Service (Event Bus/BullMQ)
+- **Code Organization Standards**: Naming conventions, file organization rules, import patterns
+- **Links đến tài liệu chi tiết**: Tất cả services, clients, và shared library
+
+**Khi nào sử dụng:**
+- Cần hiểu tổng quan về kiến trúc hệ thống
+- Tìm thông tin nhanh về một package (port, database, tech stack)
+- Hiểu cách các thành phần giao tiếp với nhau
+- **Cần xem cấu trúc code cụ thể** (folder structure, file organization)
+- Bắt đầu làm việc với project lần đầu
+- Cần biết naming conventions và code organization standards
+
+### 3. **[HOW_TO_USE.md](./HOW_TO_USE.md)** - Detailed Usage Guide & Navigation
+File này cung cấp:
+- **Bản đồ tài liệu**: Danh sách đầy đủ tất cả files trong structure
+- **Cách tìm thông tin**:
+  - Tìm theo chức năng (Authentication, Reading Features, Library, Social, AI, etc.)
+  - Tìm theo công nghệ (NestJS, Next.js, Mobile, gRPC, Database)
+- **Quy tắc quan trọng**: Các rules cần nhớ khi làm việc với hệ thống
+- **Tips & Best Practices**: Mẹo sử dụng tài liệu hiệu quả
+
+**Khi nào sử dụng:**
+- Không biết tìm thông tin ở đâu
+- Cần tìm tài liệu về một tính năng cụ thể
+- Cần tìm tài liệu về một công nghệ cụ thể
+- Muốn hiểu quy trình cập nhật tài liệu
+
+## 🗺️ Quick Navigation
+
+### Cho người mới bắt đầu
+
+1. **Bước 1**: Đọc [01-overview.mdc](./01-overview.mdc) để hiểu:
+   - Kiến trúc tổng thể của hệ thống
+   - Các packages và vai trò của chúng
+   - Cách các thành phần giao tiếp
+   - **Cấu trúc code cơ bản** (folder structure, file organization)
+
+2. **Bước 2**: Đọc [HOW_TO_USE.md](./HOW_TO_USE.md) để biết:
+   - Cách tìm kiếm thông tin trong tài liệu
+   - Các quy tắc quan trọng cần nhớ
+   - Tips sử dụng tài liệu hiệu quả
+
+3. **Bước 3**: Đi sâu vào các phần cụ thể:
+   - Nếu làm backend: Xem [Services](../services/README.md)
+   - Nếu làm frontend: Xem [Clients](../clients/README.md)
+   - Nếu làm infrastructure: Xem [Root Structure](../root/README.md)
+
+### Cho người đã quen với project
+
+- **Tìm thông tin nhanh**: Sử dụng [01-overview.mdc](./01-overview.mdc) như một quick reference
+- **Xem cấu trúc code**: Sử dụng phần "Code Structure Patterns" trong [01-overview.mdc](./01-overview.mdc)
+- **Tìm file cụ thể**: Sử dụng [HOW_TO_USE.md](./HOW_TO_USE.md) để navigate
+- **Cập nhật tài liệu**: Xem phần "Cập nhật tài liệu" trong [HOW_TO_USE.md](./HOW_TO_USE.md)
+
+## 🔑 Key Concepts
+
+### Architecture Pattern
+- **Microservices Architecture**: Mỗi service độc lập với database riêng
+- **API Gateway Pattern**: Gateway là điểm vào duy nhất (BFF Layer)
+- **Event-Driven Architecture**: Services giao tiếp async qua Event Bus
+
+### Communication Protocols
+- **REST API**: Web frontend → Gateway
+- **GraphQL**: Mobile apps → Gateway
+- **WebSocket**: Real-time communication
+- **gRPC**: Gateway → Services (synchronous)
+- **Event Bus (BullMQ)**: Service → Service (asynchronous)
+
+### Code Organization Patterns
+
+#### Backend (NestJS Services)
+- **Module-based Architecture**: Mỗi feature = một module độc lập
+- **Service Layer Pattern**: Business logic trong `*.service.ts`
+- **DTO Pattern**: Tất cả DTOs import từ `7-shared`, không hard-code
+- **Prisma ORM**: Database access qua Prisma
+- **gRPC Controllers**: Implement proto files từ `7-shared`
+
+#### Frontend (Next.js)
+- **App Router Pattern**: Next.js 13+ App Router
+- **Atomic Design**: UI components organized by complexity (Atoms → Molecules → Organisms → Templates)
+- **React Query**: Server state management (Rule #5)
+- **Zustand**: Client/UI state only (Rule #5)
+- **Type Imports**: All types from `7-shared`, no local types
+
+#### Mobile (iOS/Android)
+- **MVVM Pattern**: View → ViewModel → Repository → Data Source
+- **Repository Pattern**: Single source of truth, decides network vs local
+- **Offline-First**: Load from local DB first, sync in background
+- **GraphQL**: Apollo client for flexible queries
+
+### Important Rules
+1. **Rule #1**: Services NEVER touch each other's databases
+2. **Rule #2**: Use the right communication channel (gRPC for sync, Event Bus for async)
+3. **Rule #3**: ALL contracts MUST be defined in 7-shared first
+4. **Rule #4**: Gateway is a "Bouncer", NOT the "Brain" - NO business logic!
+5. **Rule #5**: Use React Query for server data, Zustand for UI state only (Web frontend)
+
+## 📐 Code Structure Quick Reference
+
+### Backend Service Structure
+```
+packages/2-services/{service-name}/
+├── src/
+│   ├── main.ts                      # gRPC server entry
+│   ├── app.module.ts                # Root module
+│   ├── modules/                     # Feature modules
+│   │   └── {feature}/
+│   │       ├── {feature}.module.ts
+│   │       ├── {feature}.service.ts
+│   │       └── dto/                 # DTOs (import from 7-shared)
+│   ├── controllers/                 # gRPC controllers
+│   └── prisma/                      # Database schema
+└── proto/                           # gRPC proto files
+```
+
+### Web Frontend Structure
+```
+packages/3-web/
+├── src/
+│   ├── app/                         # Next.js App Router
+│   ├── components/                   # React components
+│   │   ├── ui/                      # Atoms (shadcn/ui)
+│   │   ├── shared/                  # Molecules/Organisms
+│   │   └── features/                # Feature-specific
+│   ├── lib/                         # Utilities
+│   │   ├── api.ts                   # API client
+│   │   └── hooks/                   # React Query hooks
+│   └── store/                       # State management
+│       ├── server-state.ts          # React Query
+│       └── client-state.ts          # Zustand
+```
+
+### Mobile App Structure (iOS/Android)
+```
+packages/5-mobile-ios/ or 6-mobile-android/
+├── Views/                           # Presentation layer
+├── ViewModels/                      # Business logic
+├── Repositories/                    # Data access (decides network vs local)
+├── Services/                        # Network clients
+└── Database/                        # Local storage (Core Data/Room)
+```
+
+## 🔗 Related Documentation
+
+### Infrastructure & Core
+- [Root Structure](../root/README.md) - Cấu trúc root, configuration files, scripts
+- [Gateway](../gateway/README.md) - API Gateway service (BFF Layer)
+- [Shared Library](../shared/README.md) - Shared contracts, types, DTOs, proto files
+
+### Backend Services
+- [Services Overview](../services/README.md) - Tổng quan về tất cả microservices
+- [Users Service](../services/05-users-service.md) - User management, Library, Reading Preferences
+- [Stories Service](../services/06-stories-service.md) - Content management
+- [Comments Service](../services/07-comments-service.md) - Comments & Ratings
+- [Search Service](../services/08-search-service.md) - Full-text search
+- [AI Service](../services/09-ai-service.md) - TTS, Translation, Dictionary, Recommendations
+- [Notification Service](../services/10-notification-service.md) - Email, Push, SMS
+- [WebSocket Service](../services/11-websocket-service.md) - Real-time communication
+- [Social Service](../services/12-social-service.md) - Posts, Groups, Follows
+- [Community Service](../services/13-community-service.md) - Community Interactions & Fan Economy
+- [Monetization Service](../services/14-monetization-service.md) - PPC, Virtual Currency, Subscriptions
+
+### Client Applications
+- [Clients Overview](../clients/README.md) - Tổng quan về client applications
+- [Web Frontend](../clients/13-3-web.md) - Next.js Web App (PWA)
+- [Desktop App](../clients/14-4-desktop.md) - Electron Desktop App
+- [iOS App](../clients/15-5-mobile-ios.md) - iOS Native App
+- [Android App](../clients/16-6-mobile-android.md) - Android Native App
+
+### Roadmap & Planning
+- [Implementation Roadmap](../roadmap/README.md) - Lộ trình triển khai 3 giai đoạn
+
+### Main Documentation
+- [Main README](../README.md) - Main structure documentation entry point
+
+---
+
+**💡 Tip**: Nếu bạn không chắc nên bắt đầu từ đâu, hãy đọc [01-overview.mdc](./01-overview.mdc) trước, sau đó sử dụng [HOW_TO_USE.md](./HOW_TO_USE.md) để tìm thông tin cụ thể bạn cần.
+
+**📐 Code Structure**: Xem phần "Code Structure Patterns" trong [01-overview.mdc](./01-overview.mdc) để hiểu chi tiết cách code được tổ chức trong từng package.

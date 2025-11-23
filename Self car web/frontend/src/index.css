@@ -1,0 +1,646 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme CSS variables */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f9fafb;
+    --bg-tertiary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --text-tertiary: #6b7280;
+    --border-default: #e5e7eb;
+    --border-subtle: #d1d5db;
+    
+    /* Theme transition optimization - use CSS variables for smooth transitions */
+    --theme-transition-duration: 200ms;
+    --theme-transition-timing: ease-in-out;
+  }
+  
+  .dark {
+    /* Dark theme CSS variables (Material Design compliant) */
+    --bg-primary: #111827;
+    --bg-secondary: #1f2937;
+    --bg-tertiary: #374151;
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+    --text-tertiary: #d1d5db;
+    --border-default: #374151;
+    --border-subtle: #4b5563;
+  }
+  
+  * {
+    @apply border-gray-200 dark:border-dark-border-default;
+  }
+  
+  /* Optimize theme transitions - only transition color properties */
+  body,
+  body * {
+    transition: 
+      background-color var(--theme-transition-duration) var(--theme-transition-timing),
+      color var(--theme-transition-duration) var(--theme-transition-timing),
+      border-color var(--theme-transition-duration) var(--theme-transition-timing);
+  }
+  
+  /* Disable transitions for performance-critical elements during theme change */
+  body.theme-changing * {
+    transition: none !important;
+  }
+  
+  body {
+    @apply bg-gray-50 dark:bg-dark-bg-primary text-gray-900 dark:text-dark-text-primary font-sans antialiased;
+    /* Minimum 16px font size for accessibility */
+    font-size: 16px;
+    /* Optimal line height for readability */
+    line-height: 1.5;
+  }
+
+  /* Reduced motion support (FE-120) */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* Typography System - Enhanced with modern styling */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  /* Headings with proper spacing and modern gradient */
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+    margin-bottom: 1.5rem;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
+    margin-bottom: 1.25rem;
+  }
+  
+  h3 {
+    @apply text-2xl md:text-3xl;
+    margin-bottom: 1rem;
+  }
+  
+  /* Paragraph spacing for clarity */
+  p {
+    margin-bottom: 1rem;
+    @apply text-base;
+  }
+  
+  /* Whitespace utilities - Beauty = Clarity */
+  .whitespace-generous {
+    padding: 3rem 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .whitespace-generous {
+      padding: 4rem 2rem;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .whitespace-generous {
+      padding: 5rem 2.5rem;
+    }
+  }
+  
+  /* Screen reader only class */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .sr-only:focus,
+  .sr-only:focus-within {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+}
+
+@layer components {
+  /* Modern Button Styles with Enhanced Gradient and Glassmorphism */
+  .btn-primary {
+    @apply text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 200% 200%;
+    font-size: 16px;
+    min-height: 48px;
+    position: relative;
+    overflow: hidden;
+    border: none;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-primary:hover {
+    background-position: 100% 50%;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4);
+  }
+  
+  .btn-primary:hover::after {
+    opacity: 1;
+  }
+  
+  .btn-primary:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+  
+  .dark .btn-primary {
+    background: linear-gradient(135deg, #a78bfa 0%, #c084fc 50%, #e879f9 100%);
+    background-size: 200% 200%;
+  }
+  
+  .dark .btn-primary:hover {
+    background-position: 100% 50%;
+    box-shadow: 0 12px 24px rgba(167, 139, 250, 0.5);
+  }
+  
+  .btn-accent {
+    @apply text-white font-semibold py-3 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
+    background-size: 200% 200%;
+    font-size: 16px;
+    min-height: 48px;
+    position: relative;
+    overflow: hidden;
+    border: none;
+  }
+  
+  .btn-accent::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-accent:hover::before {
+    left: 100%;
+  }
+  
+  .btn-accent:hover {
+    background-position: 100% 50%;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(245, 87, 108, 0.4);
+  }
+  
+  .btn-accent:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+  
+  .btn-secondary {
+    @apply font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow-sm hover:shadow-lg active:scale-95;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #374151;
+  }
+  
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateY(-2px);
+  }
+  
+  .dark .btn-secondary {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #e5e7eb;
+  }
+  
+  .dark .btn-secondary:hover {
+    background: rgba(31, 41, 55, 1);
+  }
+  
+  /* Modern Card with Enhanced Glassmorphism */
+  .card {
+    @apply rounded-2xl p-6 transition-all duration-300;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.12),
+      0 2px 8px 0 rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #4facfe);
+    background-size: 200% 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    animation: gradientShift 3s ease infinite;
+  }
+  
+  .card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  
+  .card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 
+      0 20px 60px 0 rgba(31, 38, 135, 0.25),
+      0 8px 16px 0 rgba(0, 0, 0, 0.08);
+    border-color: rgba(102, 126, 234, 0.3);
+  }
+  
+  .card:hover::before {
+    opacity: 1;
+  }
+  
+  .card:hover::after {
+    opacity: 1;
+  }
+  
+  .dark .card {
+    background: rgba(31, 41, 55, 0.85);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 8px 32px 0 rgba(0, 0, 0, 0.4),
+      0 2px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .dark .card:hover {
+    box-shadow: 
+      0 20px 60px 0 rgba(0, 0, 0, 0.6),
+      0 8px 16px 0 rgba(0, 0, 0, 0.3);
+    border-color: rgba(167, 139, 250, 0.3);
+  }
+  
+  .dark .card::after {
+    background: radial-gradient(circle, rgba(167, 139, 250, 0.15) 0%, transparent 70%);
+  }
+  
+  /* Modern Input Field with Glassmorphism */
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl transition-all duration-300 outline-none;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #111827;
+    font-size: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+  
+  .input-field::placeholder {
+    color: #9ca3af;
+  }
+  
+  .input-field:hover {
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 6px 12px -2px rgba(102, 126, 234, 0.2);
+  }
+  
+  .input-field:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 8px 16px -4px rgba(102, 126, 234, 0.3);
+    background: rgba(255, 255, 255, 1);
+  }
+  
+  .dark .input-field {
+    background: rgba(31, 41, 55, 0.8);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #f9fafb;
+  }
+  
+  .dark .input-field::placeholder {
+    color: #9ca3af;
+  }
+  
+  .dark .input-field:hover {
+    border-color: rgba(167, 139, 250, 0.5);
+  }
+  
+  .dark .input-field:focus {
+    border-color: #a78bfa;
+    box-shadow: 0 0 0 4px rgba(167, 139, 250, 0.1), 0 8px 16px -4px rgba(167, 139, 250, 0.3);
+    background: rgba(31, 41, 55, 1);
+  }
+  
+  .input-field:disabled {
+    @apply cursor-not-allowed opacity-50;
+    background: rgba(243, 244, 246, 0.5);
+  }
+  
+  .dark .input-field:disabled {
+    background: rgba(17, 24, 39, 0.5);
+  }
+}
+
+/* Modern Background Gradients */
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: float 20s infinite linear;
+  opacity: 0.3;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(50px, 50px) rotate(360deg);
+  }
+}
+
+/* Animated gradient background */
+.gradient-bg {
+  background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #4facfe);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Form field focus states */
+input[type="email"]:focus,
+input[type="password"]:focus {
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+}
+
+/* Accessibility improvements - Standardized focus states */
+*:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+  outline-style: solid;
+}
+
+.dark *:focus-visible {
+  outline-color: #38bdf8; /* Lighter primary for dark mode */
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+}
+
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark select:focus-visible {
+  outline-color: #38bdf8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+}
+
+.dark button:focus-visible,
+.dark a:focus-visible {
+  outline-color: #38bdf8;
+}
+
+/* Remove default focus outline for mouse users, keep for keyboard */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Custom scrollbar - Enhanced */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #a78bfa, #c084fc);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #764ba2, #667eea);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #c084fc, #a78bfa);
+}
+
+/* Mobile-first improvements - Thumbs-reach navigation */
+@media (max-width: 768px) {
+  /* Ensure interactive elements are at least 48px (thumbs-reach friendly) */
+  button, a[role="button"], input[type="submit"], input[type="button"] {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  /* Increase touch target spacing */
+  .mobile-spacing > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Horizontal scroll for category shortcuts */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Optimize font sizes for mobile readability */
+  body {
+    font-size: 16px; /* Never smaller than 16px */
+  }
+  
+  /* Reduce padding on mobile for more content space */
+  .card {
+    padding: 1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f0f0;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --border-default: #000000;
+  }
+  
+  .dark {
+    --bg-primary: #000000;
+    --bg-secondary: #1a1a1a;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --border-default: #ffffff;
+  }
+  
+  button, a {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Global responsive media rules ===== */
+@layer base {
+  /* Ảnh/video luôn bám theo chiều rộng container, giữ tỉ lệ */
+  img, picture, video, canvas {
+    display: block;
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Icon SVG “đậm” hơn & nét không mỏng khi scale */
+  /* Tự động áp dụng cho thư viện phổ biến: lucide/feather/heroicons */
+  svg.lucide, svg.feather, svg.heroicon, .icon, [data-icon="true"] {
+    stroke-width: 2.25;
+    vector-effect: non-scaling-stroke;
+  }
+}
+
+@layer utilities {
+  /* Tương đương Bootstrap .img-fluid */
+  .img-fluid { width: 100% !important; height: auto !important; }
+
+  /* Fit ảnh theo nhu cầu mà không méo */
+  .img-cover  { object-fit: cover; }
+  .img-contain{ object-fit: contain; }
+
+  /* Tỉ lệ khung ảnh thông dụng (không méo khi đổi width) */
+  .ratio-16x9 { aspect-ratio: 16 / 9; }
+  .ratio-4x3  { aspect-ratio: 4 / 3; }
+  .ratio-1x1  { aspect-ratio: 1 / 1; }
+
+  /* Full-bleed 100vw cho hero/ảnh tràn màn hình */
+  .full-bleed {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+  }
+
+  /* Icon nét đậm hơn nữa khi cần */
+  .icon-bold    { stroke-width: 2.75; }
+  .icon-bolder  { stroke-width: 3.0; }
+}

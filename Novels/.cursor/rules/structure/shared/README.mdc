@@ -1,0 +1,257 @@
+---
+alwaysApply: true
+---
+
+# 📚 Shared Library Documentation
+
+## 🎯 Overview
+
+Folder này chứa tài liệu về Shared Library (7-shared) - "Common Dictionary" cho toàn bộ hệ thống. Đây là nơi định nghĩa tất cả contracts, types, DTOs, và proto files.
+
+## 📁 Structure
+
+```
+shared/
+├── README.mdc (this file)              # Overview & Navigation
+└── 17-7-shared.md                     # Shared Library Details
+```
+
+## 🏗️ Code Structure
+
+```
+packages/7-shared/
+├── src/
+│   ├── types/                          # TypeScript Interfaces & Types
+│   │   ├── index.ts                   # Re-exports all types
+│   │   │
+│   │   ├── 📁 user/                   # User-related types
+│   │   │   ├── user.types.ts         # User, Profile interfaces
+│   │   │   ├── reading-preferences.types.ts
+│   │   │   ├── desktop-preferences.types.ts
+│   │   │   ├── bookmark.types.ts
+│   │   │   ├── annotation.types.ts
+│   │   │   ├── library.types.ts
+│   │   │   └── reading-progress.types.ts
+│   │   │
+│   │   ├── 📁 story/                  # Story-related types
+│   │   │   ├── story.types.ts        # Story, Chapter interfaces
+│   │   │   ├── genre.types.ts
+│   │   │   ├── ranking.types.ts
+│   │   │   ├── editor-pick.types.ts
+│   │   │   └── drm.types.ts
+│   │   │
+│   │   ├── 📁 social/                 # Social-related types
+│   │   │   ├── post.types.ts
+│   │   │   ├── group.types.ts
+│   │   │   └── follow.types.ts
+│   │   │
+│   │   ├── 📁 ai/                     # AI-related types
+│   │   │   ├── tts.types.ts
+│   │   │   ├── translation.types.ts
+│   │   │   ├── dictionary.types.ts
+│   │   │   └── recommendation.types.ts
+│   │   │
+│   │   └── 📁 comment/                # Comment-related types
+│   │       ├── comment.types.ts
+│   │       ├── paragraph-comment.types.ts
+│   │       ├── chapter-comment.types.ts
+│   │       └── rating.types.ts
+│   │
+│   ├── validation/                    # Validation DTOs & Schemas
+│   │   ├── index.ts                   # Re-exports all DTOs
+│   │   │
+│   │   ├── 📁 user/                   # User DTOs
+│   │   │   ├── create-user.dto.ts    # @IsString(), @IsEmail() decorators
+│   │   │   ├── update-user.dto.ts
+│   │   │   ├── update-reading-preferences.dto.ts
+│   │   │   ├── update-desktop-preferences.dto.ts
+│   │   │   ├── create-bookmark.dto.ts
+│   │   │   ├── create-annotation.dto.ts
+│   │   │   ├── add-to-library.dto.ts
+│   │   │   └── ...
+│   │   │
+│   │   ├── 📁 story/                  # Story DTOs
+│   │   │   ├── create-story.dto.ts
+│   │   │   ├── update-story.dto.ts
+│   │   │   ├── create-chapter.dto.ts
+│   │   │   ├── ranking-query.dto.ts
+│   │   │   └── ...
+│   │   │
+│   │   ├── 📁 social/                 # Social DTOs
+│   │   │   ├── create-post.dto.ts
+│   │   │   └── ...
+│   │   │
+│   │   ├── 📁 ai/                     # AI DTOs
+│   │   │   ├── synthesize-speech.dto.ts
+│   │   │   ├── translate-text.dto.ts
+│   │   │   ├── lookup-word.dto.ts
+│   │   │   └── ...
+│   │   │
+│   │   └── 📁 comment/                # Comment DTOs
+│   │       ├── create-comment.dto.ts
+│   │       ├── paragraph-comment/
+│   │       └── ...
+│   │
+│   ├── proto/                         # Protocol Buffer definitions
+│   │   ├── users.proto               # UsersService gRPC contract
+│   │   ├── stories.proto             # StoriesService gRPC contract
+│   │   ├── comments.proto            # CommentsService gRPC contract
+│   │   ├── search.proto              # SearchService gRPC contract
+│   │   ├── ai.proto                  # AIService gRPC contract
+│   │   ├── social.proto              # SocialService gRPC contract
+│   │   ├── notification.proto        # NotificationService gRPC contract
+│   │   └── websocket.proto           # WebSocketService gRPC contract
+│   │
+│   └── constants/                     # Shared constants
+│       ├── index.ts
+│       ├── events.ts                  # Event Bus Topics
+│       ├── roles.ts                   # User Roles
+│       └── reading.ts                 # Reading Constants
+│
+├── package.json
+└── tsconfig.json
+```
+
+## 📋 Files
+
+- **[17-7-shared.md](./17-7-shared.md)** - Shared Library (CRITICALLY IMPORTANT)
+  - Package Info (Goal, Key Tech, Rules)
+  - Source Code Structure:
+    - **types/**: TypeScript Interfaces & Types
+    - **validation/**: Validation DTOs & Schemas
+    - **constants/**: Constants & Enums
+    - **proto/**: gRPC Protocol Buffers
+  - Development Steps chi tiết
+
+## 🔑 Key Features
+
+### Types (TypeScript Interfaces)
+- User-related types (User, Profile, ReadingPreferences, Bookmark, Annotation, Library, Bookshelf, Wishlist, ReadingProgress)
+- Story-related types (Story, Chapter, Genre, Ranking, EditorPick)
+- Social-related types (Post, Group, Follow)
+- AI-related types (TTSAudio, Translation, DictionaryEntry, Recommendation)
+- Comment-related types (Comment, ParagraphComment, ChapterComment, Rating)
+
+### Validation (DTOs & Schemas)
+- **Backend DTOs** với `class-validator` decorators
+  - Used in NestJS services
+  - Validation: `@IsString()`, `@IsEmail()`, etc.
+- **Frontend schemas** với `zod` (if needed)
+  - Used in Next.js for form validation
+- **Rule**: Tất cả DTOs phải được định nghĩa ở đây trước
+
+### Constants
+- **Event Bus Topics** (user-events, story-events, comment-events, social-events, notification-events)
+- **User Roles** (ADMIN, USER, MODERATOR, etc.)
+- **Reading Constants** (DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT, etc.)
+- **API Constants** (Rate limits, timeouts, etc.)
+
+### Proto Files (gRPC Contracts)
+- **users.proto**: UsersService gRPC contract
+  - Methods: `GetUser`, `CreateUser`, `UpdateUser`, `SyncLibrary`, etc.
+- **stories.proto**: StoriesService gRPC contract
+  - Methods: `GetStory`, `GetChapter`, `GetRankings`, `GetEditorPicks`, etc.
+- **comments.proto**: CommentsService gRPC contract
+  - Methods: `CreateComment`, `GetParagraphComments`, `GetChapterComments`, etc.
+- **search.proto**: SearchService gRPC contract
+- **ai.proto**: AIService gRPC contract
+- **social.proto**: SocialService gRPC contract
+- **notification.proto**: NotificationService gRPC contract
+- **websocket.proto**: WebSocketService gRPC contract
+
+## ⚠️ Important Rules
+
+**Rule #3:** ALL contracts MUST be defined here first!
+
+- ✅ Tất cả types, DTOs, proto files phải được định nghĩa ở đây trước
+- ✅ Sau đó mới implement trong các services/apps
+- ❌ KHÔNG được hard-code types/DTOs trong services/apps
+- ❌ KHÔNG được định nghĩa types trong client apps
+
+### Code Patterns
+
+**Type Definition:**
+```typescript
+// types/user/user.types.ts
+export interface User {
+  id: string;
+  email: string;
+  username: string;
+  profile?: Profile;
+}
+
+export interface Profile {
+  userId: string;
+  displayName: string;
+  avatar?: string;
+}
+```
+
+**DTO Definition:**
+```typescript
+// validation/user/create-user.dto.ts
+import { IsString, IsEmail } from 'class-validator';
+
+export class CreateUserDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  username: string;
+
+  @IsString()
+  password: string;
+}
+```
+
+**Proto Definition:**
+```protobuf
+// proto/users.proto
+service UsersService {
+  rpc GetUser(GetUserRequest) returns (User);
+  rpc CreateUser(CreateUserRequest) returns (User);
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string username = 2;
+  string password = 3;
+}
+```
+
+## 📝 Development Workflow
+
+1. **Định nghĩa contract trong 7-shared**:
+   - Thêm types trong `types/{domain}/{domain}.types.ts`
+   - Thêm DTOs trong `validation/{domain}/{action}-{resource}.dto.ts`
+   - Thêm proto messages trong `proto/{service}.proto`
+   - Thêm constants trong `constants/{domain}.ts`
+
+2. **Generate code**:
+   - Run `ts-proto` để compile .proto to TypeScript
+   - Export types từ `types/index.ts`
+   - Export DTOs từ `validation/index.ts`
+
+3. **Implement trong services/apps**:
+   - Import types/DTOs từ 7-shared: `import { User, CreateUserDto } from '@shared/types'`
+   - Implement business logic
+   - Sử dụng generated proto types
+
+## 🔗 Related Documentation
+
+- [Overview](../overview/README.mdc) - Architecture overview
+- [Gateway](../gateway/README.mdc) - Gateway sử dụng shared contracts
+- [Services](../services/README.mdc) - Services sử dụng shared contracts
+- [Clients](../clients/README.mdc) - Client apps sử dụng shared types
+- [Feature Sync Map](../FEATURE_SYNC_MAP.md) - ⭐ Feature synchronization across all layers
+- [Main README](../README.md) - Main structure documentation
+
+---
+
+**💡 Tip**: 7-shared là "single source of truth". Nếu bạn thấy types/DTOs được định nghĩa ở nơi khác, đó là bug - move them to 7-shared!
+
+**🔄 Synchronization**: Xem [Feature Sync Map](../FEATURE_SYNC_MAP.md) để đảm bảo features được đồng bộ giữa Services, Shared, Gateway, và Clients.

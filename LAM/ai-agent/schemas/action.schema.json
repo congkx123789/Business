@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["action_id", "kind"],
+  "properties": {
+    "action_id": { "type": "string" },
+    "kind": {
+      "enum": [
+        "NAVIGATE",
+        "WAIT_FOR",
+        "CLICK",
+        "TYPE",
+        "SELECT",
+        "SCROLL",
+        "HOTKEY",
+        "DRAG"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "selector": { "type": "string" },
+        "role": { "type": "string" },
+        "name": { "type": "string" },
+        "bbox": {
+          "type": "array",
+          "items": { "type": "number" },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "tab": { "type": "integer" }
+      }
+    },
+    "input_text": { "type": "string" },
+    "assert": {
+      "type": "object",
+      "properties": {
+        "appears": { "type": "object" },
+        "url_contains": { "type": "string" }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "retries": { "type": "integer", "default": 2 },
+        "timeout_ms": { "type": "integer", "default": 6000 },
+        "scroll_into_view": { "type": "boolean", "default": true },
+        "screenshot_on_error": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}
+
+

@@ -1,0 +1,1812 @@
+{
+  "session_id": "c3e0b462-699e-40a5-84c6-78996c92d6a1",
+  "start_time": 1762612945.5953486,
+  "end_time": 1762612954.0871851,
+  "goal": "Test AI agent actions",
+  "snapshots": [
+    {
+      "snapshot_id": "132b340b-c551-496d-b124-94719506d398",
+      "timestamp": 1762612945.6196387,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612945.768363,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 15.8,
+        "memory_percent": 81.3,
+        "running_processes": [],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "2870c865-a41d-4679-a55e-fa38a26530c9",
+      "timestamp": 1762612945.8288703,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612945.653703,
+          "event_type": "release",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612945.9618688,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 19.3,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "dwm.exe",
+          "pwsh.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "48589b26-de6d-4424-aa35-b167119b752b",
+      "timestamp": 1762612946.0797977,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612945.9618688,
+          "event_type": "press",
+          "key": "backspace",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612946.0023148,
+          "event_type": "release",
+          "key": "backspace",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612946.2112222,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 8.8,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "java.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "d43efbb2-d822-4143-9b82-f5923ace952c",
+      "timestamp": 1762612946.3263168,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612946.2732275,
+          "event_type": "press",
+          "key": "ctrl_l",
+          "key_code": null,
+          "modifiers": [
+            "ctrl"
+          ],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612946.4568722,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 12.5,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "java.exe",
+          "pwsh.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "0aa7541e-18d4-43f6-a62a-895b3e6afca8",
+      "timestamp": 1762612946.5761976,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612946.3347561,
+          "event_type": "press",
+          "key": "backspace",
+          "key_code": null,
+          "modifiers": [
+            "ctrl"
+          ],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612946.40391,
+          "event_type": "release",
+          "key": "backspace",
+          "key_code": null,
+          "modifiers": [
+            "ctrl"
+          ],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612946.4048698,
+          "event_type": "release",
+          "key": "ctrl_l",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612946.5403364,
+          "event_type": "press",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612946.7110538,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 10.7,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "csrss.exe",
+          "dwm.exe",
+          "pwsh.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "b8294af6-2aa1-4ef2-ac61-c77c238326b3",
+      "timestamp": 1762612946.825632,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612946.6341248,
+          "event_type": "release",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612946.6601965,
+          "event_type": "press",
+          "key": "h",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "h"
+        },
+        {
+          "timestamp": 1762612946.7110538,
+          "event_type": "release",
+          "key": "h",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "h"
+        },
+        {
+          "timestamp": 1762612946.7839615,
+          "event_type": "press",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612946.9583285,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 9.1,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "6b31a6a6-c406-48e3-8695-ae947852acd6",
+      "timestamp": 1762612947.0749698,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612946.872339,
+          "event_type": "press",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612946.8923347,
+          "event_type": "release",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612946.9593282,
+          "event_type": "release",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612947.0401568,
+          "event_type": "press",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612947.2083626,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 20.0,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "NVDisplay.Container.exe",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "dwm.exe",
+          "pwsh.exe",
+          "python.exe",
+          "svchost.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "c04c57a0-e1dd-4b87-b431-e6d40712d399",
+      "timestamp": 1762612947.3266602,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612947.1604884,
+          "event_type": "release",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612947.4603763,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 20.0,
+        "memory_percent": 81.3,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "dwm.exe",
+          "pwsh.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "9eef3e39-c788-4581-a4b7-b2adc58a8126",
+      "timestamp": 1762612947.5759153,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612947.4063716,
+          "event_type": "press",
+          "key": "d",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "d"
+        },
+        {
+          "timestamp": 1762612947.5193326,
+          "event_type": "release",
+          "key": "d",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "d"
+        },
+        {
+          "timestamp": 1762612947.5402935,
+          "event_type": "press",
+          "key": "o",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "o"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612947.7069159,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 12.5,
+        "memory_percent": 81.2,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "0f206207-bcbe-431f-bbc2-d7f6019664e9",
+      "timestamp": 1762612947.8244107,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612947.6419344,
+          "event_type": "press",
+          "key": "n",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "n"
+        },
+        {
+          "timestamp": 1762612947.671917,
+          "event_type": "release",
+          "key": "o",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "o"
+        },
+        {
+          "timestamp": 1762612947.8213294,
+          "event_type": "release",
+          "key": "n",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "n"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612947.9573238,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 8.9,
+        "memory_percent": 81.2,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "esrv_svc.exe",
+          "pwsh.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "632de16e-869a-4e87-8edc-6196cdb01dde",
+      "timestamp": 1762612948.0744681,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612947.8427699,
+          "event_type": "press",
+          "key": "'",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "'"
+        },
+        {
+          "timestamp": 1762612947.9583263,
+          "event_type": "release",
+          "key": "'",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "'"
+        },
+        {
+          "timestamp": 1762612948.0448601,
+          "event_type": "press",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612948.2052503,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 12.3,
+        "memory_percent": 81.2,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "NisSrv.exe",
+          "System",
+          "System Idle Process",
+          "csrss.exe",
+          "nordsec-threatprotection-service.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "5e291335-4250-4c3a-94e0-a4ee699d7485",
+      "timestamp": 1762612948.3220894,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612948.087008,
+          "event_type": "release",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612948.1330016,
+          "event_type": "press",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612948.2444024,
+          "event_type": "release",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612948.4591444,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 14.8,
+        "memory_percent": 81.2,
+        "running_processes": [
+          "Cursor.exe",
+          "GameViewerServer.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "nordsec-threatprotection-service.exe",
+          "pwsh.exe",
+          "svchost.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "44fe4aee-397d-43c2-9d34-3d0a5fa0d982",
+      "timestamp": 1762612948.5745306,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612948.704989,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 7.3,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "dwm.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "78deffbd-1e2d-49cb-8abd-867f004af451",
+      "timestamp": 1762612948.8242552,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612948.9610465,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 5.8,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "pwsh.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "2122bf18-7a38-4202-8a06-038582295630",
+      "timestamp": 1762612949.0722558,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612948.8426034,
+          "event_type": "press",
+          "key": "h",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "h"
+        },
+        {
+          "timestamp": 1762612948.8986104,
+          "event_type": "release",
+          "key": "h",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "h"
+        },
+        {
+          "timestamp": 1762612948.9860933,
+          "event_type": "press",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612949.2058651,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 10.9,
+        "memory_percent": 81.1,
+        "running_processes": [
+          "ChatGPT.exe",
+          "Cursor.exe",
+          "GameViewerHealthd.exe",
+          "MsMpEng.exe",
+          "System",
+          "System Idle Process",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "65a3bd9d-d783-4896-8b8e-97a03362acf8",
+      "timestamp": 1762612949.3234055,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612949.0787742,
+          "event_type": "release",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612949.1087725,
+          "event_type": "press",
+          "key": "v",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "v"
+        },
+        {
+          "timestamp": 1762612949.1747718,
+          "event_type": "release",
+          "key": "v",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "v"
+        },
+        {
+          "timestamp": 1762612949.2403743,
+          "event_type": "press",
+          "key": "e",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "e"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612949.454155,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 16.1,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "dwm.exe",
+          "svchost.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "9c2011b1-fea8-44c4-9dcb-14f07023cfe4",
+      "timestamp": 1762612949.5377672,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612949.3444057,
+          "event_type": "release",
+          "key": "e",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "e"
+        },
+        {
+          "timestamp": 1762612949.464155,
+          "event_type": "press",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612949.7263193,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 20.0,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "ChatGPT.exe",
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "dwm.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "8853a0ab-e9d0-43b5-9735-d73af3379852",
+      "timestamp": 1762612949.7784042,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612949.593859,
+          "event_type": "release",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612949.593859,
+          "event_type": "press",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612949.67032,
+          "event_type": "release",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612949.7013276,
+          "event_type": "press",
+          "key": "n",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "n"
+        },
+        {
+          "timestamp": 1762612949.7743223,
+          "event_type": "release",
+          "key": "n",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "n"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612949.907396,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 12.5,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System",
+          "System Idle Process",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "60c83d3e-2ccf-4d66-a9a2-2e77636d193c",
+      "timestamp": 1762612950.0286708,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612950.158975,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 9.1,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "java.exe",
+          "nordsec-threatprotection-service.exe",
+          "pwsh.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "bd032051-7256-4cda-a6ed-dedc51a3de8b",
+      "timestamp": 1762612950.2776191,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612950.4121716,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 14.3,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System",
+          "System Idle Process",
+          "dwm.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "141e39ab-756d-4b6b-9553-c2e08f8823a4",
+      "timestamp": 1762612950.5280252,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612950.3541634,
+          "event_type": "press",
+          "key": "y",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "y"
+        },
+        {
+          "timestamp": 1762612950.3871257,
+          "event_type": "release",
+          "key": "y",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "y"
+        },
+        {
+          "timestamp": 1762612950.4901264,
+          "event_type": "press",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612950.6556733,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 10.7,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "kdxyagent.exe",
+          "python.exe",
+          "svchost.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "5f6d7f86-ec9a-44b5-8847-9b60379a7222",
+      "timestamp": 1762612950.7777507,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612950.5469217,
+          "event_type": "release",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612950.5919232,
+          "event_type": "press",
+          "key": "h",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "h"
+        },
+        {
+          "timestamp": 1762612950.6767642,
+          "event_type": "release",
+          "key": "h",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "h"
+        },
+        {
+          "timestamp": 1762612950.6767642,
+          "event_type": "press",
+          "key": "i",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "i"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612950.9052074,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 1.8,
+        "memory_percent": 80.6,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "dcb3e4bf-a572-4522-867f-748d88098d07",
+      "timestamp": 1762612951.0259123,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612950.8330944,
+          "event_type": "release",
+          "key": "i",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "i"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612951.1496708,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 0.0,
+        "memory_percent": 80.6,
+        "running_processes": [
+          "System Idle Process",
+          "dwm.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "1899124a-f059-464b-b5ba-eaf80832bb0a",
+      "timestamp": 1762612951.2743862,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612951.1707404,
+          "event_type": "press",
+          "key": "ctrl_l",
+          "key_code": null,
+          "modifiers": [
+            "ctrl"
+          ],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612951.2009509,
+          "event_type": "press",
+          "key": "backspace",
+          "key_code": null,
+          "modifiers": [
+            "ctrl"
+          ],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612951.2513719,
+          "event_type": "release",
+          "key": "backspace",
+          "key_code": null,
+          "modifiers": [
+            "ctrl"
+          ],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612951.2682977,
+          "event_type": "release",
+          "key": "ctrl_l",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612951.399759,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 3.6,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "System Idle Process",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "7409acb0-8e67-474c-854e-6a6bbb9a02df",
+      "timestamp": 1762612951.5232267,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612951.6495097,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 3.6,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "svchost.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "a46d223f-de4c-4edc-959e-1d7e8fb14874",
+      "timestamp": 1762612951.7721424,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612951.7184265,
+          "event_type": "press",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612951.901273,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 1.8,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "System Idle Process"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "55cba404-7da8-4195-b0cb-c1381bc6a11e",
+      "timestamp": 1762612952.0220969,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612951.8183477,
+          "event_type": "release",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612951.832697,
+          "event_type": "press",
+          "key": "n",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "n"
+        },
+        {
+          "timestamp": 1762612951.9022243,
+          "event_type": "release",
+          "key": "n",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "n"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612952.147889,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 1.8,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "System Idle Process",
+          "dwm.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "a2b7f76d-d34b-4ba7-9fe7-ce0b90e45c14",
+      "timestamp": 1762612952.2692587,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612952.0388768,
+          "event_type": "press",
+          "key": "y",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "y"
+        },
+        {
+          "timestamp": 1762612952.1060054,
+          "event_type": "release",
+          "key": "y",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "y"
+        },
+        {
+          "timestamp": 1762612952.242914,
+          "event_type": "press",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612952.521862,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 42.0,
+        "memory_percent": 80.8,
+        "running_processes": [
+          "ChatGPT.exe",
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "dwm.exe",
+          "java.exe",
+          "nordvpn-service.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "dda301bc-9c50-4797-964a-551d5c989d1b",
+      "timestamp": 1762612952.576886,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612952.342644,
+          "event_type": "release",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612952.7427247,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 34.5,
+        "memory_percent": 80.6,
+        "running_processes": [
+          "Cursor.exe",
+          "System",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "kdxyagent.exe",
+          "nordsec-threatprotection-service.exe",
+          "python.exe",
+          "svchost.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "f402f381-d734-4c09-b0c2-7c729d7e619f",
+      "timestamp": 1762612952.8060193,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612952.6889653,
+          "event_type": "press",
+          "key": "u",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "u"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612952.973561,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 20.0,
+        "memory_percent": 80.8,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "esrv_svc.exe",
+          "nordsec-threatprotection-service.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "ec7bd130-bed0-42e2-b977-d672b475dccf",
+      "timestamp": 1762612953.030752,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612952.818129,
+          "event_type": "press",
+          "key": "p",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "p"
+        },
+        {
+          "timestamp": 1762612952.846118,
+          "event_type": "release",
+          "key": "u",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "u"
+        },
+        {
+          "timestamp": 1762612952.9223986,
+          "event_type": "press",
+          "key": "d",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "d"
+        },
+        {
+          "timestamp": 1762612952.9745624,
+          "event_type": "release",
+          "key": "p",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "p"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612953.2612975,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 65.7,
+        "memory_percent": 81.0,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "NVDisplay.Container.exe",
+          "NordVPN.exe",
+          "System",
+          "System Idle Process",
+          "esbuild.exe",
+          "esrv_svc.exe",
+          "java.exe",
+          "nordsec-threatprotection-service.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "a6ed392e-5fa7-41e7-8ec6-4d01e3d01ceb",
+      "timestamp": 1762612953.3228447,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612953.06729,
+          "event_type": "press",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612953.0886502,
+          "event_type": "release",
+          "key": "d",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "d"
+        },
+        {
+          "timestamp": 1762612953.262298,
+          "event_type": "press",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612953.262298,
+          "event_type": "release",
+          "key": "a",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "a"
+        },
+        {
+          "timestamp": 1762612953.3148677,
+          "event_type": "press",
+          "key": "e",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "e"
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612953.6213236,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 67.4,
+        "memory_percent": 80.8,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "NordVPN.exe",
+          "System",
+          "System Idle Process",
+          "dwm.exe",
+          "esrv_svc.exe",
+          "explorer.exe",
+          "java.exe",
+          "nordsec-threatprotection-service.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "5d14ecb6-0b41-4742-b391-3a313a8de442",
+      "timestamp": 1762612953.6834652,
+      "keyboard_events": [
+        {
+          "timestamp": 1762612953.3273344,
+          "event_type": "release",
+          "key": "t",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "t"
+        },
+        {
+          "timestamp": 1762612953.4024594,
+          "event_type": "release",
+          "key": "e",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": false,
+          "text": "e"
+        },
+        {
+          "timestamp": 1762612953.5431435,
+          "event_type": "press",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        },
+        {
+          "timestamp": 1762612953.6263232,
+          "event_type": "release",
+          "key": "space",
+          "key_code": null,
+          "modifiers": [],
+          "is_special": true,
+          "text": null
+        }
+      ],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612953.8224409,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 10.7,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "MsMpEng.exe",
+          "System Idle Process",
+          "WmiPrvSE.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    },
+    {
+      "snapshot_id": "ae4ec455-0c92-4222-8e4b-25b7de974c5a",
+      "timestamp": 1762612953.8857918,
+      "keyboard_events": [],
+      "mouse_events": [],
+      "screen_state": null,
+      "system_state": {
+        "timestamp": 1762612954.0218158,
+        "active_window": {
+          "title": "Self car web - Cursor [Administrator]",
+          "rect": [
+            -9,
+            -9,
+            1929,
+            1029
+          ]
+        },
+        "clipboard": "Cannot connect to server. Please make sure the Python backend is running on port 8001.",
+        "cpu_percent": 8.9,
+        "memory_percent": 80.7,
+        "running_processes": [
+          "Cursor.exe",
+          "System Idle Process",
+          "kdxyagent.exe",
+          "python.exe"
+        ],
+        "network_activity": null
+      },
+      "metadata": {}
+    }
+  ],
+  "metadata": {}
+}

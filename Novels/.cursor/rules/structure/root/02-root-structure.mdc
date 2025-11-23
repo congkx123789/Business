@@ -1,0 +1,107 @@
+
+# 📁 ROOT STRUCTURE
+
+## Tổng quan
+
+Cấu trúc root của monorepo bao gồm các file cấu hình chung, documentation, scripts và thư mục packages chứa tất cả các services và applications.
+
+## Cấu trúc chi tiết
+
+```
+truyen-app-monorepo/
+│
+├── 📁 Root Configuration Files
+│   ├── .gitignore                    # Git ignore patterns
+│   ├── .npmrc                        # NPM configuration
+│   ├── .cursorignore                 # Cursor AI ignore patterns
+│   ├── package.json                  # Root package.json (workspace manager)
+│   ├── pnpm-workspace.yaml           # PNPM workspace configuration
+│   ├── tsconfig.base.json            # Base TypeScript configuration (shared)
+│   ├── turbo.json                    # Turborepo configuration
+│   ├── README.md                     # Project documentation
+│   └── docker-compose.yml            # Docker services (PostgreSQL, Redis, MeiliSearch)
+│
+├── 📁 Documentation & Scripts
+│   ├── docs/                         # Project documentation
+│   │   ├── ARCHITECTURE.md           # System architecture overview
+│   │   ├── PORT_MANAGEMENT.md        # Port allocation guide
+│   │   ├── HOW_TO_VIEW_LOGS.md       # Logging guide
+│   │   └── structure/                # Structure documentation (this folder)
+│   │       ├── README.md             # Structure documentation index
+│   │       ├── 01-overview.md        # Quick reference guide
+│   │       └── ...                   # Other structure files
+│   ├── scripts/                      # Utility scripts
+│   │   ├── start-all.ps1             # Start all services (PowerShell)
+│   │   ├── check-services.ps1       # Health check script
+│   │   └── fix-ports.ts              # Port conflict resolver
+│   └── logs/                         # Service logs directory
+│
+└── 📁 packages/                      # Monorepo packages (all services & apps)
+    │
+    ├── 📦 1-gateway/                 # API Gateway (BFF Layer)
+    ├── 📦 2-services/                # Microservices
+    │   ├── users-service/            # User management
+    │   ├── stories-service/          # Content management
+    │   ├── comments-service/         # Comments & ratings
+    │   ├── search-service/          # Full-text search
+    │   ├── ai-service/              # AI features
+    │   ├── notification-service/    # Notifications
+    │   ├── websocket-service/       # Real-time communication
+    │   └── social-service/          # Social features
+    ├── 📦 3-web/                     # Next.js Web Frontend
+    ├── 📦 4-desktop/                # Electron Desktop App
+    ├── 📦 5-mobile-ios/             # iOS Native App
+    ├── 📦 6-mobile-android/         # Android Native App
+    └── 📦 7-shared/                 # Shared Library (Types, DTOs, Proto)
+```
+
+## Mô tả các thành phần
+
+### Root Configuration Files
+
+Các file cấu hình ở root level quản lý toàn bộ monorepo:
+
+- **package.json**: Quản lý workspace, dependencies chung, scripts
+- **pnpm-workspace.yaml**: Cấu hình PNPM workspace để quản lý các packages
+- **tsconfig.base.json**: TypeScript configuration chung cho tất cả packages
+- **turbo.json**: Cấu hình Turborepo cho build pipeline và caching
+- **docker-compose.yml**: Định nghĩa các services infrastructure (PostgreSQL, Redis, MeiliSearch)
+- **Local env defaults**: docker-compose exposes PostgreSQL as `novels_user` / `novels_password` on `novels_db`. Mỗi Prisma service fallback sang schema riêng (`users_service`, `comments_service`, `community_service`, `monetization_service`, `social_service`) nên không cần file .env local để chạy dev.
+
+### Documentation & Scripts
+
+- **docs/**: Chứa tài liệu về architecture, port management, logging, và structure documentation
+- **scripts/**: Các utility scripts để start services, check health, fix port conflicts
+  - `restart-and-monitor.ps1`: kill Node processes, boot hết services qua `pnpm --filter ...` (chạy bằng `cmd.exe /c`) và redirect log vào `logs/`. Script này tự động log tình trạng, lỗi và check Docker infrastructure.
+- **logs/**: Thư mục chứa logs của các services
+
+### Packages
+
+Thư mục `packages/` chứa tất cả các services và applications. Xem các file sau để biết chi tiết:
+
+### 🌐 Gateway
+- [Gateway Service](../gateway/03-1-gateway.md) - API Gateway (BFF)
+
+### 🔧 Microservices
+- [Services Overview](../services/04-2-services-overview.md) - Tổng quan về microservices
+- [Users Service](../services/05-users-service.md) - User management service
+- [Stories Service](../services/06-stories-service.md) - Content management service
+- [Comments Service](../services/07-comments-service.md) - Comments & ratings service
+- [Search Service](../services/08-search-service.md) - Full-text search service
+- [AI Service](../services/09-ai-service.md) - AI features service
+- [Notification Service](../services/10-notification-service.md) - Notifications service
+- [WebSocket Service](../services/11-websocket-service.md) - Real-time communication service
+- [Social Service](../services/12-social-service.md) - Social features service
+
+### 💻 Client Applications
+- [Web Frontend](../clients/13-3-web.md) - Next.js web application
+- [Desktop App](../clients/14-4-desktop.md) - Electron desktop application
+- [iOS App](../clients/15-5-mobile-ios.md) - iOS native application
+- [Android App](../clients/16-6-mobile-android.md) - Android native application
+
+### 📦 Shared Library
+- [Shared Library](../shared/17-7-shared.md) - Shared types, DTOs, and proto files
+
+---
+
+**Xem thêm:** [Main README](../README.md) | [Overview](../overview/01-overview.md)

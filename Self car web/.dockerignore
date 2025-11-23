@@ -1,0 +1,11 @@
+.git
+**/node_modules/
+frontend/dist/
+backend/target/
+coverage/
+tests/**/test-results/
+*.log
+.env
+.env.*
+
+

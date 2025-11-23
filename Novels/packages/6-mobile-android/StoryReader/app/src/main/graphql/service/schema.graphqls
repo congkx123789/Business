@@ -1,0 +1,310 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+scalar Long
+
+enum StoryStatus {
+  ONGOING
+  COMPLETED
+  HIATUS
+}
+
+enum BackgroundMode {
+  WHITE
+  BLACK
+  SEPIA
+  EYE_PROTECTION
+  CUSTOM
+}
+
+enum ReadingMode {
+  SCROLL
+  PAGE_TURN
+}
+
+enum SyncStatus {
+  SYNCED
+  SYNCING
+  PENDING
+  CONFLICT
+  ERROR
+}
+
+type Query {
+  stories(limit: Int, offset: Int): [Story!]!
+  story(id: ID!): Story
+  chapters(storyId: ID!): [Chapter!]!
+  chapter(id: ID!): Chapter
+  library(userId: ID!): [LibraryItem!]!
+  readingPreferences(userId: ID!): ReadingPreferences
+  readingProgress(userId: ID!, storyId: ID!): ReadingProgress
+  bookmarks(userId: ID!, storyId: ID): [Bookmark!]!
+  annotations(userId: ID!, chapterId: ID): [Annotation!]!
+  bookClubSchedule(groupId: ID!): [BookClubScheduleItem!]!
+  challengeProgress(challengeId: ID!): ChallengeProgress
+  friendChallengeProgress(challengeId: ID!): [ChallengeParticipant!]!
+  activityFeed(page: Int, limit: Int): ActivityFeed!
+  readingStatistics: ReadingStatistics!
+}
+
+type Mutation {
+  addToLibrary(userId: ID!, storyId: ID!): LibraryItem!
+  removeFromLibrary(userId: ID!, storyId: ID!): Boolean!
+  updateReadingPreferences(input: ReadingPreferencesInput!): ReadingPreferences!
+  updateReadingProgress(input: ReadingProgressInput!): ReadingProgress!
+  createBookmark(input: BookmarkInput!): Bookmark!
+  deleteBookmark(id: ID!): Boolean!
+  createAnnotation(input: AnnotationInput!): Annotation!
+  updateAnnotation(input: AnnotationUpdateInput!): Annotation!
+  deleteAnnotation(id: ID!): Boolean!
+  updateReadingChallengeProgress(challengeId: ID!, progress: Int!): Boolean!
+  setReadingGoal(
+    goalType: String!
+    target: Int!
+    timeRange: String!
+    startDate: String!
+    endDate: String!
+  ): SetReadingGoalPayload!
+}
+
+type Story {
+  id: ID!
+  title: String!
+  author: String!
+  description: String
+  coverImage: String
+  genreId: Int
+  genre: String
+  status: StoryStatus!
+  totalChapters: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Chapter {
+  id: ID!
+  storyId: ID!
+  title: String!
+  content: String
+  order: Int!
+  wordCount: Int
+  isPaid: Boolean!
+  price: Int
+  isUnlocked: Boolean!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type LibraryItem {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  addedAt: String!
+  lastReadAt: String
+  isFavorite: Boolean!
+  syncStatus: SyncStatus!
+  lastSyncedAt: String
+}
+
+type ReadingPreferences {
+  userId: ID!
+  backgroundColor: BackgroundMode!
+  customBackgroundColor: String
+  fontSize: Int!
+  lineHeight: Float!
+  readingMode: ReadingMode!
+  brightness: Int!
+  tapToToggleControls: Boolean!
+  autoHideControls: Boolean!
+  controlsTimeout: Long!
+  syncStatus: SyncStatus!
+  lastSyncedAt: String
+}
+
+type ReadingProgress {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  chapterId: ID!
+  position: Int!
+  progress: Float!
+  wordsPerMinute: Int
+  readingTime: Long!
+  lastReadAt: String!
+  syncStatus: SyncStatus!
+  lastSyncedAt: String
+}
+
+type Bookmark {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  chapterId: ID!
+  position: Int!
+  note: String
+  createdAt: String!
+  updatedAt: String!
+  syncStatus: SyncStatus!
+  lastSyncedAt: String
+}
+
+type Annotation {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  chapterId: ID!
+  startPosition: Int!
+  endPosition: Int!
+  selectedText: String!
+  note: String
+  color: String
+  tags: [String!]
+  createdAt: String!
+  updatedAt: String!
+  syncStatus: SyncStatus!
+  lastSyncedAt: String
+}
+
+input ReadingPreferencesInput {
+  userId: ID!
+  backgroundColor: BackgroundMode!
+  customBackgroundColor: String
+  fontSize: Int!
+  lineHeight: Float!
+  readingMode: ReadingMode!
+  brightness: Int!
+  tapToToggleControls: Boolean!
+  autoHideControls: Boolean!
+  controlsTimeout: Long!
+}
+
+input ReadingProgressInput {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  chapterId: ID!
+  position: Int!
+  progress: Float!
+  wordsPerMinute: Int
+  readingTime: Long!
+  lastReadAt: String!
+}
+
+input BookmarkInput {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  chapterId: ID!
+  position: Int!
+  note: String
+}
+
+input AnnotationInput {
+  id: ID!
+  userId: ID!
+  storyId: ID!
+  chapterId: ID!
+  startPosition: Int!
+  endPosition: Int!
+  selectedText: String!
+  note: String
+  color: String
+  tags: [String!]
+}
+
+input AnnotationUpdateInput {
+  id: ID!
+  startPosition: Int
+  endPosition: Int
+  selectedText: String
+  note: String
+  color: String
+  tags: [String!]
+}
+
+type BookClubScheduleItem {
+  id: ID!
+  chapterNumber: Int!
+  deadline: String!
+  discussionDate: String
+}
+
+type ReadingChallenge {
+  id: ID!
+  name: String!
+  description: String
+  challengeType: String!
+  goal: Int!
+  goalType: String!
+  timeRange: String!
+  startDate: String!
+  endDate: String!
+  progress: Int!
+  status: String!
+  isPublic: Boolean!
+}
+
+type ChallengeParticipant {
+  userId: ID!
+  progress: Int!
+  joinedAt: String!
+  updatedAt: String!
+}
+
+type ChallengeProgress {
+  challenge: ReadingChallenge!
+  participants: [ChallengeParticipant!]!
+}
+
+type SetReadingGoalPayload {
+  goal: ReadingGoal!
+}
+
+type ReadingGoal {
+  id: ID!
+  goalType: String!
+  target: Int!
+  current: Int!
+  timeRange: String!
+  startDate: String!
+  endDate: String!
+  status: String!
+}
+
+type ActivityFeed {
+  items: [ActivityFeedItem!]!
+  total: Int!
+  page: Int!
+  limit: Int!
+}
+
+type ActivityFeedItem {
+  id: ID
+  activityType: String!
+  timestamp: String!
+  storyId: ID
+  chapterId: ID
+  metadata: ActivityMetadata
+}
+
+type ReadingStatistics {
+  activityCounts: [ActivityCount!]!
+  activeGoals: [ReadingGoal!]!
+}
+
+type ActivityCount {
+  activityType: String!
+  count: Int!
+}
+
+type ActivityMetadata {
+  entries: [MetadataEntry!]!
+}
+
+type MetadataEntry {
+  key: String!
+  value: String!
+}
+

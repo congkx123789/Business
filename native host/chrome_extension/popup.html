@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Automation</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 12px; min-width: 360px; }
+      button { padding: 6px 10px; }
+      input, select { padding: 6px; width: 100%; box-sizing: border-box; }
+      .row { display: flex; gap: 8px; align-items: center; }
+      .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+      .section { margin-bottom: 12px; border: 1px solid #ddd; padding: 10px; border-radius: 6px; }
+      .section h4 { margin: 0 0 8px; font-size: 14px; }
+      #status { font-size: 12px; color: #555; }
+      #img { max-width: 100%; border: 1px solid #ddd; margin-top: 6px; }
+      label { font-size: 12px; color: #333; }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <div class="row">
+        <button id="btnPing">Sample Task</button>
+        <span id="status"></span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h4>App Control</h4>
+      <div class="grid">
+        <div>
+          <label>Exe Path</label>
+          <input id="exePath" placeholder="C:\\Windows\\System32\\notepad.exe" />
+        </div>
+        <div>
+          <label>Args (optional)</label>
+          <input id="exeArgs" placeholder="" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnLaunch">Launch</button>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div>
+          <label>Window Title</label>
+          <input id="winTitle" placeholder="Notepad" />
+        </div>
+        <div>
+          <label>Keys</label>
+          <input id="keys" placeholder="Hello{ENTER}" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnFocus">Focus</button>
+        <button id="btnKeys">Send Keys</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h4>Cursor</h4>
+      <div class="grid">
+        <div>
+          <label>X</label>
+          <input id="curX" type="number" placeholder="600" />
+        </div>
+        <div>
+          <label>Y</label>
+          <input id="curY" type="number" placeholder="400" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnMove">Move</button>
+        <button id="btnGetPos">Get Pos</button>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div>
+          <label>Wheel Delta</label>
+          <input id="wheelDelta" type="number" value="-120" />
+        </div>
+        <div>
+          <label>Button (drag)</label>
+          <input id="dragButton" placeholder="left" />
+        </div>
+      </div>
+      <div class="grid" style="margin-top:8px">
+        <div>
+          <label>From X</label>
+          <input id="fromX" type="number" />
+        </div>
+        <div>
+          <label>From Y</label>
+          <input id="fromY" type="number" />
+        </div>
+        <div>
+          <label>To X</label>
+          <input id="toX" type="number" />
+        </div>
+        <div>
+          <label>To Y</label>
+          <input id="toY" type="number" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnScroll">Scroll</button>
+        <button id="btnDrag">Drag</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h4>Agent at Cursor</h4>
+      <div class="grid">
+        <div>
+          <label>Shot Width</label>
+          <input id="shotW" type="number" value="480" />
+        </div>
+        <div>
+          <label>Shot Height</label>
+          <input id="shotH" type="number" value="360" />
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button id="btnCtx">Get Context</button>
+        <button id="btnShot">Screenshot</button>
+      </div>
+      <img id="img" />
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+  </html>
+

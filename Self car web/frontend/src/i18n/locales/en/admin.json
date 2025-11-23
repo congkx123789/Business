@@ -1,0 +1,13 @@
+{
+  "dashboard": "Dashboard",
+  "analytics": "Analytics",
+  "bookings": "Bookings",
+  "cars": "Cars",
+  "users": "Users",
+  "revenue": "Revenue",
+  "totalCars": "Total Cars",
+  "totalBookings": "Total Bookings",
+  "totalUsers": "Total Users",
+  "totalRevenue": "Total Revenue"
+}
+

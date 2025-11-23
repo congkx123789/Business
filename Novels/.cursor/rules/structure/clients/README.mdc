@@ -1,0 +1,487 @@
+---
+alwaysApply: true
+---
+
+# 💻 Client Applications Documentation
+
+## 🎯 Overview
+
+Folder này chứa tài liệu về tất cả các client applications trong hệ thống, bao gồm Web, Desktop, và Mobile apps (iOS & Android).
+
+## 📁 Structure
+
+```
+clients/
+├── README.mdc (this file)              # Overview & Navigation
+├── 13-3-web.mdc                        # Next.js Web Frontend
+├── keyboard-shortcuts.md               # Keyboard Shortcuts Design
+├── 14-4-desktop.md                     # Electron Desktop App
+├── 15-5-mobile-ios.md                  # iOS Native App
+└── 16-6-mobile-android.md              # Android Native App
+```
+
+## 🏗️ Code Structure Patterns
+
+### Web Frontend (Next.js) - App Router Pattern
+
+```
+packages/3-web/
+├── src/
+│   ├── app/                            # Next.js App Router
+│   │   ├── layout.tsx                  # Root layout (providers, error boundaries)
+│   │   ├── page.tsx                    # Home page (Storefront)
+│   │   ├── providers.tsx                # Context providers (QueryClient, etc.)
+│   │   │
+│   │   └── 📁 (main)/                  # Main route group
+│   │       ├── 📁 browse/              # Browse & Discovery
+│   │       ├── 📁 rankings/           # Rankings
+│   │       ├── 📁 feed/               # Social Feed
+│   │       ├── 📁 groups/             # Social Groups
+│   │       ├── 📁 library/            # Library & Bookshelf
+│   │       ├── 📁 reader/             # Reader Interface
+│   │       ├── 📁 wallet/            # Wallet & Payments
+│   │       ├── 📁 subscriptions/      # Subscriptions
+│   │       └── 📁 notifications/      # Notifications
+│   │
+│   ├── components/                     # React components (Atomic Design)
+│   │   ├── ui/                         # Atoms (shadcn/ui primitives)
+│   │   │   ├── button.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── command.tsx            # Command palette (Ctrl+K)
+│   │   │   └── ...
+│   │   │
+│   │   ├── shared/                     # Organisms (reusable components)
+│   │   │   ├── Navbar.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── SyncStatusIndicator.tsx
+│   │   │   └── ...
+│   │   │
+│   │   ├── desktop/                    # Desktop-Specific Components
+│   │   │   ├── shortcuts/              # Keyboard shortcuts
+│   │   │   ├── multi-window/           # Multi-window/tab support
+│   │   │   ├── bulk-operations/        # Bulk selection & actions
+│   │   │   ├── export-import/          # Export/Import features
+│   │   │   └── advanced-search/        # Advanced search/filter
+│   │   │
+│   │   └── features/                   # Templates (complex features)
+│   │       ├── Storefront/             # Storefront & Discovery
+│   │       ├── Recommendations/        # Recommendation Components
+│   │       ├── Community/              # Community Interaction Components
+│   │       ├── Reader/                 # Reader Interface
+│   │       ├── Library/                # Library Management
+│   │       └── Social/                 # Social Features
+│   │
+│   ├── lib/                            # Utilities & configurations
+│   │   ├── api.ts                      # API client (axios) - calls Gateway REST API
+│   │   ├── hooks/                      # Custom React hooks
+│   │   │   ├── useStories.ts           # React Query hooks
+│   │   │   ├── useReader.ts
+│   │   │   └── ...
+│   │   └── utils/                      # Helper functions
+│   │
+│   ├── store/                          # State management
+│   │   ├── server-state.ts             # React Query configuration
+│   │   ├── client-state.ts             # Zustand stores (UI state only)
+│   │   └── reading-preferences-store.ts
+│   │
+│   └── types/                          # TypeScript types (import from 7-shared)
+│       └── index.ts                    # Re-exports from @shared/types
+│
+├── public/                             # Static assets
+├── package.json
+└── next.config.js
+```
+
+### Mobile Apps - MVVM + Repository Pattern
+
+#### iOS (SwiftUI)
+```
+packages/5-mobile-ios/
+├── {AppName}/
+│   ├── 📁 Views/                       # SwiftUI Views (Presentation Layer)
+│   │   ├── LibraryView.swift
+│   │   ├── ReaderView.swift
+│   │   └── ...
+│   │
+│   ├── 📁 ViewModels/                  # ViewModels (Business Logic)
+│   │   ├── LibraryViewModel.swift
+│   │   ├── ReaderViewModel.swift
+│   │   └── ...
+│   │
+│   ├── 📁 Repositories/                # Repository Layer (Data Access)
+│   │   ├── LibraryRepository.swift     # Decides: Network or Core Data?
+│   │   ├── StoryRepository.swift
+│   │   └── ...
+│   │
+│   ├── 📁 Models/                      # Data Models
+│   │   └── ...                         # Core Data entities
+│   │
+│   ├── 📁 Services/                    # Network & External Services
+│   │   ├── APIService.swift            # GraphQL client (Apollo)
+│   │   ├── WebSocketService.swift
+│   │   └── ...
+│   │
+│   └── 📁 CoreData/                    # Database Layer
+│       ├── CoreDataStack.swift
+│       └── *.xcdatamodeld             # Core Data schema
+│
+└── Package.swift
+```
+
+#### Android (Jetpack Compose)
+```
+packages/6-mobile-android/
+├── app/
+│   ├── src/main/java/.../
+│   │   ├── 📁 ui/                      # Compose UI (Presentation Layer)
+│   │   │   ├── library/
+│   │   │   │   └── LibraryScreen.kt
+│   │   │   └── reader/
+│   │   │       └── ReaderScreen.kt
+│   │   │
+│   │   ├── 📁 viewmodel/               # ViewModels (Business Logic)
+│   │   │   ├── LibraryViewModel.kt
+│   │   │   └── ReaderViewModel.kt
+│   │   │
+│   │   ├── 📁 repository/              # Repository Layer (Data Access)
+│   │   │   ├── LibraryRepository.kt    # Decides: Network or Room?
+│   │   │   └── StoryRepository.kt
+│   │   │
+│   │   ├── 📁 database/                # Room Database
+│   │   │   ├── AppDatabase.kt
+│   │   │   ├── entities/                # Room entities
+│   │   │   └── daos/                    # Data Access Objects
+│   │   │
+│   │   └── 📁 network/                 # Network Layer
+│   │       ├── ApiService.kt            # GraphQL client (Apollo)
+│   │       └── WebSocketService.kt
+│   │
+│   └── build.gradle.kts
+│
+└── build.gradle.kts
+```
+
+## 📋 Files
+
+### Web Frontend
+
+- **[13-3-web.mdc](./13-3-web.mdc)** - Next.js Web Frontend (Desktop Web App - PWA)
+  - Core Reader Interface (Based on Qidian/QQ Reading)
+  - Storefront Components & Browse Pages
+  - Library Feature Components
+  - Social Feature Components
+  - **⭐ Community UI (Prominent Feature #3):**
+    - Paragraph Comments (Duanping) - Real-time bubble indicators, quick reactions
+    - Chapter Comments, Reviews, Forums, Polls, Quizzes
+  - **⭐ Monetization UI (Prominent Features #1 & #2):**
+    - Privilege purchase flow (Advanced Chapters)
+    - PPC purchase flow (Pay-Per-Chapter)
+    - Wallet display & top-up
+    - Transaction history
+  - **⭐ Gamification UI (Prominent Feature #4):**
+    - Daily missions dashboard
+    - Power Stones display
+    - Fast Passes management
+    - Points exchange
+  - **Annotation Suite (Enhanced):**
+    - AI Summary from highlights
+    - Export to Notion/Obsidian/Capacities
+    - Unification from multiple sources
+    - Revisitation queue (spaced repetition)
+  - **⭐ AI Integration (Prominent Feature #5):**
+    - **Emotional AI TTS Player** (with sync highlighting) - Market disruptor
+    - Dictionary Popup (with third-party integration)
+    - Sentence-level & Parallel Translation
+    - Mood-based Recommendations
+    - Natural Language Search
+    - Explore New Territories (filter bubble breaker)
+  - WebSocket connection
+  - State Management (React Query + Zustand)
+  - **Desktop Power-User Features:**
+    - Multi-window/tabbed interface
+    - Split-view reading
+    - Focus mode (text width limiter)
+    - Bulk operations
+    - Advanced search
+    - Export/import
+
+### Desktop Application
+
+- **[14-4-desktop.md](./14-4-desktop.md)** - Electron Desktop App
+  - Cross-platform desktop application
+  - Wraps 3-web
+  - Native OS integration
+  - Offline support
+
+### Mobile Applications
+
+- **[15-5-mobile-ios.md](./15-5-mobile-ios.md)** - iOS Native App (SwiftUI)
+  - Core Reader Interface (Based on Qidian/QQ Reading)
+  - **⭐ Paragraph Comments UI (Prominent Feature #3):** Real-time bubble indicators, inline comments
+  - **⭐ Monetization UI (Prominent Features #1 & #2):** Privilege purchase, PPC flow, wallet
+  - **⭐ Gamification UI (Prominent Feature #4):** Daily missions, Power Stones, Fast Passes
+  - **⭐ AI Features (Prominent Feature #5):** Emotional TTS Player, Dictionary, Translation
+  - **Annotation Suite (Enhanced - Synced from Web):** AI Summary, Export, Unification, Revisitation
+    - Annotation Templates (save templates for quick use)
+    - Annotation Search (search within annotations by text, tags, dates)
+    - Annotation Export (export as Markdown, PDF, to Notion/Obsidian/Capacities)
+  - **Learning Tools:** Dictionary (with ABBYY), Touch-to-translate, Sentence/Parallel Translation
+  - **Power-User Features (Synced from Web):**
+    - Command Palette (swipe down to open, search stories/chapters/annotations/settings)
+    - Scheduled Exports (auto-export on schedule using BGTaskScheduler)
+    - Export History (track all exports with timestamps)
+    - Search History & Suggestions (track recent searches, auto-complete)
+    - Filter Presets (save frequently used filter combinations)
+  - MVVM + Repository Pattern
+  - Core Data for local storage
+  - Offline-first architecture
+  - GraphQL API (Apollo)
+
+- **[16-6-mobile-android.md](./16-6-mobile-android.md)** - Android Native App (Jetpack Compose)
+  - Core Reader Interface (Based on Qidian/QQ Reading)
+  - **⭐ Paragraph Comments UI (Prominent Feature #3):** Real-time bubble indicators, inline comments
+  - **⭐ Monetization UI (Prominent Features #1 & #2):** Privilege purchase, PPC flow, wallet
+  - **⭐ Gamification UI (Prominent Feature #4):** Daily missions, Power Stones, Fast Passes
+  - **⭐ AI Features (Prominent Feature #5):** Emotional TTS Player, Dictionary, Translation
+  - **Annotation Suite (Enhanced - Synced from Web):** AI Summary, Export, Unification, Revisitation
+    - Annotation Templates (save templates for quick use)
+    - Annotation Search (search within annotations by text, tags, dates)
+    - Annotation Export (export as Markdown, PDF, to Notion/Obsidian/Capacities)
+  - **Learning Tools:** Dictionary (with ABBYY), Touch-to-translate, Sentence/Parallel Translation
+  - **Power-User Features (Synced from Web):**
+    - Command Palette (swipe down to open, search stories/chapters/annotations/settings)
+    - Scheduled Exports (auto-export on schedule using WorkManager)
+    - Export History (track all exports with timestamps)
+    - Search History & Suggestions (track recent searches, auto-complete)
+    - Filter Presets (save frequently used filter combinations)
+  - MVVM + Repository Pattern
+  - Room Database for local storage
+  - Offline-first architecture
+  - GraphQL API (Apollo)
+
+### Power User Features
+
+- **[keyboard-shortcuts.md](./keyboard-shortcuts.md)** - Keyboard Shortcuts Design Specification
+  - Complete keyboard navigation system
+  - Power-user feature for desktop/web
+  - Quick reference guide
+
+## ⭐ Prominent Features Integration
+
+All clients must implement these five prominent features for strategic impact:
+
+1. **Privilege Model UI** (Monetization) - Revenue Engine
+   - Purchase privilege flow for advanced chapters
+   - Monthly reset indicators
+   - Advanced chapters list (privilege-required)
+
+2. **Pay-Per-Chapter (PPC) UI** (Monetization) - Core Revenue Engine
+   - Chapter purchase flow with virtual currency
+   - Paywall indicators
+   - Purchase history
+
+3. **Paragraph Comments UI** (Community) - Engagement Engine
+   - Real-time bubble indicators on paragraphs
+   - Inline comment panel
+   - Quick reactions
+   - Author interaction indicators
+
+4. **Gamification UI** (Users) - F2P Retention Engine
+   - Daily missions dashboard
+   - Power Stones counter
+   - Fast Passes display
+   - Points balance
+
+5. **AI Narration UI** (AI) - Technology Disruptor
+   - Emotional TTS player with controls
+   - Text highlighting sync during playback
+   - Voice style selection
+   - Emotion control
+
+See [Overview - Prominent Features](../overview/01-overview.mdc#-prominent-features-strategic-impact) for detailed analysis.
+
+## 🔑 Key Features
+
+### Core Reading Experience
+
+Tất cả clients đều có **Core Reader Interface** dựa trên Qidian/QQ Reading:
+- Customizable UI (font size, line height, background color, theme)
+- Content interaction (bookmarks, annotations, highlights)
+- Reading progress tracking
+- Chapter navigation
+
+### Annotation & Research Tools (Enhanced - Chapter 3)
+
+**Annotation Suite:**
+- **AI Summary from Highlights:** Generate intelligent summaries from selected highlights only
+- **Workflow Integration:** Export annotations to Notion, Obsidian, Capacities (Markdown format)
+- **Unification:** Collect annotations from all sources (EPUB, PDF, web, YouTube, Twitter) into unified database
+- **Revisitation:** Spaced repetition system to review and learn from highlights
+
+**Integrated Learning Tools:**
+- **Dictionary:** Pop-up dictionary with pronunciation, pinyin (for Chinese), example sentences
+- **Third-party Dictionary Integration:** Support for ABBYY and other high-quality dictionaries
+- **Touch-to-translate:** Tap word to get instant translation
+- **Sentence-level Translation:** Translate entire sentences (not just words) - preserves semantics
+- **Parallel Translation:** Show original + translated side-by-side (line-by-line, side-by-side, interleaved)
+
+### AI Assistant Features (Enhanced - Chapter 4)
+
+**Text-to-Speech (TTS):**
+- **Emotional AI Narration:** High-quality AI voices with emotional intelligence
+  - Emotion control: "emotional and dramatic", "calm and soothing"
+  - Voice styles: Terrified, Sad, Shouting, Whispering, Cheerful, Angry
+  - Contextual awareness: Understands punctuation, natural pauses, tone adjustment
+- **Sync with Text Highlighting:** Audio syncs with text highlighting during playback (word-by-word or sentence-by-sentence)
+- **Human Narration:** Premium human narrators for selected stories
+
+**AI Recommendation Engine:**
+- **Mood-based Recommendations:** Recommend stories based on user's current mood
+- **Natural Language Search:** "sci-fi with advanced AI and ethical issues"
+- **Breaking Filter Bubbles:** "Explore New Territories" feature to introduce new genres/ideas
+- **Learning from Interactions:** Refine recommendations based on user feedback
+
+### State Management
+
+- **Web (Next.js)**: 
+  - **React Query (TanStack Query)** cho server data
+    - Hooks trong `lib/hooks/`
+    - Configuration trong `store/server-state.ts`
+  - **Zustand** cho UI state only
+    - Stores trong `store/client-state.ts`
+    - UI state: sidebar open/closed, theme, active tab, etc.
+- **Mobile (iOS/Android)**:
+  - **MVVM + Repository Pattern**
+    - View → ViewModel → Repository → Data Source
+    - Repository decides: Network (GraphQL) or Local DB (Core Data/Room)
+  - **Local-first architecture** với offline support
+
+### Offline Support
+
+- **Mobile**: Full offline support với local database (Core Data/Room)
+  - Repository loads from local DB first
+  - Syncs in background when online
+- **Web**: Service Worker cho PWA offline capabilities
+  - Workbox for caching
+  - Background sync
+- **Desktop**: Local caching và sync
+
+### API Communication
+
+- **Web**: REST API → Gateway (port 3000)
+  - API client trong `lib/api.ts`
+  - Uses axios
+- **Mobile**: GraphQL → Gateway (port 3000)
+  - Apollo Client
+  - Flexible queries
+- **All Clients**: WebSocket → Gateway (port 3000)
+  - Real-time updates
+  - Live comments, notifications
+
+## 🗺️ Quick Navigation
+
+### By Platform
+- **Web**: [13-3-web.mdc](./13-3-web.mdc)
+- **Desktop**: [14-4-desktop.md](./14-4-desktop.md)
+- **iOS**: [15-5-mobile-ios.md](./15-5-mobile-ios.md)
+- **Android**: [16-6-mobile-android.md](./16-6-mobile-android.md)
+
+### By Feature
+- **Reader Interface**: Tất cả client files
+- **Keyboard Shortcuts**: [keyboard-shortcuts.md](./keyboard-shortcuts.md)
+- **State Management**: Xem trong từng client file
+- **Offline Support**: Xem trong từng client file
+
+## ⚠️ Important Rules
+
+1. **Rule #5**: 
+   - **Web**: Use React Query for server data, Zustand for UI state only
+     - ❌ DON'T: `useState` for server data
+     - ✅ DO: `useQuery` from React Query for server data
+     - ✅ DO: Zustand for UI state (sidebar, theme, etc.)
+   - **Mobile**: Strictly follow MVVM + Repository Pattern
+     - View → ViewModel → Repository → Network/Local DB
+     - Repository is the ONLY place that decides network vs local DB
+
+2. **Offline-First (Mobile)**:
+   - Repository loads from local DB first (instant UI)
+   - Syncs in background when online
+   - Conflict resolution on server
+
+3. **Shared Contracts**:
+   - All types/DTOs must come from 7-shared package
+   - Never hard-code types in client apps
+   - Import: `import { Story, Chapter } from '@shared/types'`
+
+4. **API Calls**:
+   - Web: REST API via `lib/api.ts` (axios)
+   - Mobile: GraphQL via Apollo Client
+   - All clients: WebSocket for real-time
+
+## 📝 Code Examples
+
+### Web - React Query Hook
+```typescript
+// lib/hooks/useStories.ts
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/lib/api';
+import { Story } from '@shared/types';
+
+export const useStories = () => {
+  return useQuery<Story[]>({
+    queryKey: ['stories'],
+    queryFn: () => api.getStories(),
+  });
+};
+```
+
+### Web - Zustand Store
+```typescript
+// store/client-state.ts
+import { create } from 'zustand';
+
+interface UIState {
+  isSidebarOpen: boolean;
+  toggleSidebar: () => void;
+}
+
+export const useUIStore = create<UIState>((set) => ({
+  isSidebarOpen: false,
+  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+}));
+```
+
+### Mobile - Repository Pattern
+```swift
+// iOS: LibraryRepository.swift
+class LibraryRepository {
+  func getLibrary() async throws -> [LibraryItem] {
+    // 1. Load from Core Data first (instant)
+    let localItems = try coreDataStack.fetchLibrary()
+    
+    // 2. Sync from network in background
+    Task {
+      let networkItems = try await apiService.getLibrary()
+      try coreDataStack.saveLibrary(networkItems)
+    }
+    
+    return localItems
+  }
+}
+```
+
+## 🔗 Related Documentation
+
+- [Overview](../overview/README.mdc) - Architecture overview
+- [Gateway](../gateway/README.mdc) - API Gateway that clients connect to
+- [Services](../services/README.mdc) - Backend services
+- [Shared](../shared/README.mdc) - Shared types, DTOs, contracts
+- [Feature Sync Map](../FEATURE_SYNC_MAP.md) - ⭐ Feature synchronization across all layers
+- [Main README](../README.md) - Main structure documentation
+
+---
+
+**💡 Tip**: Web uses React Query + Zustand, Mobile uses MVVM + Repository. Never mix patterns!
+
+**🔄 Synchronization**: Xem [Feature Sync Map](../FEATURE_SYNC_MAP.md) để đảm bảo features được đồng bộ giữa Services, Shared, Gateway, và Clients.

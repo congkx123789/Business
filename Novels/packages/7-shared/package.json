@@ -1,0 +1,23 @@
+{
+  "name": "7-shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "generate-proto": "ts-node build-scripts/generate-proto.ts",
+    "validate-contracts": "ts-node build-scripts/validate-contracts.ts"
+  },
+  "dependencies": {
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1"
+  },
+  "devDependencies": {
+    "@grpc/grpc-js": "^1.9.14",
+    "@types/node": "20.11.30",
+    "ts-node": "^10.9.2",
+    "ts-proto": "^2.2.2",
+    "typescript": "^5.7.2"
+  }
+}

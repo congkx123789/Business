@@ -1,0 +1,447 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/@prisma/users-service-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("USERS_SERVICE_DATABASE_URL")
+}
+
+enum DownloadStatus {
+  PENDING
+  DOWNLOADING
+  COMPLETED
+  FAILED
+}
+
+enum LibraryDisplayLayout {
+  GRID
+  LIST
+}
+
+enum LibrarySortOrder {
+  RECENT
+  TITLE
+  PROGRESS
+  ADDED
+}
+
+enum SystemListType {
+  FAVORITES
+  TO_READ
+  HAVE_READ
+  CURRENTLY_READING
+  RECENTLY_ADDED
+}
+
+enum AnnotationSourceType {
+  STORY
+  CHAPTER
+  EPUB
+  PDF
+  WEB
+  YOUTUBE
+  TWITTER
+}
+
+enum MissionType {
+  CHECK_IN
+  READING
+  AD
+  VOTING
+}
+
+enum RewardType {
+  POWER_STONE
+  FAST_PASS
+  POINTS
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  username  String?
+  password  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  profile             Profile?
+  readingPreferences  ReadingPreferences?
+  desktopPreferences  DesktopPreferences?
+  libraryItems        LibraryItem[]
+  bookshelves         Bookshelf[]
+  wishlistItems       Wishlist[]
+  readingProgress     ReadingProgress[]
+  bookmarks           Bookmark[]
+  annotations         Annotation[]
+  annotationSources   AnnotationSource[]
+  tags                Tag[]
+  filteredViews       FilteredView[]
+  systemLists         SystemList[]
+  userBehaviorEvents  UserBehaviorEvent[]
+  dailyMissions       DailyMission[]
+  missionRewards      MissionReward[]
+  powerStones         PowerStone[]
+  fastPasses          FastPass[]
+  gamificationRewards GamificationReward[]
+}
+
+model Profile {
+  id          Int     @id @default(autoincrement())
+  userId      Int     @unique
+  displayName String?
+  avatarUrl   String?
+  bio         String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ReadingPreferences {
+  id                       Int      @id @default(autoincrement())
+  userId                   Int      @unique
+  fontSize                 Int      @default(16)
+  backgroundColor          String   @default("white")
+  textColor                String   @default("#000000")
+  lineHeight               Float    @default(1.5)
+  fontFamily               String   @default("system")
+  readingMode              String   @default("scroll")
+  scrollBehavior           String   @default("smooth")
+  autoHideControls         Boolean  @default(true)
+  tapToToggleControls      Boolean  @default(true)
+  controlsTimeout          Int      @default(3000)
+  brightness               Int      @default(100)
+  pageTurnAnimation        Boolean  @default(true)
+  syncAcrossDevices        Boolean  @default(true)
+  blueLightFilterEnabled   Boolean  @default(false)
+  blueLightFilterStrength  Int      @default(50)
+  blueLightFilterAdaptive  Boolean  @default(true)
+  blueLightFilterStart     String? 
+  blueLightFilterEnd       String?
+  customBackgroundColor    String?
+  customFontUrl            String?
+  customFontName           String?
+  customFontData           String?
+  letterSpacing            Float    @default(0)
+  paragraphSpacing         Float    @default(1)
+  wordSpacing              Float    @default(0)
+  textAlign                String   @default("left")
+  readingModePageDirection String   @default("horizontal")
+  marginHorizontal         Int      @default(20)
+  marginVertical           Int      @default(20)
+  preferredFormats         String[]
+  formatProcessingPdfAutoCropMargins    Boolean @default(true)
+  formatProcessingPdfAutoGenerateTOC    Boolean @default(true)
+  formatProcessingDocxAutoGenerateTOC   Boolean @default(true)
+  formatProcessingArchiveReadFromZip    Boolean @default(true)
+  formatProcessingArchiveReadFromRar    Boolean @default(true)
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DesktopPreferences {
+  id                  Int      @id @default(autoincrement())
+  userId              Int      @unique
+  tabState            Json?
+  layoutPreferences   Json?
+  focusModeSettings   Json?
+  keyboardShortcuts   Json?
+  splitViewState      Json?
+  savedFilters        Json?
+  exportHistory       Json?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LibraryItem {
+  id               String               @id @default(cuid())
+  userId           Int
+  storyId          String
+  addedAt          DateTime              @default(now())
+  lastReadAt       DateTime?
+  lastChapterId    String?
+  authorId         String?
+  authorName       String?
+  seriesId         String?
+  seriesName       String?
+  genres           String[]
+  deviceId         String?
+  lastSyncedAt     DateTime?
+  notes            String?
+  isDownloaded     Boolean               @default(false)
+  downloadProgress Int                   @default(0)
+  downloadStatus   DownloadStatus        @default(PENDING)
+  downloadSize     BigInt?
+  downloadedAt     DateTime?
+  displayLayout    LibraryDisplayLayout  @default(GRID)
+  sortOrder        LibrarySortOrder      @default(RECENT)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookshelfItems BookshelfItem[]
+  tags          LibraryTag[]
+  systemLists   LibrarySystemList[]
+
+  @@unique([userId, storyId])
+  @@index([userId, authorId])
+  @@index([userId, seriesId])
+}
+
+model Bookshelf {
+  id          String          @id @default(cuid())
+  userId      Int
+  name        String
+  description String?
+  displayOrder Int             @default(0)
+  isDefault   Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items   BookshelfItem[]
+}
+
+model BookshelfItem {
+  id           String      @id @default(cuid())
+  bookshelfId  String
+  libraryItemId String
+  displayOrder Int         @default(0)
+  addedAt      DateTime    @default(now())
+
+  bookshelf   Bookshelf   @relation(fields: [bookshelfId], references: [id], onDelete: Cascade)
+  libraryItem LibraryItem @relation(fields: [libraryItemId], references: [id], onDelete: Cascade)
+
+  @@unique([bookshelfId, libraryItemId])
+}
+
+model Tag {
+  id          String   @id @default(cuid())
+  userId      Int
+  name        String
+  color       String?
+  icon        String?
+  parentTagId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentTag  Tag?        @relation("TagHierarchy", fields: [parentTagId], references: [id])
+  childTags  Tag[]       @relation("TagHierarchy")
+  libraryTag LibraryTag[]
+}
+
+model LibraryTag {
+  id          String      @id @default(cuid())
+  libraryItemId String
+  tagId       String
+  createdAt   DateTime    @default(now())
+
+  libraryItem LibraryItem @relation(fields: [libraryItemId], references: [id], onDelete: Cascade)
+  tag         Tag         @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@unique([libraryItemId, tagId])
+}
+
+model FilteredView {
+  id             String   @id @default(cuid())
+  userId         Int
+  name           String
+  description    String?
+  query          Json
+  isAutoUpdating Boolean  @default(false)
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SystemList {
+  id        String         @id @default(cuid())
+  userId    Int
+  listType  SystemListType
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  user      User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     LibrarySystemList[]
+}
+
+model LibrarySystemList {
+  id            String      @id @default(cuid())
+  systemListId  String
+  libraryItemId String
+  createdAt     DateTime    @default(now())
+
+  systemList  SystemList  @relation(fields: [systemListId], references: [id], onDelete: Cascade)
+  libraryItem LibraryItem @relation(fields: [libraryItemId], references: [id], onDelete: Cascade)
+}
+
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    Int
+  storyId   String
+  priority  Int?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storyId])
+}
+
+model ReadingProgress {
+  id                String   @id @default(cuid())
+  userId            Int
+  storyId           String
+  chapterId         String
+  position          Float    @default(0)
+  progressPercentage Float   @default(0)
+  lastReadAt        DateTime @default(now())
+  isCompleted       Boolean  @default(false)
+  lastSyncedAt      DateTime?
+  deviceId          String?
+  syncVersion       Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storyId])
+}
+
+model Bookmark {
+  id         String   @id @default(cuid())
+  userId     Int
+  storyId    String
+  chapterId  String
+  position   Float
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, storyId, chapterId])
+}
+
+model Annotation {
+  id              String              @id @default(cuid())
+  userId          Int
+  storyId         String?
+  chapterId       String?
+  selectedText    String
+  startOffset     Int
+  endOffset       Int
+  note            String
+  color           String?
+  sourceType      AnnotationSourceType @default(STORY)
+  sourceId        String?
+  sourceUrl       String?
+  unifiedAt       DateTime?
+  lastReviewedAt  DateTime?
+  reviewCount     Int                  @default(0)
+  nextReviewDate  DateTime?
+  isArchived      Boolean              @default(false)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AnnotationSource {
+  id            String              @id @default(cuid())
+  userId        Int
+  sourceType    AnnotationSourceType
+  sourceId      String
+  sourceUrl     String?
+  sourceTitle   String?
+  importedAt    DateTime @default(now())
+  lastSyncedAt  DateTime?
+  syncEnabled   Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserBehaviorEvent {
+  id         String   @id @default(cuid())
+  userId     Int
+  storyId    String?
+  chapterId  String?
+  action     String
+  metadata   Json?
+  timestamp  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model DailyMission {
+  id         String     @id @default(cuid())
+  userId     Int
+  missionType MissionType
+  date       DateTime
+  completed  Boolean    @default(false)
+  claimed    Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rewards MissionReward[]
+
+  @@unique([userId, missionType, date])
+}
+
+model MissionReward {
+  id         String     @id @default(cuid())
+  userId     Int
+  missionId  String?
+  rewardType RewardType
+  amount     Int        @default(0)
+  source     String     @default("mission")
+  createdAt  DateTime   @default(now())
+
+  user    User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mission DailyMission? @relation(fields: [missionId], references: [id], onDelete: SetNull)
+}
+
+model PowerStone {
+  id        String   @id @default(cuid())
+  userId    Int
+  amount    Int      @default(0)
+  date      DateTime @default(now())
+  resetAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model FastPass {
+  id        String   @id @default(cuid())
+  userId    Int
+  storyId   String?
+  chapterId String?
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model GamificationReward {
+  id         String     @id @default(cuid())
+  userId     Int
+  rewardType RewardType
+  amount     Int        @default(0)
+  source     String     @default("mission")
+  createdAt  DateTime   @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+

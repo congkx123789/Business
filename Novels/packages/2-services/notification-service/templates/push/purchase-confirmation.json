@@ -1,0 +1,10 @@
+{
+  "title": "Purchase confirmed",
+  "body": "You unlocked {{chaptersUnlocked}} chapter(s) of {{storyTitle}}",
+  "data": {
+    "type": "purchase.completed",
+    "storyTitle": "{{storyTitle}}",
+    "chaptersUnlocked": "{{chaptersUnlocked}}"
+  }
+}
+

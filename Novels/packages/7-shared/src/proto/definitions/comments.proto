@@ -1,0 +1,664 @@
+syntax = "proto3";
+
+package comments;
+
+/**
+ * Comments Service gRPC Contract
+ * Covers hierarchical interactions (paragraph/chapter reviews), forums, polls, quizzes, ratings.
+ */
+service CommentsService {
+  // Paragraph comments (micro level)
+  rpc CreateParagraphComment(CreateParagraphCommentRequest) returns (ParagraphCommentResponse);
+  rpc GetParagraphComments(GetParagraphCommentsRequest) returns (ParagraphCommentsResponse);
+  rpc GetParagraphCommentCounts(GetParagraphCommentCountsRequest) returns (ParagraphCommentCountsResponse);
+  rpc DeleteParagraphComment(ModifyParagraphCommentRequest) returns (StatusResponse);
+  rpc LikeParagraphComment(LikeParagraphCommentRequest) returns (LikeParagraphCommentResponse);
+  rpc ReplyToParagraphComment(ReplyParagraphCommentRequest) returns (ParagraphCommentReplyResponse);
+
+  // Chapter comments (meso level)
+  rpc CreateChapterComment(CreateChapterCommentRequest) returns (ChapterCommentResponse);
+  rpc GetChapterComments(GetChapterCommentsRequest) returns (ChapterCommentsResponse);
+  rpc VoteChapterComment(VoteChapterCommentRequest) returns (ChapterCommentVoteResponse);
+  rpc DeleteChapterComment(DeleteChapterCommentRequest) returns (StatusResponse);
+
+  // Reviews (macro level)
+  rpc CreateReview(CreateReviewRequest) returns (ReviewResponse);
+  rpc GetStoryReviews(GetStoryReviewsRequest) returns (ReviewsResponse);
+  rpc UpdateReview(UpdateReviewRequest) returns (ReviewResponse);
+  rpc DeleteReview(DeleteReviewRequest) returns (StatusResponse);
+  rpc VoteReviewHelpful(VoteReviewHelpfulRequest) returns (ReviewHelpfulResponse);
+
+  // Forums & threads (macro level)
+  rpc CreateForumThread(CreateForumThreadRequest) returns (ForumThreadResponse);
+  rpc GetForumThreads(GetForumThreadsRequest) returns (ForumThreadsResponse);
+  rpc SetThreadPinned(SetThreadStateRequest) returns (ForumThreadResponse);
+  rpc SetThreadLocked(SetThreadStateRequest) returns (ForumThreadResponse);
+  rpc CreateForumPost(CreateForumPostRequest) returns (ForumPostResponse);
+  rpc GetForumPosts(GetForumPostsRequest) returns (ForumPostsResponse);
+
+  // Polls (platform interactions)
+  rpc CreatePoll(CreatePollRequest) returns (PollResponse);
+  rpc VotePoll(VotePollRequest) returns (PollResponse);
+  rpc GetPolls(GetPollsRequest) returns (PollsResponse);
+  rpc GetPollResults(GetPollResultsRequest) returns (PollResponse);
+
+  // Quizzes (platform interactions)
+  rpc CreateQuiz(CreateQuizRequest) returns (QuizResponse);
+  rpc GetQuizzes(GetQuizzesRequest) returns (QuizzesResponse);
+  rpc SubmitQuiz(SubmitQuizRequest) returns (QuizSubmissionResponse);
+  rpc GetQuizLeaderboard(GetQuizLeaderboardRequest) returns (QuizLeaderboardResponse);
+
+  // Ratings (supporting)
+  rpc CreateRating(CreateRatingRequest) returns (RatingResponse);
+  rpc GetRatingSummary(GetRatingSummaryRequest) returns (RatingSummaryResponse);
+
+  // Aggregated helpers
+  rpc GetCommentById(GetCommentByIdRequest) returns (GenericCommentResponse);
+  rpc DeleteComment(DeleteCommentRequest) returns (StatusResponse);
+  rpc GetStoryActivityFeed(GetStoryActivityFeedRequest) returns (StoryActivityFeedResponse);
+}
+
+// ---------- Shared utilities ----------
+
+message StatusResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Pagination {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+// ---------- Paragraph comments ----------
+
+enum ParagraphCommentReaction {
+  PARAGRAPH_REACTION_UNSPECIFIED = 0;
+  PARAGRAPH_REACTION_LIKE = 1;
+  PARAGRAPH_REACTION_LAUGH = 2;
+  PARAGRAPH_REACTION_CRY = 3;
+  PARAGRAPH_REACTION_ANGRY = 4;
+  PARAGRAPH_REACTION_WOW = 5;
+  PARAGRAPH_REACTION_LOVE = 6;
+}
+
+enum ParagraphCommentSort {
+  PARAGRAPH_SORT_UNSPECIFIED = 0;
+  PARAGRAPH_SORT_NEWEST = 1;
+  PARAGRAPH_SORT_OLDEST = 2;
+  PARAGRAPH_SORT_MOST_LIKED = 3;
+}
+
+message ParagraphComment {
+  string id = 1;
+  string storyId = 2;
+  string chapterId = 3;
+  string userId = 4;
+  int32 paragraphIndex = 5;
+  string paragraphText = 6;
+  string content = 7;
+  ParagraphCommentReaction reactionType = 8;
+  int32 likeCount = 9;
+  int32 replyCount = 10;
+  bool isAuthorLiked = 11;
+  bool isAuthorReplied = 12;
+  string createdAt = 13;
+  string updatedAt = 14;
+  repeated ParagraphCommentReply replies = 15;
+}
+
+message ParagraphCommentReply {
+  string id = 1;
+  string commentId = 2;
+  string userId = 3;
+  string content = 4;
+  bool isAuthorReply = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+message CreateParagraphCommentRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  string userId = 3;
+  int32 paragraphIndex = 4;
+  string paragraphText = 5;
+  string content = 6;
+  ParagraphCommentReaction reactionType = 7;
+}
+
+message GetParagraphCommentsRequest {
+  string chapterId = 1;
+  optional int32 paragraphIndex = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+  ParagraphCommentSort sortBy = 5;
+  bool includeReplies = 6;
+}
+
+message GetParagraphCommentCountsRequest {
+  string chapterId = 1;
+}
+
+message ModifyParagraphCommentRequest {
+  string commentId = 1;
+  string userId = 2;
+}
+
+message LikeParagraphCommentRequest {
+  string commentId = 1;
+  string userId = 2;
+  bool isAuthor = 3;
+}
+
+message ReplyParagraphCommentRequest {
+  string commentId = 1;
+  string userId = 2;
+  bool isAuthorReply = 3;
+  string content = 4;
+}
+
+message ParagraphCommentResponse {
+  bool success = 1;
+  ParagraphComment data = 2;
+  string message = 3;
+}
+
+message ParagraphCommentsResponse {
+  bool success = 1;
+  repeated ParagraphComment data = 2;
+  int32 total = 3;
+  Pagination pagination = 4;
+}
+
+message ParagraphCommentCount {
+  int32 paragraphIndex = 1;
+  int32 count = 2;
+}
+
+message ParagraphCommentCountsResponse {
+  bool success = 1;
+  string chapterId = 2;
+  repeated ParagraphCommentCount counts = 3;
+}
+
+message LikeParagraphCommentResponse {
+  bool success = 1;
+  bool liked = 2;
+}
+
+message ParagraphCommentReplyResponse {
+  bool success = 1;
+  ParagraphCommentReply data = 2;
+}
+
+// ---------- Chapter comments ----------
+
+enum ChapterCommentSort {
+  CHAPTER_SORT_UNSPECIFIED = 0;
+  CHAPTER_SORT_NEWEST = 1;
+  CHAPTER_SORT_OLDEST = 2;
+  CHAPTER_SORT_TOP = 3;
+}
+
+message ChapterComment {
+  string id = 1;
+  string storyId = 2;
+  string chapterId = 3;
+  string userId = 4;
+  string content = 5;
+  string parentId = 6;
+  int32 upvotes = 7;
+  int32 downvotes = 8;
+  string createdAt = 9;
+  string updatedAt = 10;
+  repeated ChapterComment replies = 11;
+}
+
+message CreateChapterCommentRequest {
+  string storyId = 1;
+  string chapterId = 2;
+  string userId = 3;
+  string content = 4;
+  string parentId = 5;
+}
+
+message GetChapterCommentsRequest {
+  string chapterId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+  ChapterCommentSort sortBy = 4;
+}
+
+message VoteChapterCommentRequest {
+  string commentId = 1;
+  string userId = 2;
+  int32 value = 3; // -1 or 1
+}
+
+message DeleteChapterCommentRequest {
+  string commentId = 1;
+  string userId = 2;
+}
+
+message ChapterCommentResponse {
+  bool success = 1;
+  ChapterComment data = 2;
+}
+
+message ChapterCommentsResponse {
+  bool success = 1;
+  repeated ChapterComment data = 2;
+  int32 total = 3;
+  Pagination pagination = 4;
+}
+
+message ChapterCommentVoteResponse {
+  bool success = 1;
+  int32 value = 2;
+}
+
+// ---------- Reviews ----------
+
+message Review {
+  string id = 1;
+  string storyId = 2;
+  string userId = 3;
+  string title = 4;
+  string content = 5;
+  int32 plotRating = 6;
+  int32 characterRating = 7;
+  int32 writingStyleRating = 8;
+  int32 overallRating = 9;
+  int32 helpfulCount = 10;
+  string createdAt = 11;
+  string updatedAt = 12;
+}
+
+message CreateReviewRequest {
+  string storyId = 1;
+  string userId = 2;
+  string title = 3;
+  string content = 4;
+  int32 plotRating = 5;
+  int32 characterRating = 6;
+  int32 writingStyleRating = 7;
+  int32 overallRating = 8;
+}
+
+message GetStoryReviewsRequest {
+  string storyId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message UpdateReviewRequest {
+  string id = 1;
+  string userId = 2;
+  string title = 3;
+  string content = 4;
+  int32 plotRating = 5;
+  int32 characterRating = 6;
+  int32 writingStyleRating = 7;
+  int32 overallRating = 8;
+}
+
+message DeleteReviewRequest {
+  string reviewId = 1;
+  string userId = 2;
+}
+
+message VoteReviewHelpfulRequest {
+  string reviewId = 1;
+  string userId = 2;
+}
+
+message ReviewResponse {
+  bool success = 1;
+  Review data = 2;
+}
+
+message ReviewsResponse {
+  bool success = 1;
+  repeated Review data = 2;
+  int32 total = 3;
+  double averageRating = 4;
+}
+
+message ReviewHelpfulResponse {
+  bool success = 1;
+  bool helpful = 2;
+}
+
+// ---------- Forums ----------
+
+message ForumThread {
+  string id = 1;
+  string storyId = 2;
+  string userId = 3;
+  string title = 4;
+  string content = 5;
+  string category = 6;
+  bool isPinned = 7;
+  bool isLocked = 8;
+  int32 postCount = 9;
+  string lastPostAt = 10;
+  string createdAt = 11;
+  string updatedAt = 12;
+}
+
+message ForumPost {
+  string id = 1;
+  string threadId = 2;
+  string userId = 3;
+  string content = 4;
+  string parentPostId = 5;
+  int32 likeCount = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+  repeated ForumPost replies = 9;
+}
+
+message CreateForumThreadRequest {
+  string storyId = 1;
+  string userId = 2;
+  string title = 3;
+  string content = 4;
+  string category = 5;
+}
+
+message GetForumThreadsRequest {
+  string storyId = 1;
+  string category = 2;
+  int32 limit = 3;
+  int32 offset = 4;
+  optional bool pinnedFirst = 5;
+}
+
+message SetThreadStateRequest {
+  string threadId = 1;
+  bool state = 2;
+}
+
+message CreateForumPostRequest {
+  string threadId = 1;
+  string userId = 2;
+  string content = 3;
+  string parentPostId = 4;
+}
+
+message GetForumPostsRequest {
+  string threadId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message ForumThreadResponse {
+  bool success = 1;
+  ForumThread data = 2;
+}
+
+message ForumThreadsResponse {
+  bool success = 1;
+  repeated ForumThread data = 2;
+  int32 total = 3;
+}
+
+message ForumPostResponse {
+  bool success = 1;
+  ForumPost data = 2;
+}
+
+message ForumPostsResponse {
+  bool success = 1;
+  repeated ForumPost data = 2;
+  int32 total = 3;
+}
+
+// ---------- Polls ----------
+
+message Poll {
+  string id = 1;
+  string storyId = 2;
+  string createdBy = 3;
+  string title = 4;
+  string description = 5;
+  string endsAt = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+  repeated PollOption options = 9;
+}
+
+message PollOption {
+  string id = 1;
+  string label = 2;
+  int32 voteCount = 3;
+}
+
+message CreatePollRequest {
+  string storyId = 1;
+  string createdBy = 2;
+  string title = 3;
+  string description = 4;
+  repeated string options = 5;
+  string endsAt = 6;
+}
+
+message VotePollRequest {
+  string pollId = 1;
+  string optionId = 2;
+  string userId = 3;
+}
+
+message GetPollsRequest {
+  string storyId = 1;
+  bool activeOnly = 2;
+}
+
+message GetPollResultsRequest {
+  string pollId = 1;
+}
+
+message PollResponse {
+  bool success = 1;
+  Poll data = 2;
+  string message = 3;
+}
+
+message PollsResponse {
+  bool success = 1;
+  repeated Poll data = 2;
+}
+
+// ---------- Quizzes ----------
+
+message Quiz {
+  string id = 1;
+  string storyId = 2;
+  string createdBy = 3;
+  string title = 4;
+  string description = 5;
+  int32 timeLimit = 6;
+  string createdAt = 7;
+  string updatedAt = 8;
+  repeated QuizQuestion questions = 9;
+}
+
+message QuizQuestion {
+  string id = 1;
+  string prompt = 2;
+  string explanation = 3;
+  repeated QuizOption options = 4;
+}
+
+message QuizOption {
+  string id = 1;
+  string text = 2;
+  bool isCorrect = 3;
+}
+
+message QuizSubmission {
+  string id = 1;
+  string quizId = 2;
+  string userId = 3;
+  int32 score = 4;
+  int32 totalQuestions = 5;
+  int32 timeSpent = 6;
+  string createdAt = 7;
+  repeated QuizSubmissionAnswer answers = 8;
+}
+
+message QuizSubmissionAnswer {
+  string questionId = 1;
+  string optionId = 2;
+  bool isCorrect = 3;
+}
+
+message QuizQuestionInput {
+  string prompt = 1;
+  string explanation = 2;
+  repeated QuizOptionInput options = 3;
+}
+
+message QuizOptionInput {
+  string text = 1;
+  bool isCorrect = 2;
+}
+
+message SubmitQuizAnswerInput {
+  string questionId = 1;
+  string optionId = 2;
+}
+
+message CreateQuizRequest {
+  string storyId = 1;
+  string createdBy = 2;
+  string title = 3;
+  string description = 4;
+  int32 timeLimit = 5;
+  repeated QuizQuestionInput questions = 6;
+}
+
+message GetQuizzesRequest {
+  string storyId = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message SubmitQuizRequest {
+  string quizId = 1;
+  string userId = 2;
+  int32 timeSpent = 3;
+  repeated SubmitQuizAnswerInput answers = 4;
+}
+
+message GetQuizLeaderboardRequest {
+  string quizId = 1;
+  int32 limit = 2;
+}
+
+message QuizResponse {
+  bool success = 1;
+  Quiz data = 2;
+}
+
+message QuizzesResponse {
+  bool success = 1;
+  repeated Quiz data = 2;
+  int32 total = 3;
+}
+
+message QuizSubmissionResponse {
+  bool success = 1;
+  QuizSubmission data = 2;
+}
+
+message QuizLeaderboardResponse {
+  bool success = 1;
+  repeated QuizSubmission entries = 2;
+}
+
+// ---------- Ratings ----------
+
+message Rating {
+  string id = 1;
+  string storyId = 2;
+  string userId = 3;
+  int32 rating = 4;
+  string review = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+message CreateRatingRequest {
+  string storyId = 1;
+  string userId = 2;
+  int32 rating = 3;
+  string review = 4;
+}
+
+message GetRatingSummaryRequest {
+  string storyId = 1;
+}
+
+message RatingResponse {
+  bool success = 1;
+  Rating data = 2;
+}
+
+message RatingSummaryResponse {
+  bool success = 1;
+  string storyId = 2;
+  int32 count = 3;
+  double average = 4;
+}
+
+// ---------- Aggregated helpers ----------
+
+message GetCommentByIdRequest {
+  string commentId = 1;
+}
+
+message DeleteCommentRequest {
+  string commentId = 1;
+  string userId = 2;
+}
+
+message GenericComment {
+  string type = 1;
+  oneof entity {
+    ParagraphComment paragraph = 2;
+    ChapterComment chapter = 3;
+    Review review = 4;
+    ForumPost forumPost = 5;
+  }
+}
+
+message GenericCommentResponse {
+  bool success = 1;
+  GenericComment data = 2;
+  string message = 3;
+}
+
+message StoryActivityFeedItem {
+  string type = 1;
+  string createdAt = 2;
+  oneof entity {
+    ParagraphComment paragraph = 3;
+    ChapterComment chapter = 4;
+    Review review = 5;
+    ForumThread thread = 6;
+  }
+}
+
+message GetStoryActivityFeedRequest {
+  string storyId = 1;
+  int32 limit = 2;
+}
+
+message StoryActivityFeedResponse {
+  bool success = 1;
+  string storyId = 2;
+  repeated StoryActivityFeedItem items = 3;
+}
+

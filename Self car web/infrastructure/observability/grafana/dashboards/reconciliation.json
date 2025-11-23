@@ -1,0 +1,55 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Reconciliation Consistency (SLI)",
+      "gridPos": {"h": 9, "w": 24, "x": 0, "y": 0},
+      "targets": [
+        {"expr": "sli:inventory_consistency:ratio", "legendFormat": "consistency", "refId": "A"},
+        {"expr": "1 - sli:inventory_consistency:ratio", "legendFormat": "failure rate", "refId": "B"}
+      ],
+      "options": {"legend": {"displayMode": "table", "placement": "bottom"}}
+    },
+    {
+      "type": "timeseries",
+      "title": "Reconciliation Results by Source",
+      "gridPos": {"h": 9, "w": 24, "x": 0, "y": 9},
+      "targets": [
+        {"expr": "sum by (source) (rate(inventory_reconciliation_total{result=\"failure\"}[5m]))", "legendFormat": "{{source}} failures/min", "refId": "A"},
+        {"expr": "sum by (source) (rate(inventory_reconciliation_total{result=\"success\"}[5m]))", "legendFormat": "{{source}} successes/min", "refId": "B"}
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Current Consistency",
+      "gridPos": {"h": 6, "w": 12, "x": 0, "y": 18},
+      "targets": [
+        {"expr": "sli:inventory_consistency:ratio", "refId": "A"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 5}, "overrides": []},
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}}
+    },
+    {
+      "type": "stat",
+      "title": "Failure Budget Burn (est 30d)",
+      "gridPos": {"h": 6, "w": 12, "x": 12, "y": 18},
+      "targets": [
+        {"expr": "(1 - slo:target:inventory_consistency) - sum_over_time((1 - sli:inventory_consistency:ratio)[30d])", "refId": "A"}
+      ],
+      "fieldConfig": {"defaults": {"unit": "percentunit", "decimals": 6}, "overrides": []},
+      "options": {"reduceOptions": {"calcs": ["lastNotNull"]}}
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": ["inventory", "reconciliation"],
+  "time": {"from": "now-24h", "to": "now"},
+  "title": "Inventory Reconciliation",
+  "uid": "inventory-recon",
+  "version": 1
+}
+
+

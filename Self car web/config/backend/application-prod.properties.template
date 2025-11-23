@@ -1,0 +1,39 @@
+# Production Profile
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.show-sql=false
+
+logging.level.com.selfcar=INFO
+
+# Production Database Configuration (Update with actual values)
+# spring.datasource.url=jdbc:mysql://production-host:3306/selfcar_db
+# spring.datasource.username=${DB_USERNAME}
+# spring.datasource.password=${DB_PASSWORD}
+
+# JWT Configuration (Update with actual values)
+# jwt.secret=${JWT_SECRET}
+# jwt.expiration=3600000
+
+# CORS: lock to production domains (comma-separated)
+spring.web.cors.allowed-origins=https://app.selfcar.example,https://admin.selfcar.example
+
+# Force HTTPS behind proxy and enable HSTS via SecurityHeadersConfig
+server.forward-headers-strategy=framework
+
+# CSP: enforce (set to false for Report-Only)
+app.security.csp.report-only=false
+
+# Redis (adjust host/port)
+spring.data.redis.host=${REDIS_HOST:localhost}
+spring.data.redis.port=${REDIS_PORT:6379}
+
+# AWS S3 Configuration for Image Storage
+aws.access-key-id=${AWS_ACCESS_KEY_ID:}
+aws.secret-access-key=${AWS_SECRET_ACCESS_KEY:}
+aws.s3.bucket-name=${AWS_S3_BUCKET_NAME:}
+aws.s3.region=${AWS_S3_REGION:us-east-1}
+aws.s3.cdn-domain=${AWS_CDN_DOMAIN:}
+
+# Image CDN Configuration
+image.cdn.enabled=${IMAGE_CDN_ENABLED:true}
+image.cdn.base-url=${IMAGE_CDN_BASE_URL:}
+

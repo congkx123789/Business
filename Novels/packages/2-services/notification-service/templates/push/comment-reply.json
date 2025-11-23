@@ -1,0 +1,9 @@
+{
+  "title": "New reply",
+  "body": "Someone replied to your comment on {{storyTitle}}",
+  "data": {
+    "type": "comment.reply",
+    "storyTitle": "{{storyTitle}}"
+  }
+}
+

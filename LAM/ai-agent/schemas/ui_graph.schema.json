@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "role": { "type": "string" },
+          "name": { "type": "string" },
+          "selector": { "type": "string" },
+          "bbox": { "type": "array", "items": { "type": "number" } },
+          "affordances": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "enum": ["spatial", "hierarchy", "flow"] },
+          "src": { "type": "string" },
+          "dst": { "type": "string" }
+        }
+      }
+    }
+  }
+}
+
+

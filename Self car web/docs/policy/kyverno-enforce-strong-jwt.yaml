@@ -1,0 +1,23 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-strong-jwt-secrets
+spec:
+  validationFailureAction: enforce
+  background: true
+  rules:
+    - name: require-strong-jwt-secret
+      match:
+        resources:
+          kinds: [Pod]
+      validate:
+        message: "JWT_SECRET must be sourced from a Secret and ≥ 32 chars"
+        pattern:
+          spec:
+            containers:
+            - env:
+              - name: JWT_SECRET
+                valueFrom:
+                  secretKeyRef:
+                    name: ?*
+

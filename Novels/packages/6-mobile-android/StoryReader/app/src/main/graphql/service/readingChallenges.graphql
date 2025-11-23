@@ -1,0 +1,108 @@
+query BookClubSchedule($groupId: ID!) {
+  bookClubSchedule(groupId: $groupId) {
+    id
+    chapterNumber
+    deadline
+    discussionDate
+  }
+}
+
+query ChallengeProgress($challengeId: ID!) {
+  challengeProgress(challengeId: $challengeId) {
+    challenge {
+      id
+      name
+      description
+      challengeType
+      goal
+      goalType
+      timeRange
+      startDate
+      endDate
+      progress
+      status
+      isPublic
+    }
+    participants {
+      userId
+      progress
+      joinedAt
+      updatedAt
+    }
+  }
+}
+
+query FriendChallengeProgress($challengeId: ID!) {
+  friendChallengeProgress(challengeId: $challengeId) {
+    userId
+    progress
+    joinedAt
+    updatedAt
+  }
+}
+
+mutation UpdateReadingChallengeProgress($challengeId: ID!, $progress: Int!) {
+  updateReadingChallengeProgress(challengeId: $challengeId, progress: $progress)
+}
+
+mutation SetReadingGoal($goalType: String!, $target: Int!, $timeRange: String!, $startDate: String!, $endDate: String!) {
+  setReadingGoal(
+    goalType: $goalType
+    target: $target
+    timeRange: $timeRange
+    startDate: $startDate
+    endDate: $endDate
+  ) {
+    goal {
+      id
+      goalType
+      target
+      current
+      timeRange
+      startDate
+      endDate
+      status
+    }
+  }
+}
+
+query ActivityFeed($page: Int, $limit: Int) {
+  activityFeed(page: $page, limit: $limit) {
+    items {
+      id
+      activityType
+      timestamp
+      storyId
+      chapterId
+      metadata {
+        entries {
+          key
+          value
+        }
+      }
+    }
+    total
+    page
+    limit
+  }
+}
+
+query ReadingStatistics {
+  readingStatistics {
+    activityCounts {
+      activityType
+      count
+    }
+    activeGoals {
+      id
+      goalType
+      target
+      current
+      timeRange
+      startDate
+      endDate
+      status
+    }
+  }
+}
+
