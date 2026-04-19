@@ -103,13 +103,13 @@ USERS_SERVICE_PORT=3002
 USERS_SERVICE_GRPC_URL=0.0.0.0:50051
 
 # Primary connection string (recommended)
-USERS_SERVICE_DATABASE_URL=postgresql://postgres:postgres@localhost:5432/users_service?schema=public
+USERS_SERVICE_DATABASE_URL=postgresql://postgres:postgres@localhost:5433/users_service?schema=public
 
 # Optional granular overrides (used when DATABASE_URL is omitted)
 USERS_SERVICE_DATABASE_USER=postgres
 USERS_SERVICE_DATABASE_PASSWORD=postgres
 USERS_SERVICE_DATABASE_HOST=localhost
-USERS_SERVICE_DATABASE_PORT=5432
+USERS_SERVICE_DATABASE_PORT=5433
 USERS_SERVICE_DATABASE_NAME=users_service
 USERS_SERVICE_DATABASE_SCHEMA=public
 

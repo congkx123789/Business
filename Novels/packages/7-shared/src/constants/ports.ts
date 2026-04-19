@@ -8,7 +8,7 @@
  * - 3000-3010: HTTP/REST API ports for services
  * - 50051-50060: gRPC ports for microservices
  * - 1433: SQL Server (Docker)
- * - 5432: PostgreSQL (Docker)
+ * - 5433: PostgreSQL (Docker host) / 5432 container
  * - 6379: Redis (Docker)
  * - 7700: MeiliSearch (Docker)
  */
@@ -46,7 +46,7 @@ export const GRPC_PORTS = {
 
 export const INFRASTRUCTURE_PORTS = {
   SQL_SERVER: 1433,
-  POSTGRESQL: 5432,
+  POSTGRESQL: 5433,
   REDIS: 6379,
   MEILISEARCH: 7700,
 } as const;

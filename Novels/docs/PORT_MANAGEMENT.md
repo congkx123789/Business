@@ -39,7 +39,7 @@ Hệ thống này cung cấp:
 
 ### Infrastructure Ports
 - **SQL Server**: 1433
-- **PostgreSQL**: 5432
+- **PostgreSQL**: 5433 (host) / 5432 (container)
 - **Redis**: 6379
 - **MeiliSearch**: 7700
 

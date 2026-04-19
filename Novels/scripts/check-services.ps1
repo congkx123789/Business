@@ -5,7 +5,7 @@ Write-Host "=== Checking Service Status ===" -ForegroundColor Cyan
 Write-Host ""
 
 $services = @(
-    @{ Name = "PostgreSQL"; Port = 5432; Type = "Database" },
+    @{ Name = "PostgreSQL"; Port = 5433; Type = "Database" },
     @{ Name = "Redis"; Port = 6379; Type = "Cache" },
     @{ Name = "MeiliSearch"; Port = 7700; Type = "Search" },
     @{ Name = "Users Service (gRPC)"; Port = 50051; Type = "Microservice" },

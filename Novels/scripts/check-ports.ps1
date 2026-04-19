@@ -23,7 +23,7 @@ $portConfig = @{
 # Infrastructure ports
 $infraPorts = @{
     "SQL Server" = 1433
-    "PostgreSQL" = 5432
+    "PostgreSQL" = 5433
     "Redis" = 6379
     "MeiliSearch" = 7700
 }
